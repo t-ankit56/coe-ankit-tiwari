@@ -1,6 +1,6 @@
 # Part 1 · Day 1 — Incubyte Culture XP & Setting Up to Build
 
-**Date completed:** 2026-10-28 · **Time spent:** ~6 hrs
+**Date completed:** 2026-10-28 · **Time spent:** ~8 hrs
 
 ## Success criteria
 
