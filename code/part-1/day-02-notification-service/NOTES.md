@@ -8,3 +8,4 @@
 - Cycle 7: send_many kept going after a failure with no new code, because it reuses send; the second test only locks that in.
 - Cycle 8: the boundary test made send_many check every channel name before sending anything, so a typo can't cause a half-sent batch.
 - Cycle 9: real channels keep their own in-memory sent list, the same shape as FakeChannel, so nothing is really sent.
+- Cycle 9: each channel checks its own input and raises ChannelError, so email rules live in EmailChannel, not in the service.
