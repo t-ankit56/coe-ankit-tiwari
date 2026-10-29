@@ -1,4 +1,4 @@
-from notifications.models import SendResult, UnknownChannelError
+from notifications.models import ChannelError, SendResult, UnknownChannelError
 
 
 class NotificationService:
@@ -6,7 +6,11 @@ class NotificationService:
         self._channels = channels
 
     def send(self, channel_name, notification):
-        self._channel_for(channel_name).send(notification)
+        channel = self._channel_for(channel_name)
+        try:
+            channel.send(notification)
+        except ChannelError as error:
+            return SendResult(channel_name, False, str(error))
         return SendResult(channel_name, True)
 
     def send_many(self, channel_names, notification):

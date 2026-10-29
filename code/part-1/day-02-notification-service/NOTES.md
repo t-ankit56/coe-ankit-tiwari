@@ -4,3 +4,4 @@
 - Cycle 4: asserting on the return value forced send to return a SendResult instead of None, so callers can see what happened.
 - Cycle 5: the unknown-name test replaced a leaking KeyError with a domain error, UnknownChannelError.
 - Cycle 6: the Many test added send_many, which reuses send, so results come back in the order the names were given.
+- Cycle 7: the failing-channel test made ChannelError part of the channel contract; send turns it into SendResult(ok=False) instead of crashing.

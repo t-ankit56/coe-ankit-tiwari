@@ -17,3 +17,7 @@ class SendResult:
 
 class UnknownChannelError(ValueError):
     pass
+
+
+class ChannelError(Exception):
+    pass
