@@ -1,1 +1,2 @@
 - Cycle 1: the Zero test forced channels to be passed into the constructor, so tests can hand in fakes.
+- Cycle 2: sending needed something to send, so the test introduced a Notification value object (frozen dataclass).
