@@ -31,3 +31,10 @@ def test_email_channel_rejects_empty_body():
 
 def test_new_sms_channel_has_sent_nothing():
     assert SmsChannel().sent == []
+
+
+def test_sms_channel_records_a_message():
+    channel = SmsChannel()
+    n = Notification(to="+919876543210", body="hi")
+    channel.send(n)
+    assert channel.sent == [n]
