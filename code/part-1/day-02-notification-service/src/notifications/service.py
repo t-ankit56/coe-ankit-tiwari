@@ -9,6 +9,8 @@ class NotificationService:
         return self._deliver(channel_name, self._channel_for(channel_name), notification)
 
     def send_many(self, channel_names, notification):
+        for name in channel_names:
+            self._channel_for(name)
         return [self.send(name, notification) for name in channel_names]
 
     def _channel_for(self, channel_name):
