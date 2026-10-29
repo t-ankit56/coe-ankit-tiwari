@@ -1,5 +1,7 @@
 import pytest
+from fakes import FakeChannel
 from notifications.models import Notification, SendResult, UnknownChannelError
+from notifications.service import NotificationService
 
 
 def test_new_service_has_sent_nothing(service, email_channel, sms_channel):
@@ -38,3 +40,9 @@ def test_send_many_delivers_once_per_channel_in_order(service, email_channel, sm
     assert all(r.ok for r in results)
     assert email_channel.sent == [n]
     assert sms_channel.sent == [n]
+
+
+def test_failed_channel_gives_failed_result():
+    service = NotificationService({"email": FakeChannel(fail_with="gateway down")})
+    result = service.send("email", Notification(to="a@x.com", body="hi"))
+    assert result == SendResult(channel="email", ok=False, error="gateway down")
