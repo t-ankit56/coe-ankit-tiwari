@@ -9,6 +9,9 @@ class NotificationService:
         self._channel_for(channel_name).send(notification)
         return SendResult(channel_name, True)
 
+    def send_many(self, channel_names, notification):
+        return [self.send(name, notification) for name in channel_names]
+
     def _channel_for(self, channel_name):
         if channel_name not in self._channels:
             raise UnknownChannelError(channel_name)
