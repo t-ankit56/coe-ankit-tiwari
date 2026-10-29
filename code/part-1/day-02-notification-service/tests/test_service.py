@@ -29,3 +29,12 @@ def test_send_returns_successful_result(service):
 def test_unknown_channel_raises(service, name):
     with pytest.raises(UnknownChannelError):
         service.send(name, Notification(to="a@x.com", body="hi"))
+
+
+def test_send_many_delivers_once_per_channel_in_order(service, email_channel, sms_channel):
+    n = Notification(to="a@x.com", body="hi", subject="Hi")
+    results = service.send_many(["email", "sms"], n)
+    assert [r.channel for r in results] == ["email", "sms"]
+    assert all(r.ok for r in results)
+    assert email_channel.sent == [n]
+    assert sms_channel.sent == [n]
