@@ -1,4 +1,4 @@
-from notifications.models import Notification
+from notifications.models import Notification, SendResult
 
 
 def test_new_service_has_sent_nothing(service, email_channel, sms_channel):
@@ -17,3 +17,8 @@ def test_send_via_sms_reaches_only_sms_channel(service, email_channel, sms_chann
     service.send("sms", n)
     assert sms_channel.sent == [n]
     assert email_channel.sent == []
+
+
+def test_send_returns_successful_result(service):
+    n = Notification(to="a@x.com", body="hi", subject="Hi")
+    assert service.send("email", n) == SendResult(channel="email", ok=True, error=None)
