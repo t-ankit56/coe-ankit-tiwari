@@ -40,3 +40,7 @@ class SmsChannel(_RecordingChannel):
         if not re.fullmatch(r"\+?[0-9]{7,15}", notification.to):
             raise ChannelError("sms number must be 7 to 15 digits, optional leading +")
         super()._validate(notification)
+
+
+class PushChannel(_RecordingChannel):
+    """Records push notifications sent to a device token."""
