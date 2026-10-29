@@ -14,3 +14,8 @@ class EmailChannel:
             raise ChannelError("email recipient must contain @")
         if not notification.body:
             raise ChannelError("body must not be empty")
+
+
+class SmsChannel:
+    def __init__(self):
+        self.sent = []
