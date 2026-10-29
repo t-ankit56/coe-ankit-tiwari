@@ -46,3 +46,10 @@ def test_sms_channel_rejects_bad_number(to):
     with pytest.raises(ChannelError):
         channel.send(Notification(to=to, body="hi"))
     assert channel.sent == []
+
+
+def test_sms_channel_rejects_empty_body():
+    channel = SmsChannel()
+    with pytest.raises(ChannelError):
+        channel.send(Notification(to="+919876543210", body=""))
+    assert channel.sent == []
