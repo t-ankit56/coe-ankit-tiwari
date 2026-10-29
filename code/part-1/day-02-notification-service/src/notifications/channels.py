@@ -43,4 +43,9 @@ class SmsChannel(_RecordingChannel):
 
 
 class PushChannel(_RecordingChannel):
-    """Records push notifications sent to a device token."""
+    """Records push notifications; the device token must not be empty."""
+
+    def _validate(self, notification: Notification) -> None:
+        if not notification.to:
+            raise ChannelError("push device token must not be empty")
+        super()._validate(notification)
