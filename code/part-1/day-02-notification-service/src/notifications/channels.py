@@ -8,4 +8,6 @@ class EmailChannel:
     def send(self, notification):
         if "@" not in notification.to:
             raise ChannelError("email recipient must contain @")
+        if not notification.body:
+            raise ChannelError("body must not be empty")
         self.sent.append(notification)
