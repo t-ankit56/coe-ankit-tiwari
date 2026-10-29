@@ -1,5 +1,5 @@
 import pytest
-from notifications.channels import EmailChannel
+from notifications.channels import EmailChannel, SmsChannel
 from notifications.models import ChannelError, Notification
 
 
@@ -27,3 +27,7 @@ def test_email_channel_rejects_empty_body():
     with pytest.raises(ChannelError):
         channel.send(Notification(to="a@x.com", body="", subject="Hello"))
     assert channel.sent == []
+
+
+def test_new_sms_channel_has_sent_nothing():
+    assert SmsChannel().sent == []
