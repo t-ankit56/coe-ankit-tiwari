@@ -25,4 +25,6 @@ class SmsChannel:
     def send(self, notification):
         if not re.fullmatch(r"\+?[0-9]{7,15}", notification.to):
             raise ChannelError("sms number must be 7 to 15 digits, optional leading +")
+        if not notification.body:
+            raise ChannelError("body must not be empty")
         self.sent.append(notification)
