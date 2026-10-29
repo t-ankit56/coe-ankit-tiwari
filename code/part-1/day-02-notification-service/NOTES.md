@@ -10,3 +10,4 @@
 - Cycle 9: real channels keep their own in-memory sent list, the same shape as FakeChannel, so nothing is really sent.
 - Cycle 9: each channel checks its own input and raises ChannelError, so email rules live in EmailChannel, not in the service.
 - Cycle 10: a second channel with the same validate-then-record shape led to a _RecordingChannel base class; each channel only adds its own recipient rule.
+- Cycle 12: the contract the tests had relied on since cycle 1 was written down as a Channel Protocol; the service is typed against Channel, never a concrete channel.
