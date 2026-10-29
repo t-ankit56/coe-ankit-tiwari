@@ -1,4 +1,5 @@
-from notifications.models import Notification, SendResult
+import pytest
+from notifications.models import Notification, SendResult, UnknownChannelError
 
 
 def test_new_service_has_sent_nothing(service, email_channel, sms_channel):
@@ -22,3 +23,9 @@ def test_send_via_sms_reaches_only_sms_channel(service, email_channel, sms_chann
 def test_send_returns_successful_result(service):
     n = Notification(to="a@x.com", body="hi", subject="Hi")
     assert service.send("email", n) == SendResult(channel="email", ok=True, error=None)
+
+
+@pytest.mark.parametrize("name", ["fax", "", "EMAIL"])
+def test_unknown_channel_raises(service, name):
+    with pytest.raises(UnknownChannelError):
+        service.send(name, Notification(to="a@x.com", body="hi"))
