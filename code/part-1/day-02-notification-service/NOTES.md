@@ -1,3 +1,4 @@
 - Cycle 1: the Zero test forced channels to be passed into the constructor, so tests can hand in fakes.
 - Cycle 2: sending needed something to send, so the test introduced a Notification value object (frozen dataclass).
 - Cycle 3: the SMS test exposed the hardcoded email channel, so send now looks the channel up by name.
+- Cycle 4: asserting on the return value forced send to return a SendResult instead of None, so callers can see what happened.
