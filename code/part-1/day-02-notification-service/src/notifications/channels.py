@@ -3,7 +3,7 @@ import re
 from notifications.models import ChannelError
 
 
-class EmailChannel:
+class _RecordingChannel:
     def __init__(self):
         self.sent = []
 
@@ -12,19 +12,19 @@ class EmailChannel:
         self.sent.append(notification)
 
     def _validate(self, notification):
+        if not notification.body:
+            raise ChannelError("body must not be empty")
+
+
+class EmailChannel(_RecordingChannel):
+    def _validate(self, notification):
         if "@" not in notification.to:
             raise ChannelError("email recipient must contain @")
-        if not notification.body:
-            raise ChannelError("body must not be empty")
+        super()._validate(notification)
 
 
-class SmsChannel:
-    def __init__(self):
-        self.sent = []
-
-    def send(self, notification):
+class SmsChannel(_RecordingChannel):
+    def _validate(self, notification):
         if not re.fullmatch(r"\+?[0-9]{7,15}", notification.to):
             raise ChannelError("sms number must be 7 to 15 digits, optional leading +")
-        if not notification.body:
-            raise ChannelError("body must not be empty")
-        self.sent.append(notification)
+        super()._validate(notification)
