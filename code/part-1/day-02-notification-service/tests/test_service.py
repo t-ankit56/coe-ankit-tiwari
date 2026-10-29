@@ -54,3 +54,9 @@ def test_send_many_continues_after_a_failure():
     results = service.send_many(["email", "sms"], Notification(to="+919876543210", body="hi"))
     assert [r.ok for r in results] == [False, True]
     assert len(sms.sent) == 1
+
+
+def test_send_many_with_unknown_channel_sends_nothing(service, email_channel):
+    with pytest.raises(UnknownChannelError):
+        service.send_many(["email", "fax"], Notification(to="a@x.com", body="hi"))
+    assert email_channel.sent == []
