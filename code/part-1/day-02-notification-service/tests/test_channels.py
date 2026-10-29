@@ -20,3 +20,10 @@ def test_email_channel_rejects_bad_recipient(to):
     with pytest.raises(ChannelError):
         channel.send(Notification(to=to, body="hi", subject="Hello"))
     assert channel.sent == []
+
+
+def test_email_channel_rejects_empty_body():
+    channel = EmailChannel()
+    with pytest.raises(ChannelError):
+        channel.send(Notification(to="a@x.com", body="", subject="Hello"))
+    assert channel.sent == []
