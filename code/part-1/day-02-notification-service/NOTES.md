@@ -5,3 +5,4 @@
 - Cycle 5: the unknown-name test replaced a leaking KeyError with a domain error, UnknownChannelError.
 - Cycle 6: the Many test added send_many, which reuses send, so results come back in the order the names were given.
 - Cycle 7: the failing-channel test made ChannelError part of the channel contract; send turns it into SendResult(ok=False) instead of crashing.
+- Cycle 7: send_many kept going after a failure with no new code, because it reuses send; the second test only locks that in.

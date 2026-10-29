@@ -46,3 +46,11 @@ def test_failed_channel_gives_failed_result():
     service = NotificationService({"email": FakeChannel(fail_with="gateway down")})
     result = service.send("email", Notification(to="a@x.com", body="hi"))
     assert result == SendResult(channel="email", ok=False, error="gateway down")
+
+
+def test_send_many_continues_after_a_failure():
+    sms = FakeChannel()
+    service = NotificationService({"email": FakeChannel(fail_with="down"), "sms": sms})
+    results = service.send_many(["email", "sms"], Notification(to="+919876543210", body="hi"))
+    assert [r.ok for r in results] == [False, True]
+    assert len(sms.sent) == 1
