@@ -38,3 +38,11 @@ def test_sms_channel_records_a_message():
     n = Notification(to="+919876543210", body="hi")
     channel.send(n)
     assert channel.sent == [n]
+
+
+@pytest.mark.parametrize("to", ["", "12345", "abcdefghij", "+1234567890123456"])
+def test_sms_channel_rejects_bad_number(to):
+    channel = SmsChannel()
+    with pytest.raises(ChannelError):
+        channel.send(Notification(to=to, body="hi"))
+    assert channel.sent == []
