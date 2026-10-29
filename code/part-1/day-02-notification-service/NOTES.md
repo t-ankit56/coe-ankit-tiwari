@@ -2,3 +2,4 @@
 - Cycle 2: sending needed something to send, so the test introduced a Notification value object (frozen dataclass).
 - Cycle 3: the SMS test exposed the hardcoded email channel, so send now looks the channel up by name.
 - Cycle 4: asserting on the return value forced send to return a SendResult instead of None, so callers can see what happened.
+- Cycle 5: the unknown-name test replaced a leaking KeyError with a domain error, UnknownChannelError.

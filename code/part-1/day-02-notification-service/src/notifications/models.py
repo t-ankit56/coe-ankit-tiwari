@@ -13,3 +13,7 @@ class SendResult:
     channel: str
     ok: bool
     error: str | None = None
+
+
+class UnknownChannelError(ValueError):
+    pass
