@@ -3,4 +3,4 @@ class NotificationService:
         self._channels = channels
 
     def send(self, channel_name, notification):
-        self._channels["email"].send(notification)
+        self._channels[channel_name].send(notification)
