@@ -1,5 +1,6 @@
 import pytest
 from fakes import FakeChannel
+from notifications.channels import EmailChannel, SmsChannel
 from notifications.models import Notification, SendResult, UnknownChannelError
 from notifications.service import NotificationService
 
@@ -60,3 +61,13 @@ def test_send_many_with_unknown_channel_sends_nothing(service, email_channel):
     with pytest.raises(UnknownChannelError):
         service.send_many(["email", "fax"], Notification(to="a@x.com", body="hi"))
     assert email_channel.sent == []
+
+
+def test_real_channels_end_to_end():
+    email, sms = EmailChannel(), SmsChannel()
+    service = NotificationService({"email": email, "sms": sms})
+    n = Notification(to="a@x.com", body="hi", subject="Hello")
+    results = service.send_many(["email", "sms"], n)
+    assert [r.ok for r in results] == [True, False]
+    assert email.sent == [n]
+    assert sms.sent == []
