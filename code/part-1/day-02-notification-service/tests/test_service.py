@@ -23,3 +23,12 @@ def test_send_via_email_reaches_only_email_channel():
     service.send("email", n)
     assert email.sent == [n]
     assert sms.sent == []
+
+
+def test_send_via_sms_reaches_only_sms_channel():
+    email, sms = FakeChannel(), FakeChannel()
+    service = NotificationService({"email": email, "sms": sms})
+    n = Notification(to="+919876543210", body="hi")
+    service.send("sms", n)
+    assert sms.sent == [n]
+    assert email.sent == []
