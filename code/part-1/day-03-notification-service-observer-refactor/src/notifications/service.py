@@ -42,4 +42,7 @@ class NotificationService:
 
     def _notify(self, notification: Notification, result: SendResult) -> None:
         for observer in self._observers:
-            observer.on_delivery(notification, result)
+            try:
+                observer.on_delivery(notification, result)
+            except Exception:
+                pass

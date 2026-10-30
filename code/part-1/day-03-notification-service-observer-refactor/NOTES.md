@@ -16,3 +16,4 @@
 
 - Cycle O1: the first observer test made the service the subject — it keeps a list of observers (empty at start) and tells each one the same SendResult it returns.
 - Cycle O5: unsubscribe is list.remove, so an observer is found by equality (identity for plain classes) and the service still needs no knowledge of what observers do.
+- Cycle O7: observer errors are isolated in _notify, to match how channel failures are handled — one bad observer can't stop delivery or the others.
