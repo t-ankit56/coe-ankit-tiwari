@@ -1,5 +1,6 @@
+import pytest
 from fakes import FakeChannel, FakeObserver
-from notifications.models import Notification, SendResult
+from notifications.models import Notification, SendResult, UnknownChannelError
 from notifications.service import NotificationService
 
 
@@ -27,3 +28,11 @@ def test_all_observers_notified_once_per_channel(service):
     service.send_many(["email", "sms"], Notification(to="a@x.com", body="hi"))
     assert [r.channel for _, r in first.events] == ["email", "sms"]
     assert first.events == second.events
+
+
+def test_unknown_channel_notifies_nobody(service):
+    observer = FakeObserver()
+    service.subscribe(observer)
+    with pytest.raises(UnknownChannelError):
+        service.send_many(["email", "fax"], Notification(to="a@x.com", body="hi"))
+    assert observer.events == []
