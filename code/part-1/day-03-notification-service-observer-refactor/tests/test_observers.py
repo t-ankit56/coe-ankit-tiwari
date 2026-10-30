@@ -4,6 +4,11 @@ from notifications.models import Notification, SendResult, UnknownChannelError
 from notifications.service import NotificationService
 
 
+class ExplodingObserver:
+    def on_delivery(self, notification, result):
+        raise RuntimeError("boom")
+
+
 def test_observer_receives_successful_delivery(service):
     observer = FakeObserver()
     service.subscribe(observer)
@@ -49,3 +54,13 @@ def test_unsubscribed_observer_is_not_notified(service):
 def test_unsubscribing_unknown_observer_raises(service):
     with pytest.raises(ValueError):
         service.unsubscribe(FakeObserver())
+
+
+def test_failing_observer_does_not_break_delivery(service, email_channel):
+    good = FakeObserver()
+    service.subscribe(ExplodingObserver())
+    service.subscribe(good)
+    n = Notification(to="a@x.com", body="hi")
+    assert service.send("email", n).ok
+    assert email_channel.sent == [n]
+    assert len(good.events) == 1
