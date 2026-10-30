@@ -18,3 +18,12 @@ def test_observer_receives_failed_delivery():
     n = Notification(to="a@x.com", body="hi")
     service.send("email", n)
     assert observer.events == [(n, SendResult(channel="email", ok=False, error="down"))]
+
+
+def test_all_observers_notified_once_per_channel(service):
+    first, second = FakeObserver(), FakeObserver()
+    service.subscribe(first)
+    service.subscribe(second)
+    service.send_many(["email", "sms"], Notification(to="a@x.com", body="hi"))
+    assert [r.channel for _, r in first.events] == ["email", "sms"]
+    assert first.events == second.events
