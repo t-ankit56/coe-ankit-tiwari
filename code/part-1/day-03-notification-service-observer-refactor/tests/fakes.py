@@ -10,3 +10,11 @@ class FakeChannel:
         if self._fail_with:
             raise ChannelError(self._fail_with)
         self.sent.append(notification)
+
+
+class FakeObserver:
+    def __init__(self):
+        self.events = []
+
+    def on_delivery(self, notification, result):
+        self.events.append((notification, result))
