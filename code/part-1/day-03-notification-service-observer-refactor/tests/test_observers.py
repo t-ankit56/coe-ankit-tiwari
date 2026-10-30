@@ -44,3 +44,8 @@ def test_unsubscribed_observer_is_not_notified(service):
     service.unsubscribe(observer)
     service.send("email", Notification(to="a@x.com", body="hi"))
     assert observer.events == []
+
+
+def test_unsubscribing_unknown_observer_raises(service):
+    with pytest.raises(ValueError):
+        service.unsubscribe(FakeObserver())
