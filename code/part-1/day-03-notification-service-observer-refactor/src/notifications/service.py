@@ -13,6 +13,9 @@ class NotificationService:
     def subscribe(self, observer: Observer) -> None:
         self._observers.append(observer)
 
+    def unsubscribe(self, observer: Observer) -> None:
+        self._observers.remove(observer)
+
     def send(self, channel_name: str, notification: Notification) -> SendResult:
         """Send through one channel; unknown names raise UnknownChannelError."""
         return self._deliver(channel_name, self._channel_for(channel_name), notification)
