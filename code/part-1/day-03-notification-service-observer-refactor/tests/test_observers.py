@@ -36,3 +36,11 @@ def test_unknown_channel_notifies_nobody(service):
     with pytest.raises(UnknownChannelError):
         service.send_many(["email", "fax"], Notification(to="a@x.com", body="hi"))
     assert observer.events == []
+
+
+def test_unsubscribed_observer_is_not_notified(service):
+    observer = FakeObserver()
+    service.subscribe(observer)
+    service.unsubscribe(observer)
+    service.send("email", Notification(to="a@x.com", body="hi"))
+    assert observer.events == []
