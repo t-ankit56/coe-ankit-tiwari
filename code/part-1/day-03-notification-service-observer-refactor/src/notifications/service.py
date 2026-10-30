@@ -1,19 +1,23 @@
+from contextlib import suppress
+
 from notifications.channels import Channel
 from notifications.models import ChannelError, Notification, SendResult, UnknownChannelError
 from notifications.observers import Observer
 
 
 class NotificationService:
-    """Routes a notification to channels by name and reports a SendResult per channel."""
+    """Routes a notification to channels by name, reports a SendResult per channel and tells subscribed observers."""
 
     def __init__(self, channels: dict[str, Channel]) -> None:
         self._channels = channels
         self._observers: list[Observer] = []
 
     def subscribe(self, observer: Observer) -> None:
+        """Add an observer; observers are told in the order they subscribed."""
         self._observers.append(observer)
 
     def unsubscribe(self, observer: Observer) -> None:
+        """Remove an observer; raises ValueError if it was never subscribed."""
         self._observers.remove(observer)
 
     def send(self, channel_name: str, notification: Notification) -> SendResult:
@@ -41,8 +45,7 @@ class NotificationService:
         return result
 
     def _notify(self, notification: Notification, result: SendResult) -> None:
+        """Tell every observer about one delivery; an observer's error never stops the others."""
         for observer in self._observers:
-            try:
+            with suppress(Exception):
                 observer.on_delivery(notification, result)
-            except Exception:
-                pass
