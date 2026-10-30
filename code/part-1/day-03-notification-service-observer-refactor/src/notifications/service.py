@@ -1,5 +1,6 @@
 from notifications.channels import Channel
 from notifications.models import ChannelError, Notification, SendResult, UnknownChannelError
+from notifications.observers import Observer
 
 
 class NotificationService:
@@ -7,6 +8,10 @@ class NotificationService:
 
     def __init__(self, channels: dict[str, Channel]) -> None:
         self._channels = channels
+        self._observers: list[Observer] = []
+
+    def subscribe(self, observer: Observer) -> None:
+        self._observers.append(observer)
 
     def send(self, channel_name: str, notification: Notification) -> SendResult:
         """Send through one channel; unknown names raise UnknownChannelError."""
@@ -26,5 +31,12 @@ class NotificationService:
         try:
             channel.send(notification)
         except ChannelError as error:
-            return SendResult(channel_name, False, str(error))
-        return SendResult(channel_name, True)
+            result = SendResult(channel_name, False, str(error))
+        else:
+            result = SendResult(channel_name, True)
+        self._notify(notification, result)
+        return result
+
+    def _notify(self, notification: Notification, result: SendResult) -> None:
+        for observer in self._observers:
+            observer.on_delivery(notification, result)
