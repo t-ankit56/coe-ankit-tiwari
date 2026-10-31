@@ -10,7 +10,7 @@
 | Explains how the MRO resolves methods | | |
 | Uses type hints well | | |
 | Applies Strategy or Observer to a real refactor | Yes | [Exercise 1](#exercise-1-refactor-the-notification-service-to-observer) · [README](../code/part-1/day-03-notification-service-observer-refactor/README.md#observer) |
-| Writes a working context manager | | |
+| Writes a working context manager | Yes | [Exercise 2](#exercise-2-write-a-small-context-manager) · [README](../code/part-1/day-03-context-manager/README.md) |
 | Writes self-explaining code | | |
 
 ## Key learnings
@@ -95,17 +95,45 @@ $ pytest -q
 34 passed in 0.03s
 ```
 
-The final `_notify` uses `contextlib.suppress`, so one broken observer can't stop delivery or the others:
-
-```python
-def _notify(self, notification: Notification, result: SendResult) -> None:
-    """Tell every observer about one delivery; an observer's error never stops the others."""
-    for observer in self._observers:
-        with suppress(Exception):
-            observer.on_delivery(notification, result)
-```
+The final `_notify` uses `contextlib.suppress`, so one broken observer can't stop delivery or the others ([service.py](../code/part-1/day-03-notification-service-observer-refactor/src/notifications/service.py)).
 
 ### Exercise 2: Write a small context manager
+
+`working_directory(path)` is a class-based context manager: `__enter__` saves the current directory, changes into `path` and returns it, and `__exit__` always changes back, even when the block raises. I'd use a context manager whenever something must be undone after a block, whatever happens in it: files, locks, transactions, or the working directory. The stdlib has the same thing as `contextlib.chdir`; this rebuilds it to show the protocol. Code, usage and how it works are in the [README](../code/part-1/day-03-context-manager/README.md).
+
+| Cycle | What the test pinned | ZOMBIES | Kind |
+| --- | --- | --- | --- |
+| C1 | Inside the block, cwd is the target | One | Red, then green |
+| C2 | After the block, cwd is restored | One | Red, green, then refactor (`target` fixture) |
+| C3 | `as` gives the target path | One | Red, then green |
+| C4 | An error in the block restores cwd and propagates | Exceptional | Safety net |
+| C5 | A missing directory raises `FileNotFoundError`, cwd unchanged | Boundary | Safety net |
+
+C4 and C5 passed as soon as they were written. `__exit__` runs however the block ends, and a failing `os.chdir` in `__enter__` means the block and `__exit__` never run, so neither needed new code.
+
+```
+$ git log --oneline 7a56dec^..468dcc7 -- code/part-1/day-03-context-manager
+468dcc7 refactor: type hint exit parameters
+4572ea5 test: missing directory raises and cwd is unchanged
+2ba2d7f test: error in block restores cwd and propagates
+e1b8786 feat: return target path from enter
+6e39537 test: as gives the target path
+c75e282 refactor: extract target fixture in tests
+9212d81 feat: restore previous directory on exit
+3440926 test: cwd is restored after block
+1675105 feat: change into target directory on enter
+7a56dec test: inside block cwd is the target directory
+```
+
+```
+$ pytest -v
+tests/test_working_directory.py::test_inside_block_cwd_is_target PASSED  [ 20%]
+tests/test_working_directory.py::test_after_block_cwd_is_restored PASSED [ 40%]
+tests/test_working_directory.py::test_as_gives_target_path PASSED        [ 60%]
+tests/test_working_directory.py::test_error_in_block_restores_cwd_and_propagates PASSED [ 80%]
+tests/test_working_directory.py::test_missing_directory_raises_and_cwd_is_unchanged PASSED [100%]
+============================== 5 passed in 0.01s ===============================
+```
 
 ## Reflection
 
