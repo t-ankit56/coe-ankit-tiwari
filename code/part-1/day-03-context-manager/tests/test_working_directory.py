@@ -28,3 +28,11 @@ def test_after_block_cwd_is_restored(target, tmp_path):
 def test_as_gives_target_path(target):
     with working_directory(target) as path:
         assert path == target
+
+
+def test_error_in_block_restores_cwd_and_propagates(target, tmp_path):
+    with pytest.raises(RuntimeError):
+        with working_directory(target):
+            raise RuntimeError
+
+    assert Path.cwd() == tmp_path
