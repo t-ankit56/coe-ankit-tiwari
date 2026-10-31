@@ -36,3 +36,13 @@ def test_error_in_block_restores_cwd_and_propagates(target, tmp_path):
             raise RuntimeError
 
     assert Path.cwd() == tmp_path
+
+
+def test_missing_directory_raises_and_cwd_is_unchanged(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+
+    with pytest.raises(FileNotFoundError):
+        with working_directory(tmp_path / "missing"):
+            pass
+
+    assert Path.cwd() == tmp_path
