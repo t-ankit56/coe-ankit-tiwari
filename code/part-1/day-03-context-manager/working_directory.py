@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from types import TracebackType
 
 
 class working_directory:
@@ -11,5 +12,10 @@ class working_directory:
         os.chdir(self._path)
         return Path.cwd()
 
-    def __exit__(self, exc_type, exc, tb) -> None:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
+    ) -> None:
         os.chdir(self._previous)
