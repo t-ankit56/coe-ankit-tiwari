@@ -8,3 +8,4 @@
 | --- | --- | --- | --- |
 | 1 | Incubyte Culture XP & Setting Up to Build | [day-01](part-1/day-01-culture-xp-setting-up.md) | [Learn plugin to-do CLI](code/part-1/day-01-using-incubyte-learn-plugin/) · [pytest setup](code/part-1/day-01-python-pytest-setup/) |
 | 2 | TDD in Python | [day-02](part-1/day-02-tdd-in-python.md) | [Notification service](code/part-1/day-02-notification-service/) |
+| 3 | Python Craft & Object-Oriented Design | [day-03](part-1/day-03-python-craft-oop.md) | [Observer refactor](code/part-1/day-03-notification-service-observer-refactor/) · [Context manager](code/part-1/day-03-context-manager/) |
