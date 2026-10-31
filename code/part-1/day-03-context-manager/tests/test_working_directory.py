@@ -23,3 +23,8 @@ def test_after_block_cwd_is_restored(target, tmp_path):
         pass
 
     assert Path.cwd() == tmp_path
+
+
+def test_as_gives_target_path(target):
+    with working_directory(target) as path:
+        assert path == target
