@@ -56,6 +56,8 @@ def explain_each_day(start_date, end_date, holidays: Holidays, half_day=False) -
 
 
 def count_working_days(start_date, end_date, holidays: Holidays, half_day=False) -> Decimal:
+    if half_day:
+        return Decimal("0.5")
     total = Decimal("0")
     day = start_date
     while day <= end_date:
