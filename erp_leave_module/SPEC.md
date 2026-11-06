@@ -472,10 +472,11 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 | B1 | `test_submitting_leave_that_exactly_reaches_the_probation_limit_is_created` (19 Nov half day: created) |
 | E4 | `test_submitting_leave_over_the_probation_limit_is_refused` (`ProbationLimitExceeded`) |
 
-### 3.3 `test_api_leaves.py` (1 added)
+### 3.3 `test_api_leaves.py` (2 added)
 
 | Tag | Test |
 |---|---|
+| I2 | `test_preview_for_a_user_on_probation_includes_the_month_breakdown_and_a_suggestion` (added during build: the serialized `probation` shape had no test) |
 | E3 | `test_submitting_leave_over_the_probation_limit_returns_400_even_without_the_ui` |
 
 ### 3.4 Frontend (2)
@@ -487,7 +488,7 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 
 **Build:** wire `check_probation_limit` into the preview and `submit_leave`. On the Apply page add the red warning card ("This is over your probation limit"), the "Probation limit for November" breakdown, the helper text next to the disabled Submit, and the suggestion button. Optional: a small "x of 2 used this month" line on My leaves for probation users. Finish with a `refactor:` commit and the demo.
 
-**Task 3 total: 16 backend + 2 frontend = 18.**
+**Task 3 total: 17 backend + 2 frontend = 19.**
 
 ---
 
@@ -497,8 +498,8 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 |---|---|---|---|
 | Task 1 | 44 | 9 | 53 |
 | Task 2 | 20 | 4 | 24 |
-| Task 3 | 16 | 2 | 18 |
-| **All** | **80** | **15** | **95** |
+| Task 3 | 17 | 2 | 19 |
+| **All** | **81** | **15** | **96** |
 
 Parametrized tests count once. If time is short, merge the API shape tests in `test_api_leaves.py` (Z1, O1, I1) into one and drop `test_api_approvals` I1, since the service layer already covers it. That brings the total to about 75 without dropping any ZOMBIES letter.
 
