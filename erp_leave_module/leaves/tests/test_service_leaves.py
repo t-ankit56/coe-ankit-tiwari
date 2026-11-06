@@ -3,7 +3,12 @@ from decimal import Decimal
 
 import pytest
 
-from leaves.exceptions import LeaveOverlapsExistingLeave
+from leaves.exceptions import (
+    EndDateIsBeforeStartDate,
+    HalfDayNeedsASingleWorkingDay,
+    LeaveOverlapsExistingLeave,
+    NoApproverAssigned,
+)
 from leaves.models import LeaveRequest
 from leaves.tests.factories import make_leave
 from leaves.services.leave_service import list_my_leaves, preview_leave, submit_leave
@@ -75,3 +80,16 @@ def test_submitting_overlapping_leave_is_refused_and_names_the_clashing_dates(pe
     assert refusal.value.leave.id == existing.id
     assert "2026-11-18" in str(refusal.value)
     assert LeaveRequest.objects.count() == 1
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "start_date, end_date, half_day, expected_refusal",
+    [
+        (date(2026, 11, 24), date(2026, 11, 23), False, EndDateIsBeforeStartDate),
+        (date(2026, 11, 23), date(2026, 11, 24), True, HalfDayNeedsASingleWorkingDay),
+    ],
+)
+def test_submitting_invalid_dates_is_refused(people, holidays, start_date, end_date, half_day, expected_refusal):
+    with pytest.raises(expected_refusal):
+        submit_leave(people.ankit, start_date, end_date, half_day, "Trip")
