@@ -26,3 +26,7 @@ def test_a_single_weekday_counts_as_one_day():
 
 def test_monday_to_friday_counts_as_five_days():
     assert count_working_days(date(2026, 11, 23), date(2026, 11, 27), NO_HOLIDAYS) == Decimal("5")
+
+
+def test_a_weekend_inside_the_range_is_not_counted():
+    assert count_working_days(date(2026, 12, 24), date(2026, 12, 28), NO_HOLIDAYS) == Decimal("3")
