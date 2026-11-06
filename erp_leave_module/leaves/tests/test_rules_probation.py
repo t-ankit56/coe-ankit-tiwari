@@ -106,3 +106,12 @@ def test_request_spanning_two_months_is_checked_against_each_month():
     november, december = status.months
     assert (november.month, november.requested, november.over) == ("2026-11", Decimal("1"), Decimal("0.5"))
     assert (december.month, december.requested, december.over) == ("2026-12", Decimal("1"), Decimal("0"))
+
+
+def test_leave_in_other_months_is_ignored():
+    october = approved(date(2026, 10, 22), date(2026, 10, 23))
+
+    status = check(date(2026, 11, 19), date(2026, 11, 19), existing=[october], half_day=True)
+
+    assert status.ok is True
+    assert status.months[0].used == Decimal("0")
