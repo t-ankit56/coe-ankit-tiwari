@@ -16,3 +16,9 @@ def test_a_single_public_holiday_counts_as_zero_days():
     thanksgiving = date(2026, 11, 27)
 
     assert count_working_days(thanksgiving, thanksgiving, {thanksgiving: "Thanksgiving"}) == Decimal("0")
+
+
+def test_a_single_weekday_counts_as_one_day():
+    monday = date(2026, 11, 23)
+
+    assert count_working_days(monday, monday, NO_HOLIDAYS) == Decimal("1")
