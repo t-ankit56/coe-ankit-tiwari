@@ -40,3 +40,14 @@ describe("leaves table", () => {
     expect(html).not.toContain("No requests yet");
   });
 });
+
+describe("rejected request", () => {
+  it("shows the rejection comment under the dates, escaped", () => {
+    const html = renderLeavesTable([
+      makeLeave({ status: "rejected", decision_comment: "<b>x</b> Release day", approver_name: "Priya Nair" }),
+    ]);
+
+    expect(html).toContain("Priya Nair: &lt;b&gt;x&lt;/b&gt; Release day");
+    expect(html).not.toContain("<b>x</b>");
+  });
+});
