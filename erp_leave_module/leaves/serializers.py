@@ -44,6 +44,14 @@ class LeaveRequestSerializer(serializers.Serializer):
         return leave_request.approver.get_full_name()
 
 
+class WaitingApprovalSerializer(LeaveRequestSerializer):
+    requester_name = serializers.SerializerMethodField()
+    requester_email = serializers.EmailField(source="user.email")
+
+    def get_requester_name(self, leave_request) -> str:
+        return leave_request.user.get_full_name()
+
+
 class MyLeavesSummarySerializer(serializers.Serializer):
     days_taken = serializers.DecimalField(max_digits=5, decimal_places=1, coerce_to_string=False)
     pending_count = serializers.IntegerField()

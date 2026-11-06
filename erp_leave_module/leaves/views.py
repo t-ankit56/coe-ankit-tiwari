@@ -17,8 +17,9 @@ from leaves.serializers import (
     LoginInputSerializer,
     MyLeavesResponseSerializer,
     RejectionInputSerializer,
+    WaitingApprovalSerializer,
 )
-from leaves.services.approval_service import approve_leave, reject_leave
+from leaves.services.approval_service import approve_leave, list_waiting_approvals, reject_leave
 from leaves.services.leave_service import list_my_leaves, preview_leave, submit_leave
 
 
@@ -94,4 +95,4 @@ class WaitingApprovalsView(APIView):
     permission_classes = [IsApprover]
 
     def get(self, request):
-        return Response([])
+        return Response(WaitingApprovalSerializer(list_waiting_approvals(request.user), many=True).data)
