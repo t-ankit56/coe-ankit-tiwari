@@ -39,4 +39,19 @@ describe("any call", () => {
 
     expect(goTo).toHaveBeenCalledWith("/login");
   });
+
+  it("returns nothing, instead of failing to read a body, when the server answers 204", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 204,
+        json: async () => {
+          throw new SyntaxError("Unexpected end of JSON input");
+        },
+      }),
+    );
+
+    await expect(apiPost("/api/logout")).resolves.toBeUndefined();
+  });
 });
