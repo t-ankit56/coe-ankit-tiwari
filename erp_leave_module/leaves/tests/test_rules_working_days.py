@@ -1,7 +1,7 @@
 from datetime import date
 from decimal import Decimal
 
-from leaves.rules import count_working_days
+from leaves.rules import DayInRange, count_working_days, explain_each_day
 
 NO_HOLIDAYS = {}
 
@@ -64,3 +64,19 @@ def test_a_half_day_on_a_working_day_counts_as_half_a_day():
     thursday = date(2026, 11, 19)
 
     assert count_working_days(thursday, thursday, NO_HOLIDAYS, half_day=True) == Decimal("0.5")
+
+
+def test_each_day_says_whether_it_counts_and_why_not():
+    thanksgiving = {date(2026, 11, 27): "Thanksgiving"}
+
+    breakdown = explain_each_day(date(2026, 11, 21), date(2026, 11, 27), thanksgiving)
+
+    assert breakdown == [
+        DayInRange(date(2026, 11, 21), Decimal("0"), "Weekend"),
+        DayInRange(date(2026, 11, 22), Decimal("0"), "Weekend"),
+        DayInRange(date(2026, 11, 23), Decimal("1"), None),
+        DayInRange(date(2026, 11, 24), Decimal("1"), None),
+        DayInRange(date(2026, 11, 25), Decimal("1"), None),
+        DayInRange(date(2026, 11, 26), Decimal("1"), None),
+        DayInRange(date(2026, 11, 27), Decimal("0"), "Thanksgiving, not counted"),
+    ]
