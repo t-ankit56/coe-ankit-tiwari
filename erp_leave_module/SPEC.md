@@ -414,7 +414,7 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 | E2 | `test_an_approver_cannot_decide_their_own_request` | Priya on her own request (assigned to Rohan) is refused |
 | E3 | `test_only_the_assigned_approver_can_reject` | `NotTheAssignedApprover` (added during build: E1 covered approve only) |
 
-### 2.2 `test_api_approvals.py` (8)
+### 2.2 `test_api_approvals.py` (9)
 
 | Tag | Test |
 |---|---|
@@ -422,6 +422,7 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 | O1 | `test_approving_returns_200_with_the_updated_request` |
 | B1 | `test_deciding_an_already_decided_request_returns_409` |
 | I1 | `test_requester_sees_the_rejection_comment_in_my_leaves` |
+| I2 | `test_waiting_list_shows_each_request_with_who_asked` (added during build: nothing else tested the `requester_*` fields) |
 | E1 | `test_rejecting_without_a_comment_returns_400` |
 | E2 | `test_a_different_approver_deciding_returns_403` |
 | E3 | `test_a_user_who_is_not_an_approver_listing_approvals_returns_403` |
@@ -438,7 +439,7 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 
 **Build:** `approval_service.py`, the three approval views, `approvals.ts` (list, detail panel, comment box, buttons), the nav link, and rejection comments on My leaves. Finish with a `refactor:` commit and the demo.
 
-**Task 2 total: 19 backend + 4 frontend = 23.**
+**Task 2 total: 20 backend + 4 frontend = 24.**
 
 ---
 
@@ -495,9 +496,9 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 | | Backend | Frontend | Total |
 |---|---|---|---|
 | Task 1 | 44 | 9 | 53 |
-| Task 2 | 19 | 4 | 23 |
+| Task 2 | 20 | 4 | 24 |
 | Task 3 | 16 | 2 | 18 |
-| **All** | **79** | **15** | **94** |
+| **All** | **80** | **15** | **95** |
 
 Parametrized tests count once. If time is short, merge the API shape tests in `test_api_leaves.py` (Z1, O1, I1) into one and drop `test_api_approvals` I1, since the service layer already covers it. That brings the total to about 75 without dropping any ZOMBIES letter.
 
