@@ -37,3 +37,14 @@ def test_deciding_an_already_decided_request_returns_409(api_client, people, hol
 
     assert response.status_code == 409
     assert response.json() == {"error": "This request has already been decided."}
+
+
+@pytest.mark.django_db
+def test_a_different_approver_deciding_returns_403(api_client, people, holidays):
+    leave = make_leave(people.ankit, date(2026, 11, 23), date(2026, 11, 27))
+    login_as(api_client, people.rohan)
+
+    response = api_client.post(f"/api/leaves/{leave.id}/approve")
+
+    assert response.status_code == 403
+    assert response.json() == {"error": "Only the assigned approver can decide this request."}
