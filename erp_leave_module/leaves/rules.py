@@ -56,6 +56,8 @@ PROBATION_MONTHLY_LIMIT = Decimal("2")
 def explain_each_day(start_date, end_date, holidays: Holidays, half_day=False) -> list[DayInRange]:
     if end_date < start_date:
         raise EndDateIsBeforeStartDate()
+    if half_day and start_date != end_date:
+        raise HalfDayNeedsASingleWorkingDay()
     breakdown = []
     day = start_date
     while day <= end_date:
