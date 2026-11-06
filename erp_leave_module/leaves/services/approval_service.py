@@ -1,3 +1,4 @@
+from leaves.exceptions import LeaveRequestNotFound
 from leaves.models import LeaveRequest
 
 
@@ -6,7 +7,7 @@ def list_waiting_approvals(approver) -> list[LeaveRequest]:
 
 
 def approve_leave(approver, leave_id) -> LeaveRequest:
-    raise NotImplementedError
+    raise LeaveRequestNotFound()
 
 
 def reject_leave(approver, leave_id, comment) -> LeaveRequest:
