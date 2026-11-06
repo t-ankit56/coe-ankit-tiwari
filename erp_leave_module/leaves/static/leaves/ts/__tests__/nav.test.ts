@@ -21,4 +21,10 @@ describe("nav", () => {
     expect(html).toContain("My leaves");
     expect(html).not.toContain("Apply");
   });
+
+  it("shows the Apply button when the user has an approver", () => {
+    const html = renderNav(makeUser(), "/");
+
+    expect(html).toContain('href="/apply"');
+  });
 });
