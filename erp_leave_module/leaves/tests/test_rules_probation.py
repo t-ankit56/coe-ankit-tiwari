@@ -86,3 +86,14 @@ def test_one_day_request_with_one_and_a_half_days_used_is_over_by_half_a_day():
 
     assert status.ok is False
     assert status.months[0].over == Decimal("0.5")
+
+
+def test_pending_leave_counts_but_rejected_leave_does_not():
+    existing = [
+        approved(date(2026, 11, 2), date(2026, 11, 2), status="pending"),
+        approved(date(2026, 11, 3), date(2026, 11, 3), status="rejected"),
+    ]
+
+    status = check(date(2026, 11, 19), date(2026, 11, 19), existing=existing)
+
+    assert status.months[0].used == Decimal("1")
