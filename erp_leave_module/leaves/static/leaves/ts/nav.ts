@@ -16,6 +16,9 @@ export function renderNav(me: CurrentUser, currentPath: string): string {
   if (me.approver !== null) {
     links.push({ href: "/apply", label: "Apply" });
   }
+  if (me.is_approver) {
+    links.push({ href: "/approvals", label: "Approvals" });
+  }
   const items = links
     .map((link) => `<a href="${link.href}"${link.href === currentPath ? ' aria-current="page"' : ""}>${link.label}</a>`)
     .join("");
