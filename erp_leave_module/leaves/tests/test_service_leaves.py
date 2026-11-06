@@ -8,6 +8,7 @@ from leaves.exceptions import (
     HalfDayNeedsASingleWorkingDay,
     LeaveOverlapsExistingLeave,
     NoApproverAssigned,
+    ProbationLimitExceeded,
 )
 from leaves.models import LeaveRequest
 from leaves.tests.factories import make_leave
@@ -136,3 +137,15 @@ def test_submitting_leave_that_exactly_reaches_the_probation_limit_is_created(pe
     leave = submit_leave(people.aarav, date(2026, 11, 19), date(2026, 11, 19), True, "Cousin's wedding")
 
     assert LeaveRequest.objects.get(id=leave.id).days == Decimal("0.5")
+
+
+@pytest.mark.django_db
+def test_submitting_leave_over_the_probation_limit_is_refused(people, holidays):
+    give_aarav_one_and_a_half_days_used_in_november(people.aarav)
+    requests_before = LeaveRequest.objects.count()
+
+    with pytest.raises(ProbationLimitExceeded) as refusal:
+        submit_leave(people.aarav, date(2026, 11, 19), date(2026, 11, 20), False, "Cousin's wedding")
+
+    assert refusal.value.status.ok is False
+    assert LeaveRequest.objects.count() == requests_before
