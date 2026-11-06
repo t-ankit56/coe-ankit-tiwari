@@ -20,6 +20,9 @@ async function readJsonOrThrow<T>(response: Response): Promise<T> {
     navigation.goTo("/login");
     throw new ApiError(401, "Please log in.");
   }
+  if (response.status === 204) {
+    return undefined as T;
+  }
   const body = await response.json();
   if (!response.ok) {
     throw new ApiError(response.status, (body as ApiErrorBody).error);
