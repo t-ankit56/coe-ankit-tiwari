@@ -32,7 +32,10 @@ describe("leaves table", () => {
     expect(html.match(/<tr data-leave-id/g)).toHaveLength(2);
     expect(html).toContain('class="badge badge-pending"');
     expect(html).toContain('class="badge badge-approved"');
-    expect(html).toContain("23 Nov 2026");
+    expect(html).toContain("23 – 27 Nov 2026");
+    expect(html).toContain("Mon to Fri");
+    expect(html).toContain("8 – 10 Jul 2026");
+    expect(html).toContain("6 Nov");
     expect(html).toContain("Priya Nair");
     expect(html).not.toContain("No requests yet");
   });
