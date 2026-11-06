@@ -40,3 +40,9 @@ def test_leave_sharing_one_day_does_overlap():
     overlapping = find_overlapping_leave(date(2026, 11, 20), date(2026, 11, 23), [WEDNESDAY_TO_FRIDAY])
 
     assert overlapping == WEDNESDAY_TO_FRIDAY
+
+
+def test_rejected_leave_is_ignored():
+    rejected = make_record(date(2026, 11, 18), date(2026, 11, 20), status="rejected")
+
+    assert find_overlapping_leave(date(2026, 11, 19), date(2026, 11, 19), [rejected]) is None
