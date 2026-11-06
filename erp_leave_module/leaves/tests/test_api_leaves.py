@@ -55,3 +55,21 @@ def test_submitting_leave_without_logging_in_returns_401(api_client, people):
     response = api_client.post("/api/leaves", NEW_REQUEST, format="json")
 
     assert response.status_code == 401
+
+
+@pytest.mark.django_db
+def test_preview_returns_days_and_a_day_by_day_breakdown(api_client, people, holidays):
+    login_as(api_client, people.ankit)
+
+    response = api_client.get(
+        "/api/leaves/preview", {"start_date": "2026-11-23", "end_date": "2026-11-27", "half": "false"}
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert set(body.keys()) == {"days", "breakdown", "overlap", "probation"}
+    assert body["days"] == 4
+    assert len(body["breakdown"]) == 5
+    assert body["breakdown"][4] == {"date": "2026-11-27", "counts": 0, "label": "Thanksgiving, not counted"}
+    assert body["overlap"] is None
+    assert body["probation"] is None
