@@ -59,3 +59,40 @@ describe("apply page", () => {
     expect(fetchSpy.mock.calls[0][0]).toBe("/api/leaves/preview?start_date=2026-11-23&end_date=2026-11-27&half=false");
   });
 });
+
+const aarav: CurrentUser = { ...ankit, id: 2, name: "Aarav Singh", email: "aarav@incubyte.co", on_probation: true };
+
+const overTheProbationLimit: LeavePreview = {
+  days: 2,
+  breakdown: [
+    { date: "2026-11-19", counts: 1, label: null },
+    { date: "2026-11-20", counts: 1, label: null },
+  ],
+  overlap: null,
+  probation: {
+    ok: false,
+    limit: 2,
+    months: [{ month: "2026-11", used: 1.5, requested: 2, left: 0.5, over: 1.5 }],
+    suggestion: { start_date: "2026-11-19", end_date: "2026-11-19", half_day: true },
+  },
+};
+
+describe("over the probation limit", () => {
+  it("shows the warning and disables Submit", async () => {
+    answerPreviewWith(overTheProbationLimit);
+    mountApplyPage(document.getElementById("main")!, aarav);
+
+    typeInto("#reason", "Cousin's wedding");
+    typeInto("#start-date", "2026-11-19");
+    typeInto("#end-date", "2026-11-20");
+
+    await vi.waitFor(() => {
+      expect(document.getElementById("preview-panel")!.textContent).toContain("This is over your probation limit");
+    });
+    const panelText = document.getElementById("preview-panel")!.textContent!;
+    expect(panelText).toContain("1.5 of 2 days used");
+    expect(panelText).toContain("1.5 days over the limit");
+    expect(document.querySelector<HTMLButtonElement>("#submit")!.disabled).toBe(true);
+    expect(document.getElementById("apply-form")!.textContent).toContain("Change the dates to continue.");
+  });
+});
