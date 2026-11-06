@@ -30,3 +30,17 @@ def test_monday_to_friday_counts_as_five_days():
 
 def test_a_weekend_inside_the_range_is_not_counted():
     assert count_working_days(date(2026, 12, 24), date(2026, 12, 28), NO_HOLIDAYS) == Decimal("3")
+
+
+import pytest
+
+
+@pytest.mark.parametrize(
+    "start_date, end_date, holidays, expected_days",
+    [
+        (date(2026, 11, 23), date(2026, 11, 27), {date(2026, 11, 27): "Thanksgiving"}, "4"),
+        (date(2026, 12, 24), date(2026, 12, 28), {date(2026, 12, 25): "Christmas"}, "2"),
+    ],
+)
+def test_public_holidays_inside_the_range_are_not_counted(start_date, end_date, holidays, expected_days):
+    assert count_working_days(start_date, end_date, holidays) == Decimal(expected_days)
