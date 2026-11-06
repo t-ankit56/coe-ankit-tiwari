@@ -90,3 +90,14 @@ def test_a_blank_or_whitespace_only_comment_is_refused(people, holidays, blank_c
 
     leave.refresh_from_db()
     assert leave.status == "pending"
+
+
+@pytest.mark.django_db
+def test_only_the_assigned_approver_can_decide(people, holidays):
+    leave = make_leave(people.ankit, date(2026, 11, 23), date(2026, 11, 27))
+
+    with pytest.raises(NotTheAssignedApprover):
+        approve_leave(people.aarav, leave.id)
+
+    leave.refresh_from_db()
+    assert leave.status == "pending"
