@@ -91,7 +91,23 @@ def find_overlapping_leave(start_date, end_date, existing: Sequence[LeaveRecord]
 def check_probation_limit(*, on_probation: bool, start_date, end_date, half_day: bool,
                           existing: Sequence[LeaveRecord], holidays: Holidays,
                           limit: Decimal = PROBATION_MONTHLY_LIMIT) -> ProbationStatus:
-    return ProbationStatus(ok=True, limit=limit, months=[], suggestion=None)
+    if not on_probation:
+        return ProbationStatus(ok=True, limit=limit, months=[], suggestion=None)
+    requested_by_month: dict[str, Decimal] = {}
+    for day in explain_each_day(start_date, end_date, holidays, half_day):
+        month = day.date.strftime("%Y-%m")
+        requested_by_month[month] = requested_by_month.get(month, Decimal("0")) + day.counts
+    months = [
+        MonthUsage(
+            month=month,
+            used=Decimal("0"),
+            requested=requested,
+            left=max(Decimal("0"), limit - Decimal("0")),
+            over=max(Decimal("0"), Decimal("0") + requested - limit),
+        )
+        for month, requested in requested_by_month.items()
+    ]
+    return ProbationStatus(ok=all(month.over == 0 for month in months), limit=limit, months=months, suggestion=None)
 
 
 def suggest_largest_fitting_request(*, start_date, end_date, existing, holidays,
