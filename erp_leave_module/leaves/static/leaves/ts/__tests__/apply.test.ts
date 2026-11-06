@@ -96,3 +96,40 @@ describe("over the probation limit", () => {
     expect(document.getElementById("apply-form")!.textContent).toContain("Change the dates to continue.");
   });
 });
+
+describe("suggestion button", () => {
+  it("fills in the dates and half-day box and refreshes the preview", async () => {
+    const halfDayThursday: LeavePreview = {
+      days: 0.5,
+      breakdown: [{ date: "2026-11-19", counts: 0.5, label: null }],
+      overlap: null,
+      probation: {
+        ok: true,
+        limit: 2,
+        months: [{ month: "2026-11", used: 1.5, requested: 0.5, left: 0.5, over: 0 }],
+        suggestion: null,
+      },
+    };
+    const fetchSpy = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, status: 200, json: async () => overTheProbationLimit })
+      .mockResolvedValue({ ok: true, status: 200, json: async () => halfDayThursday });
+    vi.stubGlobal("fetch", fetchSpy);
+    mountApplyPage(document.getElementById("main")!, aarav);
+    typeInto("#start-date", "2026-11-19");
+    typeInto("#end-date", "2026-11-20");
+    await vi.waitFor(() => expect(document.getElementById("use-suggestion")).not.toBeNull());
+
+    document.getElementById("use-suggestion")!.click();
+
+    await vi.waitFor(() => {
+      expect(document.getElementById("preview-panel")!.textContent).toContain("Within your probation limit");
+    });
+    expect(document.querySelector<HTMLInputElement>("#start-date")!.value).toBe("2026-11-19");
+    expect(document.querySelector<HTMLInputElement>("#end-date")!.value).toBe("2026-11-19");
+    expect(document.querySelector<HTMLInputElement>("#half-day")!.checked).toBe(true);
+    expect(fetchSpy.mock.calls.at(-1)![0]).toBe(
+      "/api/leaves/preview?start_date=2026-11-19&end_date=2026-11-19&half=true",
+    );
+  });
+});
