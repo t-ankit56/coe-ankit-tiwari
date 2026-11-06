@@ -52,7 +52,17 @@ PROBATION_MONTHLY_LIMIT = Decimal("2")
 
 
 def explain_each_day(start_date, end_date, holidays: Holidays, half_day=False) -> list[DayInRange]:
-    raise NotImplementedError
+    breakdown = []
+    day = start_date
+    while day <= end_date:
+        if day in holidays:
+            breakdown.append(DayInRange(day, Decimal("0"), f"{holidays[day]}, not counted"))
+        elif day.weekday() >= 5:
+            breakdown.append(DayInRange(day, Decimal("0"), "Weekend"))
+        else:
+            breakdown.append(DayInRange(day, Decimal("1"), None))
+        day += timedelta(days=1)
+    return breakdown
 
 
 def count_working_days(start_date, end_date, holidays: Holidays, half_day=False) -> Decimal:
