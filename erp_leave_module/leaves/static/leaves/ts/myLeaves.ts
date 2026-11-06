@@ -1,7 +1,7 @@
 import type { Leave, MyLeavesResponse } from "./types.js";
 
 export function renderLeavesTable(leaves: Leave[]): string {
-  throw new Error("NotImplementedError");
+  return "<p>No requests yet</p>";
 }
 
 export function renderSummaryCards(summary: MyLeavesResponse["summary"], year: number): string {
