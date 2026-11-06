@@ -51,3 +51,11 @@ def test_first_one_day_request_of_a_month_is_within_the_limit():
     assert november == MonthUsage(
         month="2026-11", used=Decimal("0"), requested=Decimal("1"), left=Decimal("2"), over=Decimal("0")
     )
+
+
+def test_existing_leave_in_the_same_month_counts_towards_the_limit():
+    status = check(date(2026, 11, 23), date(2026, 11, 23), existing=[approved(date(2026, 11, 2), date(2026, 11, 2))])
+
+    assert status.ok is True
+    [november] = status.months
+    assert (november.used, november.requested, november.left) == (Decimal("1"), Decimal("1"), Decimal("1"))
