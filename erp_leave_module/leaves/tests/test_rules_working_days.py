@@ -3,6 +3,7 @@ from decimal import Decimal
 
 import pytest
 
+from leaves.exceptions import EndDateIsBeforeStartDate, HalfDayNeedsASingleWorkingDay
 from leaves.rules import DayInRange, count_working_days, explain_each_day
 
 NO_HOLIDAYS = {}
@@ -79,3 +80,8 @@ def test_each_day_says_whether_it_counts_and_why_not():
         DayInRange(date(2026, 11, 26), Decimal("1"), None),
         DayInRange(date(2026, 11, 27), Decimal("0"), "Thanksgiving, not counted"),
     ]
+
+
+def test_end_date_before_start_date_is_refused():
+    with pytest.raises(EndDateIsBeforeStartDate):
+        count_working_days(date(2026, 11, 24), date(2026, 11, 23), NO_HOLIDAYS)
