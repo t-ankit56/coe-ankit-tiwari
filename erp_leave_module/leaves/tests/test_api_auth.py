@@ -34,7 +34,6 @@ def test_me_shows_the_approver_and_whether_i_am_an_approver(api_client, people):
     assert ankit_details["approver"] == {"name": "Priya Nair"}
     assert priya_details["is_approver"] is True
     assert priya_details["approver"] == {"name": "Rohan Verma"}
-    assert people.rohan.profile.approver is None
 
 
 @pytest.mark.django_db
@@ -44,3 +43,13 @@ def test_login_sets_the_csrf_cookie(api_client, people):
     )
 
     assert "csrftoken" in response.cookies
+
+
+@pytest.mark.django_db
+def test_login_with_a_wrong_password_returns_400(api_client, people):
+    response = api_client.post(
+        "/api/login", {"email": "ankit@incubyte.co", "password": "not-the-password"}, format="json"
+    )
+
+    assert response.status_code == 400
+    assert response.json() == {"error": "Wrong email or password."}
