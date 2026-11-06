@@ -69,6 +69,8 @@ def explain_each_day(start_date, end_date, holidays: Holidays, half_day=False) -
             counts = Decimal("0.5") if half_day else Decimal("1")
             breakdown.append(DayInRange(day, counts, None))
         day += timedelta(days=1)
+    if half_day and breakdown[0].counts == 0:
+        raise HalfDayNeedsASingleWorkingDay()
     return breakdown
 
 
