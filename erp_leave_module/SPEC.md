@@ -537,7 +537,7 @@ Parametrized tests count once (pytest reports 92 cases for the 83 backend test f
 | Blank reason on submit? | Still checked in the serializer as format validation (the open item from planning stays open). |
 | What does `left` mean in the probation breakdown? | Days left in that month before this request (`max(0, 2 - used)`). `over` is `max(0, used + requested - 2)`. |
 | Wrong email or password? | 400 `{"error": "Wrong email or password."}`. |
-| Which statuses can the decide endpoints see? | Any request id exists; unknown id is 404 for both approve and reject, wrong approver is 403, already decided is 409, then blank comment is 400. |
+| In what order are the decide checks made? | Unknown id (404), then not the assigned approver (403), then already decided (409), then a blank comment on reject (400). Same for approve and reject. |
 | Does the Apply page offer a suggestion that spans days? | Yes if more than one day fits (button reads "Use Thu 19 – Fri 20 Nov"). A half day reads "Use 0.5 day on Thu 19 Nov". |
 
 ---
