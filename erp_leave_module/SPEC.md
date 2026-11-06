@@ -234,7 +234,8 @@ Probation    = null | {ok, limit: 2,
 | `MyLeavesResponseSerializer` | Out | `{summary, leaves}` |
 | `LeavePreviewSerializer` | Out | `{days, breakdown, overlap, probation}` |
 | `DayInRangeSerializer` | Out | one breakdown row |
-| `ProbationStatusSerializer` | Out | month-by-month status and suggestion |
+| `ProbationStatusSerializer` | Out | status, with `MonthUsageSerializer` rows and a `SuggestedRequestSerializer` suggestion |
+| `OverlapSerializer`, `MyLeavesSummarySerializer` | Out | the `overlap` and `summary` parts of their responses |
 | `WaitingApprovalSerializer` | Out | leave plus requester |
 
 ---
@@ -372,13 +373,14 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 | E1 | `test_submitting_leave_without_logging_in_returns_401` |
 | E2 | `test_overlap_invalid_dates_and_missing_approver_each_return_400` (parametrized) |
 
-### 1.7 Frontend (9)
+### 1.7 Frontend (10)
 
 | File | Test |
 |---|---|
 | `html.test.ts` | `escapeHtml › turns a <script> tag in user text into harmless text` |
 | `api.test.ts` | `post › sends the CSRF token from the cookie in the X-CSRFToken header` |
 | `api.test.ts` | `any call › redirects to the login page when the server answers 401` |
+| `api.test.ts` | `any call › returns nothing, instead of failing to read a body, when the server answers 204` (added during build: logout answers 204 with no body) |
 | `login.test.ts` | `successful login › goes to My leaves without calling /api/me again` |
 | `myLeaves.test.ts` | `leaves table › shows "No requests yet" when there are none` |
 | `myLeaves.test.ts` | `leaves table › shows one row per request with its status badge` |
@@ -386,11 +388,18 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 | `nav.test.ts` | `nav › shows the Apply button when the user has an approver` (added during build: the hide-only test cannot force Apply to ever appear) |
 | `apply.test.ts` | `apply page › shows the day count after valid dates are entered` |
 
-### 1.8 Finish
+### 1.8 Setup and tooling tests (2)
+
+| File | Test |
+|---|---|
+| `test_database_connection.py` | `test_database_connects_and_a_holiday_can_be_saved_and_read_back` (Step 0 smoke test) |
+| `test_seed_command.py` | `test_running_seed_twice_creates_the_same_users_holidays_and_requests` |
+
+### 1.9 Finish
 
 `refactor:` commit (extract date parsing and the error-response helper), run `seed`, do the demo.
 
-**Task 1 total: 44 backend + 9 frontend = 53.**
+**Task 1 total: 44 backend + 2 setup/tooling + 10 frontend = 56.**
 
 ---
 
@@ -496,12 +505,16 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 
 | | Backend | Frontend | Total |
 |---|---|---|---|
-| Task 1 | 44 | 9 | 53 |
+| Task 1 | 44 + 2 setup/tooling | 10 | 56 |
 | Task 2 | 20 | 4 | 24 |
 | Task 3 | 17 | 2 | 19 |
-| **All** | **81** | **15** | **96** |
+| **All** | **83** | **16** | **99** |
 
-Parametrized tests count once. If time is short, merge the API shape tests in `test_api_leaves.py` (Z1, O1, I1) into one and drop `test_api_approvals` I1, since the service layer already covers it. That brings the total to about 75 without dropping any ZOMBIES letter.
+Parametrized tests count once (pytest reports 92 cases for the 83 backend test functions). Nothing was trimmed: every row in the tables was built.
+
+**Rows added during the build** (each has a `docs:` commit): service I2 (preview reports overlap), nav O1 (Apply shown when an approver exists), approvals service Z3 and E3 (reject has its own not-found and assigned-approver checks), approvals API I2 (waiting list shape), leaves API I2 (serialized probation shape), and the frontend 204 row. The setup/tooling tests in 1.8 were in the build guide but not in the tables.
+
+**Skipped on purpose** (out of scope or optional): the optional "x of 2 days used this month" line on My leaves, the Contact HR button, the Decided tab, and everything listed under Out in section 1.
 
 ---
 
@@ -520,6 +533,12 @@ Parametrized tests count once. If time is short, merge the API shape tests in `t
 | User without an approver? | Cannot apply (400, button hidden). |
 | 45-day window for floating holidays? | Not applicable (Floating is out of scope). |
 | Pending request when the cap is hit later? | Not re-evaluated. It stays pending and still counts. |
+| Where does "a comment is required to reject" live? | In the approval service (`CommentRequiredToReject`). The reject input serializer accepts blank text on purpose so the rule has one home. |
+| Blank reason on submit? | Still checked in the serializer as format validation (the open item from planning stays open). |
+| What does `left` mean in the probation breakdown? | Days left in that month before this request (`max(0, 2 - used)`). `over` is `max(0, used + requested - 2)`. |
+| Wrong email or password? | 400 `{"error": "Wrong email or password."}`. |
+| Which statuses can the decide endpoints see? | Any request id exists; unknown id is 404 for both approve and reject, wrong approver is 403, already decided is 409, then blank comment is 400. |
+| Does the Apply page offer a suggestion that spans days? | Yes if more than one day fits (button reads "Use Thu 19 – Fri 20 Nov"). A half day reads "Use 0.5 day on Thu 19 Nov". |
 
 ---
 
