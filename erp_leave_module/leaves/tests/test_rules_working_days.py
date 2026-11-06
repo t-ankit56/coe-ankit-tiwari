@@ -90,3 +90,15 @@ def test_end_date_before_start_date_is_refused():
 def test_a_half_day_over_more_than_one_date_is_refused():
     with pytest.raises(HalfDayNeedsASingleWorkingDay):
         count_working_days(date(2026, 11, 23), date(2026, 11, 24), NO_HOLIDAYS, half_day=True)
+
+
+@pytest.mark.parametrize(
+    "day, holidays",
+    [
+        (date(2026, 11, 22), NO_HOLIDAYS),
+        (date(2026, 11, 27), {date(2026, 11, 27): "Thanksgiving"}),
+    ],
+)
+def test_a_half_day_on_a_weekend_or_holiday_is_refused(day, holidays):
+    with pytest.raises(HalfDayNeedsASingleWorkingDay):
+        count_working_days(day, day, holidays, half_day=True)
