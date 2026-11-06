@@ -59,3 +59,30 @@ class LeaveSubmissionInputSerializer(serializers.Serializer):
     end_date = serializers.DateField()
     half_day = serializers.BooleanField(default=False)
     reason = serializers.CharField()
+
+
+class LeavePreviewQueryInputSerializer(serializers.Serializer):
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()
+    half = serializers.BooleanField(default=False)
+
+
+class DayInRangeSerializer(serializers.Serializer):
+    date = serializers.DateField()
+    counts = serializers.DecimalField(max_digits=3, decimal_places=1, coerce_to_string=False)
+    label = serializers.CharField(allow_null=True)
+
+
+class OverlapSerializer(serializers.Serializer):
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()
+
+
+class LeavePreviewSerializer(serializers.Serializer):
+    days = serializers.DecimalField(max_digits=4, decimal_places=1, coerce_to_string=False)
+    breakdown = DayInRangeSerializer(many=True)
+    overlap = OverlapSerializer(allow_null=True)
+    probation = serializers.SerializerMethodField()
+
+    def get_probation(self, preview):
+        return None  # filled in by Task 3

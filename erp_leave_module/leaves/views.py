@@ -9,12 +9,14 @@ from rest_framework.views import APIView
 
 from leaves.serializers import (
     CurrentUserSerializer,
+    LeavePreviewQueryInputSerializer,
+    LeavePreviewSerializer,
     LeaveRequestSerializer,
     LeaveSubmissionInputSerializer,
     LoginInputSerializer,
     MyLeavesResponseSerializer,
 )
-from leaves.services.leave_service import list_my_leaves, submit_leave
+from leaves.services.leave_service import list_my_leaves, preview_leave, submit_leave
 
 
 class LoginView(APIView):
@@ -56,3 +58,16 @@ class MyLeaveRequestsView(APIView):
         submission.is_valid(raise_exception=True)
         leave = submit_leave(request.user, **submission.validated_data)
         return Response({"leave": LeaveRequestSerializer(leave).data}, status=201)
+
+
+class LeavePreviewView(APIView):
+    def get(self, request):
+        query = LeavePreviewQueryInputSerializer(data=request.query_params)
+        query.is_valid(raise_exception=True)
+        preview = preview_leave(
+            request.user,
+            query.validated_data["start_date"],
+            query.validated_data["end_date"],
+            query.validated_data["half"],
+        )
+        return Response(LeavePreviewSerializer(preview).data)
