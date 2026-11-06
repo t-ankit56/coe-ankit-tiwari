@@ -39,3 +39,16 @@ def test_my_leaves_lists_only_my_requests_newest_first(people, holidays):
     my_leaves = list_my_leaves(people.ankit, today=TODAY)
 
     assert my_leaves.leaves == [newer, older]
+
+
+@pytest.mark.django_db
+def test_summary_counts_approved_days_this_year_and_pending_requests(people, holidays):
+    make_leave(people.ankit, date(2026, 7, 8), date(2026, 7, 10), status="approved")
+    make_leave(people.ankit, date(2026, 10, 22), date(2026, 10, 23), status="approved")
+    make_leave(people.ankit, date(2026, 6, 15), date(2026, 6, 15), status="rejected")
+    make_leave(people.ankit, date(2026, 12, 24), date(2026, 12, 28))
+
+    my_leaves = list_my_leaves(people.ankit, today=TODAY)
+
+    assert my_leaves.days_taken == Decimal("5")
+    assert my_leaves.pending_count == 1
