@@ -34,3 +34,9 @@ def test_returns_only_the_clashing_leave_when_there_are_several():
 
 def test_leave_ending_the_day_before_does_not_overlap():
     assert find_overlapping_leave(date(2026, 11, 21), date(2026, 11, 23), [WEDNESDAY_TO_FRIDAY]) is None
+
+
+def test_leave_sharing_one_day_does_overlap():
+    overlapping = find_overlapping_leave(date(2026, 11, 20), date(2026, 11, 23), [WEDNESDAY_TO_FRIDAY])
+
+    assert overlapping == WEDNESDAY_TO_FRIDAY
