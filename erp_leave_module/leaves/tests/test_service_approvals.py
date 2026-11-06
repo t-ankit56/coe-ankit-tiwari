@@ -120,3 +120,9 @@ def test_only_the_assigned_approver_can_reject(people, holidays):
 
     leave.refresh_from_db()
     assert leave.status == "pending"
+
+
+@pytest.mark.django_db
+def test_rejecting_a_request_that_does_not_exist_is_refused(people):
+    with pytest.raises(LeaveRequestNotFound):
+        reject_leave(people.priya, 99999, "Not found")
