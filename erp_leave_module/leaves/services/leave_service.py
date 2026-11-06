@@ -3,7 +3,8 @@ from datetime import date
 from decimal import Decimal
 
 from leaves.models import LeaveRequest
-from leaves.rules import DayInRange, LeaveRecord, ProbationStatus
+from leaves.rules import DayInRange, LeaveRecord, ProbationStatus, explain_each_day
+from leaves.services._records import load_holidays
 
 
 @dataclass
@@ -26,7 +27,17 @@ def preview_leave(user, start_date, end_date, half_day=False) -> LeavePreview:
 
 
 def submit_leave(user, start_date, end_date, half_day, reason) -> LeaveRequest:
-    raise NotImplementedError
+    breakdown = explain_each_day(start_date, end_date, load_holidays(), half_day)
+    return LeaveRequest.objects.create(
+        user=user,
+        approver=user.profile.approver,
+        start_date=start_date,
+        end_date=end_date,
+        half_day=half_day,
+        days=sum((day.counts for day in breakdown), Decimal("0")),
+        reason=reason,
+        status=LeaveRequest.Status.PENDING,
+    )
 
 
 def list_my_leaves(user, today: date | None = None) -> MyLeaves:
