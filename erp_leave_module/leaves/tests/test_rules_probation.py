@@ -69,3 +69,13 @@ def test_two_day_request_with_one_and_a_half_days_used_is_over_by_one_and_a_half
     assert (november.used, november.requested, november.left, november.over) == (
         Decimal("1.5"), Decimal("2"), Decimal("0.5"), Decimal("1.5")
     )
+
+
+def test_request_that_exactly_reaches_the_limit_is_allowed():
+    status = check(date(2026, 11, 19), date(2026, 11, 19), existing=AARAV_USED, half_day=True)
+
+    assert status.ok is True
+    [november] = status.months
+    assert november.over == Decimal("0")
+    assert november.left == Decimal("0.5")
+    assert november.used + november.requested == status.limit
