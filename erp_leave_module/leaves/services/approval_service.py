@@ -26,6 +26,8 @@ def approve_leave(approver, leave_id) -> LeaveRequest:
 
 def reject_leave(approver, leave_id, comment) -> LeaveRequest:
     leave = LeaveRequest.objects.get(id=leave_id)
+    if leave.approver_id != approver.id:
+        raise NotTheAssignedApprover()
     if leave.status != LeaveRequest.Status.PENDING:
         raise LeaveAlreadyDecided()
     if not comment.strip():
