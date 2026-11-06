@@ -35,3 +35,12 @@ def test_me_shows_the_approver_and_whether_i_am_an_approver(api_client, people):
     assert priya_details["is_approver"] is True
     assert priya_details["approver"] == {"name": "Rohan Verma"}
     assert people.rohan.profile.approver is None
+
+
+@pytest.mark.django_db
+def test_login_sets_the_csrf_cookie(api_client, people):
+    response = api_client.post(
+        "/api/login", {"email": "ankit@incubyte.co", "password": DEV_PASSWORD}, format="json"
+    )
+
+    assert "csrftoken" in response.cookies
