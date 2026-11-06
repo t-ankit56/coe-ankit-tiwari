@@ -4,6 +4,7 @@ from decimal import Decimal
 import pytest
 
 from leaves.models import LeaveRequest
+from leaves.tests.factories import make_leave
 from leaves.services.leave_service import list_my_leaves, preview_leave, submit_leave
 
 TODAY = date(2026, 11, 6)
@@ -27,3 +28,14 @@ def test_submitting_leave_creates_a_pending_request_with_the_profile_approver_an
     assert saved.approver == people.priya
     assert saved.days == Decimal("4.0")
     assert saved.reason == "Family trip"
+
+
+@pytest.mark.django_db
+def test_my_leaves_lists_only_my_requests_newest_first(people, holidays):
+    older = make_leave(people.ankit, date(2026, 7, 8), date(2026, 7, 10), status="approved")
+    make_leave(people.aarav, date(2026, 11, 2), date(2026, 11, 2), status="approved")
+    newer = make_leave(people.ankit, date(2026, 12, 24), date(2026, 12, 28))
+
+    my_leaves = list_my_leaves(people.ankit, today=TODAY)
+
+    assert my_leaves.leaves == [newer, older]
