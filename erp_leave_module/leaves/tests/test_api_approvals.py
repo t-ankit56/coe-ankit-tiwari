@@ -72,3 +72,12 @@ def test_requester_sees_the_rejection_comment_in_my_leaves(api_client, people, h
 
     assert my_leaves[0]["status"] == "rejected"
     assert my_leaves[0]["decision_comment"] == "Release day"
+
+
+@pytest.mark.django_db
+def test_a_user_who_is_not_an_approver_listing_approvals_returns_403(api_client, people):
+    login_as(api_client, people.ankit)
+
+    response = api_client.get("/api/approvals")
+
+    assert response.status_code == 403
