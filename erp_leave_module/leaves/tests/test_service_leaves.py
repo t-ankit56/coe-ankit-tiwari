@@ -11,6 +11,7 @@ from leaves.exceptions import (
 )
 from leaves.models import LeaveRequest
 from leaves.tests.factories import make_leave
+from leaves.rules import SuggestedRequest
 from leaves.services.leave_service import list_my_leaves, preview_leave, submit_leave
 
 TODAY = date(2026, 11, 6)
@@ -110,3 +111,19 @@ def test_preview_reports_the_clashing_leave_instead_of_refusing(people, holidays
     preview = preview_leave(people.ankit, date(2026, 11, 20), date(2026, 11, 23))
 
     assert preview.overlap.id == existing.id
+
+
+def give_aarav_one_and_a_half_days_used_in_november(aarav):
+    make_leave(aarav, date(2026, 11, 2), date(2026, 11, 2), status="approved")
+    make_leave(aarav, date(2026, 11, 3), date(2026, 11, 3), status="approved", half_day=True)
+
+
+@pytest.mark.django_db
+def test_preview_shows_probation_status_and_suggestion_for_user_on_probation(people, holidays):
+    give_aarav_one_and_a_half_days_used_in_november(people.aarav)
+
+    preview = preview_leave(people.aarav, date(2026, 11, 19), date(2026, 11, 20))
+
+    assert preview.probation.ok is False
+    assert preview.probation.months[0].over == Decimal("1.5")
+    assert preview.probation.suggestion == SuggestedRequest(date(2026, 11, 19), date(2026, 11, 19), half_day=True)
