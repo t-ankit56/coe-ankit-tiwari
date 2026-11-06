@@ -1,26 +1,16 @@
 import { apiGet } from "./api.js";
+import { describeWeekdays, formatDateRange, formatShortDate } from "./dates.js";
 import { escapeHtml } from "./html.js";
 import { drawNav } from "./nav.js";
 import type { Leave, MyLeavesResponse } from "./types.js";
 
-const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-function formatDate(isoDate: string): string {
-  const [year, month, day] = isoDate.slice(0, 10).split("-").map(Number);
-  return `${day} ${MONTH_NAMES[month - 1]} ${year}`;
-}
-
 function renderLeaveRow(leave: Leave): string {
-  const dates =
-    leave.start_date === leave.end_date
-      ? formatDate(leave.start_date)
-      : `${formatDate(leave.start_date)} to ${formatDate(leave.end_date)}`;
   return `<tr data-leave-id="${leave.id}">
-    <td>${dates}</td>
+    <td><strong>${formatDateRange(leave.start_date, leave.end_date)}</strong><span class="note">${describeWeekdays(leave.start_date, leave.end_date)}</span></td>
     <td>${leave.days}</td>
     <td><span class="badge badge-${leave.status}">${leave.status}</span></td>
     <td>${escapeHtml(leave.approver_name)}</td>
-    <td>${formatDate(leave.submitted_at)}</td>
+    <td class="muted">${formatShortDate(leave.submitted_at)}</td>
   </tr>`;
 }
 
