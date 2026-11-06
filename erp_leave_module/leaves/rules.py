@@ -5,6 +5,8 @@ from datetime import date, timedelta
 from decimal import Decimal
 from typing import Mapping, Sequence
 
+from leaves.exceptions import EndDateIsBeforeStartDate, HalfDayNeedsASingleWorkingDay
+
 Holidays = Mapping[date, str]  # date -> holiday name
 
 
@@ -52,6 +54,8 @@ PROBATION_MONTHLY_LIMIT = Decimal("2")
 
 
 def explain_each_day(start_date, end_date, holidays: Holidays, half_day=False) -> list[DayInRange]:
+    if end_date < start_date:
+        raise EndDateIsBeforeStartDate()
     breakdown = []
     day = start_date
     while day <= end_date:
