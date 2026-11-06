@@ -11,6 +11,7 @@ from leaves.rules import (
     DayInRange,
     LeaveRecord,
     ProbationStatus,
+    check_probation_limit,
     explain_each_day,
     find_overlapping_leave,
 )
@@ -36,16 +37,34 @@ def _sum_counted_days(breakdown: list[DayInRange]) -> Decimal:
     return sum((day.counts for day in breakdown), Decimal("0"))
 
 
+def _existing_leave_records(user) -> list[LeaveRecord]:
+    return [to_leave_record(leave) for leave in LeaveRequest.objects.filter(user=user)]
+
+
 def _find_clashing_leave(user, start_date, end_date) -> LeaveRecord | None:
-    existing = [to_leave_record(leave) for leave in LeaveRequest.objects.filter(user=user)]
-    return find_overlapping_leave(start_date, end_date, existing)
+    return find_overlapping_leave(start_date, end_date, _existing_leave_records(user))
+
+
+def _check_probation(user, start_date, end_date, half_day) -> ProbationStatus | None:
+    """None for users who are not on probation."""
+    if not user.profile.on_probation:
+        return None
+    return check_probation_limit(
+        on_probation=True,
+        start_date=start_date,
+        end_date=end_date,
+        half_day=half_day,
+        existing=_existing_leave_records(user),
+        holidays=load_holidays(),
+    )
 
 
 def preview_leave(user, start_date, end_date, half_day=False) -> LeavePreview:
     breakdown = explain_each_day(start_date, end_date, load_holidays(), half_day)
     overlap = _find_clashing_leave(user, start_date, end_date)
     return LeavePreview(
-        days=_sum_counted_days(breakdown), breakdown=breakdown, overlap=overlap, probation=None
+        days=_sum_counted_days(breakdown), breakdown=breakdown, overlap=overlap,
+        probation=_check_probation(user, start_date, end_date, half_day),
     )
 
 
