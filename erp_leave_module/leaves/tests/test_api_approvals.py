@@ -59,3 +59,16 @@ def test_rejecting_without_a_comment_returns_400(api_client, people, holidays):
 
     assert response.status_code == 400
     assert response.json() == {"error": "A comment is required to reject."}
+
+
+@pytest.mark.django_db
+def test_requester_sees_the_rejection_comment_in_my_leaves(api_client, people, holidays):
+    leave = make_leave(people.ankit, date(2026, 11, 23), date(2026, 11, 27))
+    login_as(api_client, people.priya)
+    api_client.post(f"/api/leaves/{leave.id}/reject", {"comment": "Release day"}, format="json")
+
+    login_as(api_client, people.ankit)
+    my_leaves = api_client.get("/api/leaves").json()["leaves"]
+
+    assert my_leaves[0]["status"] == "rejected"
+    assert my_leaves[0]["decision_comment"] == "Release day"
