@@ -29,3 +29,14 @@ describe("post", () => {
     expect(options.body).toBe(JSON.stringify({ reason: "Trip" }));
   });
 });
+
+describe("any call", () => {
+  it("redirects to the login page when the server answers 401", async () => {
+    answerWith(401, { error: "Authentication credentials were not provided." });
+    const goTo = vi.spyOn(navigation, "goTo").mockImplementation(() => {});
+
+    await expect(apiGet("/api/me")).rejects.toBeInstanceOf(ApiError);
+
+    expect(goTo).toHaveBeenCalledWith("/login");
+  });
+});
