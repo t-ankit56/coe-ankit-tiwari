@@ -93,3 +93,11 @@ def test_submitting_overlapping_leave_is_refused_and_names_the_clashing_dates(pe
 def test_submitting_invalid_dates_is_refused(people, holidays, start_date, end_date, half_day, expected_refusal):
     with pytest.raises(expected_refusal):
         submit_leave(people.ankit, start_date, end_date, half_day, "Trip")
+
+
+@pytest.mark.django_db
+def test_submitting_without_an_approver_is_refused(people, holidays):
+    with pytest.raises(NoApproverAssigned):
+        submit_leave(people.rohan, date(2026, 11, 23), date(2026, 11, 27), False, "Trip")
+
+    assert LeaveRequest.objects.count() == 0
