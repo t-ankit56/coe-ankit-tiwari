@@ -1,3 +1,5 @@
+import type { ApiErrorBody } from "./types.js";
+
 export const navigation = {
   goTo(url: string): void {
     window.location.assign(url);
@@ -13,8 +15,20 @@ export class ApiError extends Error {
   }
 }
 
+async function readJsonOrThrow<T>(response: Response): Promise<T> {
+  if (response.status === 401) {
+    navigation.goTo("/login");
+    throw new ApiError(401, "Please log in.");
+  }
+  const body = await response.json();
+  if (!response.ok) {
+    throw new ApiError(response.status, (body as ApiErrorBody).error);
+  }
+  return body as T;
+}
+
 export async function apiGet<T>(path: string): Promise<T> {
-  throw new Error("NotImplementedError");
+  return readJsonOrThrow<T>(await fetch(path));
 }
 
 function readCookie(name: string): string {
@@ -28,5 +42,5 @@ export async function apiPost<T>(path: string, body?: unknown): Promise<T> {
     headers: { "Content-Type": "application/json", "X-CSRFToken": readCookie("csrftoken") },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
-  return (await response.json()) as T;
+  return readJsonOrThrow<T>(response);
 }
