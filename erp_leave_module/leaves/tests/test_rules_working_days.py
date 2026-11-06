@@ -52,3 +52,9 @@ def test_range_starting_and_ending_on_a_weekend_counts_only_the_weekdays():
 
 def test_range_crossing_a_month_end_is_counted_across_both_months():
     assert count_working_days(date(2026, 11, 30), date(2026, 12, 1), NO_HOLIDAYS) == Decimal("2")
+
+
+def test_range_crossing_a_year_end_is_counted_across_both_years():
+    new_year = {date(2027, 1, 1): "New Year"}
+
+    assert count_working_days(date(2026, 12, 31), date(2027, 1, 1), new_year) == Decimal("1")
