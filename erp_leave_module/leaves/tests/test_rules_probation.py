@@ -97,3 +97,12 @@ def test_pending_leave_counts_but_rejected_leave_does_not():
     status = check(date(2026, 11, 19), date(2026, 11, 19), existing=existing)
 
     assert status.months[0].used == Decimal("1")
+
+
+def test_request_spanning_two_months_is_checked_against_each_month():
+    status = check(date(2026, 11, 30), date(2026, 12, 1), existing=AARAV_USED)
+
+    assert status.ok is False
+    november, december = status.months
+    assert (november.month, november.requested, november.over) == ("2026-11", Decimal("1"), Decimal("0.5"))
+    assert (december.month, december.requested, december.over) == ("2026-12", Decimal("1"), Decimal("0"))
