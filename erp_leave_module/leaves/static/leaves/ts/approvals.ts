@@ -1,4 +1,4 @@
-import { apiGet } from "./api.js";
+import { apiGet, apiPost } from "./api.js";
 import { formatDateRange, formatShortDate } from "./dates.js";
 import { escapeHtml } from "./html.js";
 import { drawNav } from "./nav.js";
@@ -49,7 +49,7 @@ export function renderDecisionPanel(item: WaitingApproval): string {
 }
 
 export async function mountApprovalsPage(main: HTMLElement): Promise<void> {
-  const items = await apiGet<WaitingApproval[]>("/api/approvals");
+  let items = await apiGet<WaitingApproval[]>("/api/approvals");
   let selectedId: number | null = items.length > 0 ? items[0].id : null;
 
   main.innerHTML = `<div class="page">
@@ -72,6 +72,21 @@ export async function mountApprovalsPage(main: HTMLElement): Promise<void> {
     comment?.addEventListener("input", () => {
       reject!.disabled = comment.value.trim() === "";
     });
+    panel.querySelector("#approve")?.addEventListener("click", () => void decide("approve"));
+    reject?.addEventListener("click", () => void decide("reject", { comment: comment!.value }));
+  }
+
+  async function decide(action: "approve" | "reject", body?: unknown): Promise<void> {
+    try {
+      await apiPost(`/api/leaves/${selectedId}/${action}`, body);
+    } catch (error) {
+      const message = panel.querySelector("#decision-message");
+      if (message) message.textContent = error instanceof Error ? error.message : "Could not save the decision.";
+      return;
+    }
+    items = await apiGet<WaitingApproval[]>("/api/approvals");
+    selectedId = items.length > 0 ? items[0].id : null;
+    render();
   }
 
   list.addEventListener("click", (event) => {
