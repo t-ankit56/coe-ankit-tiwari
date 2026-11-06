@@ -5,7 +5,8 @@ from leaves.models import LeaveRequest
 
 
 def list_waiting_approvals(approver) -> list[LeaveRequest]:
-    return []
+    waiting = LeaveRequest.objects.filter(approver=approver, status=LeaveRequest.Status.PENDING)
+    return list(waiting.order_by("start_date", "id"))
 
 
 def approve_leave(approver, leave_id) -> LeaveRequest:
