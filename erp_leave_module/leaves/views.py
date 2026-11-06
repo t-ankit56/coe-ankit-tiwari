@@ -7,8 +7,14 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from leaves.serializers import CurrentUserSerializer, LoginInputSerializer, MyLeavesResponseSerializer
-from leaves.services.leave_service import list_my_leaves
+from leaves.serializers import (
+    CurrentUserSerializer,
+    LeaveRequestSerializer,
+    LeaveSubmissionInputSerializer,
+    LoginInputSerializer,
+    MyLeavesResponseSerializer,
+)
+from leaves.services.leave_service import list_my_leaves, submit_leave
 
 
 class LoginView(APIView):
@@ -44,3 +50,9 @@ class CurrentUserView(APIView):
 class MyLeaveRequestsView(APIView):
     def get(self, request):
         return Response(MyLeavesResponseSerializer(list_my_leaves(request.user)).data)
+
+    def post(self, request):
+        submission = LeaveSubmissionInputSerializer(data=request.data)
+        submission.is_valid(raise_exception=True)
+        leave = submit_leave(request.user, **submission.validated_data)
+        return Response({"leave": LeaveRequestSerializer(leave).data}, status=201)

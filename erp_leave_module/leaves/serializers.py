@@ -52,3 +52,10 @@ class MyLeavesSummarySerializer(serializers.Serializer):
 class MyLeavesResponseSerializer(serializers.Serializer):
     summary = MyLeavesSummarySerializer(source="*")
     leaves = LeaveRequestSerializer(many=True)
+
+
+class LeaveSubmissionInputSerializer(serializers.Serializer):
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()
+    half_day = serializers.BooleanField(default=False)
+    reason = serializers.CharField()
