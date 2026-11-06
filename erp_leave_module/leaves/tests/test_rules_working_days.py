@@ -1,6 +1,8 @@
 from datetime import date
 from decimal import Decimal
 
+import pytest
+
 from leaves.rules import DayInRange, count_working_days, explain_each_day
 
 NO_HOLIDAYS = {}
@@ -30,9 +32,6 @@ def test_monday_to_friday_counts_as_five_days():
 
 def test_a_weekend_inside_the_range_is_not_counted():
     assert count_working_days(date(2026, 12, 24), date(2026, 12, 28), NO_HOLIDAYS) == Decimal("3")
-
-
-import pytest
 
 
 @pytest.mark.parametrize(
