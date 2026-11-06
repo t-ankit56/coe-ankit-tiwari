@@ -53,3 +53,13 @@ def test_login_with_a_wrong_password_returns_400(api_client, people):
 
     assert response.status_code == 400
     assert response.json() == {"error": "Wrong email or password."}
+
+
+@pytest.mark.django_db
+def test_after_logout_me_returns_401(api_client, people):
+    login_as(api_client, people.ankit)
+
+    logout_response = api_client.post("/api/logout")
+
+    assert logout_response.status_code == 204
+    assert api_client.get("/api/me").status_code == 401
