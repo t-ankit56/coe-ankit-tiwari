@@ -2,6 +2,8 @@
 
 Django REST Framework backend, plain TypeScript frontend, PostgreSQL, built test-first in three sprint tasks.
 
+**Status: all three tasks are built.** Tables in sections 12 to 14 match the tests in code. Section 15 has the final counts and the rows added or skipped during the build, and section 16 has the decisions. How it was built with Claude is in `AI_WORKFLOW.md` and `AI_LOG.md`.
+
 ---
 
 ## 1. Scope
@@ -546,7 +548,7 @@ Parametrized tests count once (pytest reports 92 cases for the 83 backend test f
 
 1. **Test-first history.** Every cycle is its own commit: `red:`, `green:` or `refactor:`, with the ZOMBIES tag. Commit the failing test (with the failing output visible) before the implementation. Do not squash. Let Claude Code do this one test at a time: write the test, run it and show the failure, commit `red:`, implement, run, commit `green:`.
 2. **Keep this spec current.** The ZOMBIES tables in sections 12 to 14 are the spec for each unit. If a decision changes during the build, update the table and commit it as `docs:`. Mark any rows you skipped and why. How the spec was written: screens, then rules list, then ZOMBIES examples, then tests.
-3. **AI_LOG.md.** Keep it as you go, one line per suggestion: what Claude proposed, whether you accepted or rejected it, and why. Write it in your own words. Rejections with reasons matter most. Examples from planning:
+3. **AI_LOG.md.** (Drafted from the sessions and then edited by the owner.) Keep it as you go, one line per suggestion: what Claude proposed, whether you accepted or rejected it, and why. Write it in your own words. Rejections with reasons matter most. Examples from planning:
    - Slack and email integration: rejected, out of scope.
    - Django templates for the pages: replaced by static HTML shells.
    - React: rejected, you wanted plain TypeScript.
