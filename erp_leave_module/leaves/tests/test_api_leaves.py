@@ -48,3 +48,10 @@ def test_a_whitespace_only_reason_returns_400(api_client, people, holidays):
 
     assert response.status_code == 400
     assert "reason" in response.json()["error"]
+
+
+@pytest.mark.django_db
+def test_submitting_leave_without_logging_in_returns_401(api_client, people):
+    response = api_client.post("/api/leaves", NEW_REQUEST, format="json")
+
+    assert response.status_code == 401
