@@ -101,3 +101,11 @@ def test_only_the_assigned_approver_can_decide(people, holidays):
 
     leave.refresh_from_db()
     assert leave.status == "pending"
+
+
+@pytest.mark.django_db
+def test_an_approver_cannot_decide_their_own_request(people, holidays):
+    own_request = make_leave(people.priya, date(2026, 11, 23), date(2026, 11, 27))  # assigned to Rohan
+
+    with pytest.raises(NotTheAssignedApprover):
+        approve_leave(people.priya, own_request.id)
