@@ -40,3 +40,16 @@ def test_rejecting_with_a_comment_moves_it_to_rejected_and_stores_the_comment(pe
     assert leave.status == "rejected"
     assert leave.decision_comment == "Release day"
     assert leave.decided_at is not None
+
+
+@pytest.mark.django_db
+def test_waiting_list_shows_only_my_pending_requests_sorted_by_start_date(people, holidays):
+    december_24 = make_leave(people.ankit, date(2026, 12, 24), date(2026, 12, 28))
+    november_23 = make_leave(people.aarav, date(2026, 11, 23), date(2026, 11, 23))
+    december_7 = make_leave(people.ankit, date(2026, 12, 7), date(2026, 12, 8))
+    make_leave(people.ankit, date(2026, 7, 8), date(2026, 7, 10), status="approved")
+    make_leave(people.priya, date(2026, 11, 30), date(2026, 11, 30))  # assigned to Rohan
+
+    waiting = list_waiting_approvals(people.priya)
+
+    assert waiting == [november_23, december_7, december_24]
