@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.middleware.csrf import get_token
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -26,6 +26,12 @@ class LoginView(APIView):
         login(request._request, user)
         get_token(request._request)
         return Response(CurrentUserSerializer(user).data)
+
+
+class LogoutView(APIView):
+    def post(self, request):
+        logout(request._request)
+        return Response(status=204)
 
 
 @method_decorator(ensure_csrf_cookie, name="dispatch")
