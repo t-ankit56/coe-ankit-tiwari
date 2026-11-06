@@ -48,3 +48,14 @@ def test_a_different_approver_deciding_returns_403(api_client, people, holidays)
 
     assert response.status_code == 403
     assert response.json() == {"error": "Only the assigned approver can decide this request."}
+
+
+@pytest.mark.django_db
+def test_rejecting_without_a_comment_returns_400(api_client, people, holidays):
+    leave = make_leave(people.ankit, date(2026, 11, 23), date(2026, 11, 27))
+    login_as(api_client, people.priya)
+
+    response = api_client.post(f"/api/leaves/{leave.id}/reject", {"comment": "   "}, format="json")
+
+    assert response.status_code == 400
+    assert response.json() == {"error": "A comment is required to reject."}
