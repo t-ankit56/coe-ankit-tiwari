@@ -115,3 +115,10 @@ def test_leave_in_other_months_is_ignored():
 
     assert status.ok is True
     assert status.months[0].used == Decimal("0")
+
+
+def test_result_reports_used_requested_left_and_over_for_each_month():
+    status = check(date(2026, 11, 19), date(2026, 11, 20), existing=AARAV_USED)
+
+    assert set(asdict(status.months[0]).keys()) == {"month", "used", "requested", "left", "over"}
+    assert status.limit == Decimal("2")
