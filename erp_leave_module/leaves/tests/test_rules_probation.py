@@ -128,3 +128,12 @@ def test_suggestion_is_the_largest_request_that_fits_the_days_left():
     status = check(date(2026, 11, 19), date(2026, 11, 20), existing=AARAV_USED)
 
     assert status.suggestion == SuggestedRequest(date(2026, 11, 19), date(2026, 11, 19), half_day=True)
+
+
+def test_no_suggestion_when_no_days_are_left():
+    used_up = [approved(date(2026, 11, 2), date(2026, 11, 3))]  # 2.0 days used in November
+
+    status = check(date(2026, 11, 19), date(2026, 11, 19), existing=used_up)
+
+    assert status.ok is False
+    assert status.suggestion is None
