@@ -22,3 +22,7 @@ def test_a_single_weekday_counts_as_one_day():
     monday = date(2026, 11, 23)
 
     assert count_working_days(monday, monday, NO_HOLIDAYS) == Decimal("1")
+
+
+def test_monday_to_friday_counts_as_five_days():
+    assert count_working_days(date(2026, 11, 23), date(2026, 11, 27), NO_HOLIDAYS) == Decimal("5")
