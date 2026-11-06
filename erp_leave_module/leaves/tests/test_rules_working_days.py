@@ -85,3 +85,8 @@ def test_each_day_says_whether_it_counts_and_why_not():
 def test_end_date_before_start_date_is_refused():
     with pytest.raises(EndDateIsBeforeStartDate):
         count_working_days(date(2026, 11, 24), date(2026, 11, 23), NO_HOLIDAYS)
+
+
+def test_a_half_day_over_more_than_one_date_is_refused():
+    with pytest.raises(HalfDayNeedsASingleWorkingDay):
+        count_working_days(date(2026, 11, 23), date(2026, 11, 24), NO_HOLIDAYS, half_day=True)
