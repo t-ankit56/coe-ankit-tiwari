@@ -99,6 +99,8 @@ def check_probation_limit(*, on_probation: bool, start_date, end_date, half_day:
         requested_by_month[month] = requested_by_month.get(month, Decimal("0")) + day.counts
     used_by_month: dict[str, Decimal] = {}
     for record in existing:
+        if record.status == "rejected":
+            continue
         for day in explain_each_day(record.start_date, record.end_date, holidays, record.half_day):
             month = day.date.strftime("%Y-%m")
             used_by_month[month] = used_by_month.get(month, Decimal("0")) + day.counts
