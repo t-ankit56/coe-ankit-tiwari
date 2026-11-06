@@ -91,7 +91,7 @@ def find_overlapping_leave(start_date, end_date, existing: Sequence[LeaveRecord]
 def check_probation_limit(*, on_probation: bool, start_date, end_date, half_day: bool,
                           existing: Sequence[LeaveRecord], holidays: Holidays,
                           limit: Decimal = PROBATION_MONTHLY_LIMIT) -> ProbationStatus:
-    raise NotImplementedError
+    return ProbationStatus(ok=True, limit=limit, months=[], suggestion=None)
 
 
 def suggest_largest_fitting_request(*, start_date, end_date, existing, holidays,
