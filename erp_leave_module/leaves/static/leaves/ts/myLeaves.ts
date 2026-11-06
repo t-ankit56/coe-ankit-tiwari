@@ -16,24 +16,45 @@ function renderLeaveRow(leave: Leave): string {
 
 export function renderLeavesTable(leaves: Leave[]): string {
   if (leaves.length === 0) {
-    return "<p>No requests yet</p>";
+    return '<p class="empty">No requests yet</p>';
   }
   const rows = leaves.map(renderLeaveRow).join("");
-  return `<table><thead><tr><th>Dates</th><th>Days</th><th>Status</th><th>Approver</th><th>Submitted</th></tr></thead><tbody>${rows}</tbody></table>`;
+  return `<table class="requests"><thead><tr><th>Dates</th><th>Days</th><th>Status</th><th>Approver</th><th>Submitted</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
-export function renderSummaryCards(summary: MyLeavesResponse["summary"], year: number): string {
-  return `<div class="cards">
-    <div class="card"><span class="card-number">${summary.days_taken}</span> Personal days taken in ${year}</div>
-    <div class="card"><span class="card-number">${summary.pending_count}</span> Requests waiting for approval</div>
-  </div>`;
+export function renderSummaryCards(
+  summary: MyLeavesResponse["summary"],
+  year: number,
+  onProbation = false,
+): string {
+  const limitNote = onProbation ? "2 days a month while on probation" : "no yearly limit";
+  const waitingNote = summary.pending_count > 0 ? "awaiting a decision" : "nothing waiting";
+  return `<section class="summary" aria-label="Summary">
+    <div class="summary-cell"><span class="muted">Personal leave in ${year}</span>
+      <span class="summary-number">${summary.days_taken} <span class="summary-unit">days taken</span></span>
+      <span class="muted">${limitNote}</span></div>
+    <div class="summary-cell"><span class="muted">Waiting for approval</span>
+      <span class="summary-number">${summary.pending_count} <span class="summary-unit">${summary.pending_count === 1 ? "request" : "requests"}</span></span>
+      <span class="muted">${waitingNote}</span></div>
+  </section>`;
 }
 
 export async function initMyLeaves(): Promise<void> {
-  await drawNav("/");
+  const me = await drawNav("/");
   const response = await apiGet<MyLeavesResponse>("/api/leaves");
-  const main = document.getElementById("main")!;
-  main.innerHTML = `<h1>My leaves</h1>${renderSummaryCards(response.summary, new Date().getFullYear())}${renderLeavesTable(response.leaves)}`;
+  const applyButton = me.approver !== null ? '<a class="btn btn-primary" href="/apply">+ Apply for leave</a>' : "";
+  document.getElementById("main")!.innerHTML = `<div class="page">
+    <header class="page-header">
+      <div><span class="breadcrumb">Leave / My leaves</span><h1>My leaves</h1></div>
+      ${applyButton}
+    </header>
+    ${renderSummaryCards(response.summary, new Date().getFullYear(), me.on_probation)}
+    <section class="card table-card" aria-labelledby="requests-title">
+      <h2 id="requests-title" class="card-title">All my requests</h2>
+      ${renderLeavesTable(response.leaves)}
+      <p class="table-footer muted">Showing ${response.leaves.length} of ${response.leaves.length} requests</p>
+    </section>
+  </div>`;
 }
 
 if (typeof document !== "undefined" && document.body?.dataset.page === "myLeaves") void initMyLeaves();

@@ -9,13 +9,16 @@ export async function submitLogin(email: string, password: string): Promise<Curr
 
 export function initLogin(): void {
   const main = document.getElementById("main")!;
-  main.innerHTML = `<h1>Log in</h1>
-    <form id="login-form">
-      <label>Email <input id="email" type="email" required></label>
-      <label>Password <input id="password" type="password" required></label>
-      <button type="submit">Log in</button>
-      <p id="message" class="error"></p>
-    </form>`;
+  main.innerHTML = `<div class="login-card card">
+      <img src="/static/leaves/img/incubyte-logo.png" alt="Incubyte" class="login-logo">
+      <h1>Log in</h1>
+      <form id="login-form">
+        <div class="field"><label class="label" for="email">Email</label><input id="email" type="email" required></div>
+        <div class="field"><label class="label" for="password">Password</label><input id="password" type="password" required></div>
+        <button type="submit" class="btn btn-primary">Log in</button>
+        <p id="message" class="small error"></p>
+      </form>
+    </div>`;
   main.querySelector("form")!.addEventListener("submit", async (event) => {
     event.preventDefault();
     const email = (document.getElementById("email") as HTMLInputElement).value;
