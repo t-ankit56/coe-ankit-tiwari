@@ -21,3 +21,17 @@ def test_login_returns_the_same_user_details_as_me(api_client, people):
     assert login_response.status_code == 200
     assert login_response.json() == me_response.json()
     assert login_response.json()["email"] == "ankit@incubyte.co"
+
+
+@pytest.mark.django_db
+def test_me_shows_the_approver_and_whether_i_am_an_approver(api_client, people):
+    login_as(api_client, people.ankit)
+    ankit_details = api_client.get("/api/me").json()
+    login_as(api_client, people.priya)
+    priya_details = api_client.get("/api/me").json()
+
+    assert ankit_details["is_approver"] is False
+    assert ankit_details["approver"] == {"name": "Priya Nair"}
+    assert priya_details["is_approver"] is True
+    assert priya_details["approver"] == {"name": "Rohan Verma"}
+    assert people.rohan.profile.approver is None
