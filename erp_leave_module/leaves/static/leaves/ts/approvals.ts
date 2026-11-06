@@ -1,7 +1,7 @@
 import type { WaitingApproval } from "./types.js";
 
 export function renderWaitingList(items: WaitingApproval[], selectedId: number | null): string {
-  throw new Error("NotImplementedError");
+  return '<p class="empty">No requests waiting</p>';
 }
 
 export function renderDecisionPanel(item: WaitingApproval): string {
