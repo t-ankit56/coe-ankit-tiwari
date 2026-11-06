@@ -81,3 +81,19 @@ def test_a_user_who_is_not_an_approver_listing_approvals_returns_403(api_client,
     response = api_client.get("/api/approvals")
 
     assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_waiting_list_shows_each_request_with_who_asked(api_client, people, holidays):
+    leave = make_leave(people.ankit, date(2026, 11, 23), date(2026, 11, 27))
+    login_as(api_client, people.priya)
+
+    response = api_client.get("/api/approvals")
+
+    assert response.status_code == 200
+    [waiting] = response.json()
+    assert waiting["id"] == leave.id
+    assert waiting["requester_name"] == "Ankit Tiwari"
+    assert waiting["requester_email"] == "ankit@incubyte.co"
+    assert waiting["status"] == "pending"
+    assert waiting["days"] == 4
