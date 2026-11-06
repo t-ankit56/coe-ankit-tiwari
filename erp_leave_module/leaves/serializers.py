@@ -86,14 +86,32 @@ class OverlapSerializer(serializers.Serializer):
     end_date = serializers.DateField()
 
 
+class MonthUsageSerializer(serializers.Serializer):
+    month = serializers.CharField()
+    used = serializers.DecimalField(max_digits=4, decimal_places=1, coerce_to_string=False)
+    requested = serializers.DecimalField(max_digits=4, decimal_places=1, coerce_to_string=False)
+    left = serializers.DecimalField(max_digits=4, decimal_places=1, coerce_to_string=False)
+    over = serializers.DecimalField(max_digits=4, decimal_places=1, coerce_to_string=False)
+
+
+class SuggestedRequestSerializer(serializers.Serializer):
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()
+    half_day = serializers.BooleanField()
+
+
+class ProbationStatusSerializer(serializers.Serializer):
+    ok = serializers.BooleanField()
+    limit = serializers.DecimalField(max_digits=4, decimal_places=1, coerce_to_string=False)
+    months = MonthUsageSerializer(many=True)
+    suggestion = SuggestedRequestSerializer(allow_null=True)
+
+
 class LeavePreviewSerializer(serializers.Serializer):
     days = serializers.DecimalField(max_digits=4, decimal_places=1, coerce_to_string=False)
     breakdown = DayInRangeSerializer(many=True)
     overlap = OverlapSerializer(allow_null=True)
-    probation = serializers.SerializerMethodField()
-
-    def get_probation(self, preview):
-        return None  # filled in by Task 3
+    probation = ProbationStatusSerializer(allow_null=True)
 
 
 class RejectionInputSerializer(serializers.Serializer):
