@@ -136,9 +136,31 @@ def check_probation_limit(*, on_probation: bool, start_date, end_date, half_day:
         start_date=start_date, end_date=end_date, half_day=half_day,
         existing=existing, holidays=holidays, limit=limit,
     )
-    return ProbationStatus(ok=all(month.over == 0 for month in months), limit=limit, months=months, suggestion=None)
+    ok = all(month.over == 0 for month in months)
+    suggestion = None
+    if not ok:
+        suggestion = suggest_largest_fitting_request(
+            start_date=start_date, end_date=end_date, existing=existing, holidays=holidays, limit=limit
+        )
+    return ProbationStatus(ok=ok, limit=limit, months=months, suggestion=suggestion)
 
 
 def suggest_largest_fitting_request(*, start_date, end_date, existing, holidays,
                                     limit=PROBATION_MONTHLY_LIMIT) -> SuggestedRequest | None:
-    raise NotImplementedError
+    def fits(candidate_end, half_day) -> bool:
+        months = _month_usage(
+            start_date=start_date, end_date=candidate_end, half_day=half_day,
+            existing=existing, holidays=holidays, limit=limit,
+        )
+        return all(month.over == 0 for month in months)
+
+    candidate_end = end_date
+    while candidate_end >= start_date:
+        counts_something = count_working_days(start_date, candidate_end, holidays) > 0
+        if counts_something and fits(candidate_end, half_day=False):
+            return SuggestedRequest(start_date, candidate_end, half_day=False)
+        candidate_end -= timedelta(days=1)
+    start_is_a_working_day = count_working_days(start_date, start_date, holidays) > 0
+    if start_is_a_working_day and fits(start_date, half_day=True):
+        return SuggestedRequest(start_date, start_date, half_day=True)
+    return None
