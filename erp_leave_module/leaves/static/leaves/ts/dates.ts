@@ -47,3 +47,13 @@ export function formatDayLabel(isoDate: string): string {
   const date = parse(isoDate);
   return `${SHORT_WEEKDAYS[date.weekday]} ${date.day} ${MONTHS[date.month]}`;
 }
+
+const FULL_MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+/** "2026-11" -> "November" */
+export function formatMonthName(yearMonth: string): string {
+  return FULL_MONTH_NAMES[Number(yearMonth.slice(5, 7)) - 1];
+}
