@@ -398,12 +398,13 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 
 **Demo:** Priya approves one of Ankit's requests and rejects another with a comment. Ankit sees both results. Then Priya applies for leave herself and Rohan approves it.
 
-### 2.1 `test_service_approvals.py` (9)
+### 2.1 `test_service_approvals.py` (11)
 
 | Tag | Test | Expectation |
 |---|---|---|
 | Z1 | `test_no_waiting_requests_gives_an_empty_list` | `[]` |
 | Z2 | `test_deciding_a_request_that_does_not_exist_is_refused` | `LeaveRequestNotFound` |
+| Z3 | `test_rejecting_a_request_that_does_not_exist_is_refused` | `LeaveRequestNotFound` (added during build: reject needs its own 404) |
 | O1 | `test_approving_moves_a_pending_request_to_approved_and_records_when` | Status approved, `decided_at` set |
 | O2 | `test_rejecting_with_a_comment_moves_it_to_rejected_and_stores_the_comment` | Status rejected |
 | M1 | `test_waiting_list_shows_only_my_pending_requests_sorted_by_start_date` | Decided and other approvers' requests excluded |
@@ -411,6 +412,7 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 | B2 | `test_a_blank_or_whitespace_only_comment_is_refused` (parametrized) | `CommentRequiredToReject` |
 | E1 | `test_only_the_assigned_approver_can_decide` | `NotTheAssignedApprover` |
 | E2 | `test_an_approver_cannot_decide_their_own_request` | Priya on her own request (assigned to Rohan) is refused |
+| E3 | `test_only_the_assigned_approver_can_reject` | `NotTheAssignedApprover` (added during build: E1 covered approve only) |
 
 ### 2.2 `test_api_approvals.py` (8)
 
@@ -436,7 +438,7 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 
 **Build:** `approval_service.py`, the three approval views, `approvals.ts` (list, detail panel, comment box, buttons), the nav link, and rejection comments on My leaves. Finish with a `refactor:` commit and the demo.
 
-**Task 2 total: 17 backend + 4 frontend = 21.**
+**Task 2 total: 19 backend + 4 frontend = 23.**
 
 ---
 
@@ -493,9 +495,9 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 | | Backend | Frontend | Total |
 |---|---|---|---|
 | Task 1 | 44 | 9 | 53 |
-| Task 2 | 17 | 4 | 21 |
+| Task 2 | 19 | 4 | 23 |
 | Task 3 | 16 | 2 | 18 |
-| **All** | **77** | **15** | **92** |
+| **All** | **79** | **15** | **94** |
 
 Parametrized tests count once. If time is short, merge the API shape tests in `test_api_leaves.py` (Z1, O1, I1) into one and drop `test_api_approvals` I1, since the service layer already covers it. That brings the total to about 75 without dropping any ZOMBIES letter.
 
