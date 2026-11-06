@@ -38,3 +38,13 @@ def test_submitting_leave_returns_201_with_the_created_request(api_client, peopl
     assert leave["days"] == 4
     assert leave["status"] == "pending"
     assert leave["approver_name"] == "Priya Nair"
+
+
+@pytest.mark.django_db
+def test_a_whitespace_only_reason_returns_400(api_client, people, holidays):
+    login_as(api_client, people.ankit)
+
+    response = api_client.post("/api/leaves", {**NEW_REQUEST, "reason": "   "}, format="json")
+
+    assert response.status_code == 400
+    assert "reason" in response.json()["error"]
