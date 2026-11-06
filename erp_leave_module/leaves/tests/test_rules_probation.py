@@ -41,3 +41,13 @@ def test_user_not_on_probation_is_never_limited():
     assert status.ok is True
     assert status.months == []
     assert status.suggestion is None
+
+
+def test_first_one_day_request_of_a_month_is_within_the_limit():
+    status = check(date(2026, 11, 23), date(2026, 11, 23))
+
+    assert status.ok is True
+    [november] = status.months
+    assert november == MonthUsage(
+        month="2026-11", used=Decimal("0"), requested=Decimal("1"), left=Decimal("2"), over=Decimal("0")
+    )
