@@ -1,7 +1,31 @@
+from django.contrib.auth import authenticate, login
+from django.middleware.csrf import get_token
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from leaves.serializers import CurrentUserSerializer, LoginInputSerializer
 
+
+class LoginView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        credentials = LoginInputSerializer(data=request.data)
+        credentials.is_valid(raise_exception=True)
+        user = authenticate(
+            username=credentials.validated_data["email"],
+            password=credentials.validated_data["password"],
+        )
+        login(request._request, user)
+        get_token(request._request)
+        return Response(CurrentUserSerializer(user).data)
+
+
+@method_decorator(ensure_csrf_cookie, name="dispatch")
 class CurrentUserView(APIView):
     def get(self, request):
-        return Response({})
+        return Response(CurrentUserSerializer(request.user).data)
