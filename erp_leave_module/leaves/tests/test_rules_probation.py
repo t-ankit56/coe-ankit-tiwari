@@ -122,3 +122,9 @@ def test_result_reports_used_requested_left_and_over_for_each_month():
 
     assert set(asdict(status.months[0]).keys()) == {"month", "used", "requested", "left", "over"}
     assert status.limit == Decimal("2")
+
+
+def test_suggestion_is_the_largest_request_that_fits_the_days_left():
+    status = check(date(2026, 11, 19), date(2026, 11, 20), existing=AARAV_USED)
+
+    assert status.suggestion == SuggestedRequest(date(2026, 11, 19), date(2026, 11, 19), half_day=True)
