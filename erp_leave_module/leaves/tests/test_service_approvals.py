@@ -28,3 +28,15 @@ def test_approving_moves_a_pending_request_to_approved_and_records_when(people, 
     assert decided.id == leave.id
     assert leave.status == "approved"
     assert leave.decided_at is not None
+
+
+@pytest.mark.django_db
+def test_rejecting_with_a_comment_moves_it_to_rejected_and_stores_the_comment(people, holidays):
+    leave = make_leave(people.ankit, date(2026, 11, 23), date(2026, 11, 27))
+
+    reject_leave(people.priya, leave.id, "Release day")
+
+    leave.refresh_from_db()
+    assert leave.status == "rejected"
+    assert leave.decision_comment == "Release day"
+    assert leave.decided_at is not None
