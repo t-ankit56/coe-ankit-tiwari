@@ -167,6 +167,15 @@ export function mountApplyPage(main: HTMLElement, me: CurrentUser): void {
   for (const input of [startDate, endDate, halfDay]) {
     input.addEventListener("input", () => void refreshPreview());
   }
+  panel.addEventListener("click", (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLElement>("#use-suggestion");
+    if (!button) return;
+    startDate.value = button.dataset.start!;
+    endDate.value = button.dataset.end!;
+    halfDay.disabled = false;
+    halfDay.checked = button.dataset.half === "true";
+    void refreshPreview();
+  });
   reason.addEventListener("input", updateSubmitState);
   main.querySelector("#cancel")!.addEventListener("click", () => navigation.goTo("/"));
   updateSubmitState();
