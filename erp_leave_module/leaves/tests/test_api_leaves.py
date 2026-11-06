@@ -1,6 +1,9 @@
+from datetime import date
+
 import pytest
 
 from leaves.tests.conftest import login_as
+from leaves.tests.factories import make_leave
 
 NEW_REQUEST = {
     "start_date": "2026-11-23",
@@ -73,3 +76,33 @@ def test_preview_returns_days_and_a_day_by_day_breakdown(api_client, people, hol
     assert body["breakdown"][4] == {"date": "2026-11-27", "counts": 0, "label": "Thanksgiving, not counted"}
     assert body["overlap"] is None
     assert body["probation"] is None
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "submitting_user, request_body, expected_message",
+    [
+        (
+            "ankit",
+            {**NEW_REQUEST, "start_date": "2026-11-20", "end_date": "2026-11-23"},
+            "You already have leave on 2026-11-18-2026-11-20.",
+        ),
+        (
+            "ankit",
+            {**NEW_REQUEST, "start_date": "2026-11-24", "end_date": "2026-11-23"},
+            "End date cannot be before start date.",
+        ),
+        ("rohan", NEW_REQUEST, "No approver is assigned to you."),
+    ],
+    ids=["overlap", "invalid dates", "missing approver"],
+)
+def test_overlap_invalid_dates_and_missing_approver_each_return_400(
+    api_client, people, holidays, submitting_user, request_body, expected_message
+):
+    make_leave(people.ankit, date(2026, 11, 18), date(2026, 11, 20), status="approved")
+    login_as(api_client, getattr(people, submitting_user))
+
+    response = api_client.post("/api/leaves", request_body, format="json")
+
+    assert response.status_code == 400
+    assert response.json() == {"error": expected_message}
