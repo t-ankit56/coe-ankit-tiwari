@@ -22,4 +22,18 @@ describe("leaves table", () => {
   it('shows "No requests yet" when there are none', () => {
     expect(renderLeavesTable([])).toContain("No requests yet");
   });
+
+  it("shows one row per request with its status badge", () => {
+    const html = renderLeavesTable([
+      makeLeave({ id: 1, status: "pending" }),
+      makeLeave({ id: 2, status: "approved", start_date: "2026-07-08", end_date: "2026-07-10" }),
+    ]);
+
+    expect(html.match(/<tr data-leave-id/g)).toHaveLength(2);
+    expect(html).toContain('class="badge badge-pending"');
+    expect(html).toContain('class="badge badge-approved"');
+    expect(html).toContain("23 Nov 2026");
+    expect(html).toContain("Priya Nair");
+    expect(html).not.toContain("No requests yet");
+  });
 });
