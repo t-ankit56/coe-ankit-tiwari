@@ -2,7 +2,7 @@ from leaves.models import LeaveRequest
 
 
 def list_waiting_approvals(approver) -> list[LeaveRequest]:
-    raise NotImplementedError
+    return []
 
 
 def approve_leave(approver, leave_id) -> LeaveRequest:
