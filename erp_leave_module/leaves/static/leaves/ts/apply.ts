@@ -144,6 +144,8 @@ export function mountApplyPage(main: HTMLElement, me: CurrentUser): void {
     if (halfDay.disabled) halfDay.checked = false;
     previewIsUsable = false;
     submitHelp.textContent = "";
+    startDate.classList.remove("invalid");
+    endDate.classList.remove("invalid");
     message.textContent = "";
     if (!startDate.value || !endDate.value) {
       panel.innerHTML = renderEmptyPreviewPanel();
@@ -157,6 +159,8 @@ export function mountApplyPage(main: HTMLElement, me: CurrentUser): void {
       const overProbationLimit = preview.probation !== null && !preview.probation.ok;
       previewIsUsable = preview.overlap === null && !overProbationLimit;
       submitHelp.textContent = overProbationLimit ? "Change the dates to continue." : "";
+      startDate.classList.toggle("invalid", overProbationLimit);
+      endDate.classList.toggle("invalid", overProbationLimit);
     } catch (error) {
       panel.innerHTML = renderEmptyPreviewPanel();
       message.textContent = error instanceof Error ? error.message : "Could not preview.";
