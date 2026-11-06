@@ -30,3 +30,7 @@ def test_returns_only_the_clashing_leave_when_there_are_several():
     )
 
     assert overlapping == in_november
+
+
+def test_leave_ending_the_day_before_does_not_overlap():
+    assert find_overlapping_leave(date(2026, 11, 21), date(2026, 11, 23), [WEDNESDAY_TO_FRIDAY]) is None
