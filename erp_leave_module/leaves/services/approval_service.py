@@ -1,6 +1,6 @@
 from django.utils import timezone
 
-from leaves.exceptions import LeaveRequestNotFound
+from leaves.exceptions import LeaveAlreadyDecided, LeaveRequestNotFound
 from leaves.models import LeaveRequest
 
 
@@ -14,6 +14,8 @@ def approve_leave(approver, leave_id) -> LeaveRequest:
         leave = LeaveRequest.objects.get(id=leave_id)
     except LeaveRequest.DoesNotExist:
         raise LeaveRequestNotFound()
+    if leave.status != LeaveRequest.Status.PENDING:
+        raise LeaveAlreadyDecided()
     leave.status = LeaveRequest.Status.APPROVED
     leave.decided_at = timezone.now()
     leave.save()
@@ -22,6 +24,8 @@ def approve_leave(approver, leave_id) -> LeaveRequest:
 
 def reject_leave(approver, leave_id, comment) -> LeaveRequest:
     leave = LeaveRequest.objects.get(id=leave_id)
+    if leave.status != LeaveRequest.Status.PENDING:
+        raise LeaveAlreadyDecided()
     leave.status = LeaveRequest.Status.REJECTED
     leave.decision_comment = comment
     leave.decided_at = timezone.now()
