@@ -2,7 +2,13 @@ from datetime import date
 
 import pytest
 
-from leaves.exceptions import LeaveRequestNotFound
+from leaves.exceptions import (
+    CommentRequiredToReject,
+    LeaveAlreadyDecided,
+    LeaveRequestNotFound,
+    NotTheAssignedApprover,
+)
+from leaves.models import LeaveRequest
 from leaves.services.approval_service import approve_leave, list_waiting_approvals, reject_leave
 from leaves.tests.factories import make_leave
 
@@ -53,3 +59,22 @@ def test_waiting_list_shows_only_my_pending_requests_sorted_by_start_date(people
     waiting = list_waiting_approvals(people.priya)
 
     assert waiting == [november_23, december_7, december_24]
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "decide",
+    [
+        lambda approver, leave_id: approve_leave(approver, leave_id),
+        lambda approver, leave_id: reject_leave(approver, leave_id, "Too late"),
+    ],
+    ids=["approve", "reject"],
+)
+def test_a_request_that_was_already_decided_cannot_be_decided_again(people, holidays, decide):
+    leave = make_leave(people.ankit, date(2026, 11, 23), date(2026, 11, 27), status="approved")
+
+    with pytest.raises(LeaveAlreadyDecided):
+        decide(people.priya, leave.id)
+
+    leave.refresh_from_db()
+    assert leave.status == "approved"
