@@ -4,9 +4,16 @@ import { escapeHtml } from "./html.js";
 import { drawNav } from "./nav.js";
 import type { Leave, MyLeavesResponse } from "./types.js";
 
+function describeUnderDates(leave: Leave): string {
+  if (leave.status === "rejected" && leave.decision_comment) {
+    return `${escapeHtml(leave.approver_name)}: ${escapeHtml(leave.decision_comment)}`;
+  }
+  return describeWeekdays(leave.start_date, leave.end_date);
+}
+
 function renderLeaveRow(leave: Leave): string {
   return `<tr data-leave-id="${leave.id}">
-    <td><strong>${formatDateRange(leave.start_date, leave.end_date)}</strong><span class="note">${describeWeekdays(leave.start_date, leave.end_date)}</span></td>
+    <td><strong>${formatDateRange(leave.start_date, leave.end_date)}</strong><span class="note">${describeUnderDates(leave)}</span></td>
     <td>${leave.days}</td>
     <td><span class="badge badge-${leave.status}">${leave.status}</span></td>
     <td>${escapeHtml(leave.approver_name)}</td>
