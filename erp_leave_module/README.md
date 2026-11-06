@@ -30,7 +30,13 @@ CREATE DATABASE leaveapp OWNER leaveapp;
 cp .env.example .env
 ```
 
-The defaults match the Postgres commands above (`DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`).
+The database defaults match the Postgres commands above (`DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`).
+Replace `SECRET_KEY=change-me` with your own key:
+
+```
+python3 -c "import secrets; print(secrets.token_urlsafe(50))"
+```
+
 `.env` is gitignored.
 
 ### 3. Install
