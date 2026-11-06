@@ -86,3 +86,9 @@ class LeavePreviewSerializer(serializers.Serializer):
 
     def get_probation(self, preview):
         return None  # filled in by Task 3
+
+
+class RejectionInputSerializer(serializers.Serializer):
+    # Blank text is allowed here on purpose: "a comment is required" is a leave rule,
+    # so the service decides and raises CommentRequiredToReject.
+    comment = serializers.CharField(allow_blank=True, trim_whitespace=False, default="")

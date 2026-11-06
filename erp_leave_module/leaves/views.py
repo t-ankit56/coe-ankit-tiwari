@@ -15,8 +15,9 @@ from leaves.serializers import (
     LeaveSubmissionInputSerializer,
     LoginInputSerializer,
     MyLeavesResponseSerializer,
+    RejectionInputSerializer,
 )
-from leaves.services.approval_service import approve_leave
+from leaves.services.approval_service import approve_leave, reject_leave
 from leaves.services.leave_service import list_my_leaves, preview_leave, submit_leave
 
 
@@ -77,4 +78,12 @@ class LeavePreviewView(APIView):
 class ApproveLeaveView(APIView):
     def post(self, request, leave_id):
         leave = approve_leave(request.user, leave_id)
+        return Response({"leave": LeaveRequestSerializer(leave).data})
+
+
+class RejectLeaveView(APIView):
+    def post(self, request, leave_id):
+        rejection = RejectionInputSerializer(data=request.data)
+        rejection.is_valid(raise_exception=True)
+        leave = reject_leave(request.user, leave_id, rejection.validated_data["comment"])
         return Response({"leave": LeaveRequestSerializer(leave).data})

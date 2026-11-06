@@ -1,6 +1,7 @@
 from rest_framework.exceptions import ValidationError
 
 from leaves.exceptions import (
+    CommentRequiredToReject,
     EndDateIsBeforeStartDate,
     HalfDayNeedsASingleWorkingDay,
     LeaveAlreadyDecided,
@@ -21,6 +22,7 @@ HTTP_STATUS_FOR_LEAVE_ERROR = {
     LeaveOverlapsExistingLeave: 400,
     ProbationLimitExceeded: 400,
     NoApproverAssigned: 400,
+    CommentRequiredToReject: 400,
     LeaveRequestNotFound: 404,
     LeaveAlreadyDecided: 409,
     NotTheAssignedApprover: 403,
