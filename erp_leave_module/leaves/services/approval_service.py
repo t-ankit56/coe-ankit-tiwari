@@ -1,6 +1,6 @@
 from django.utils import timezone
 
-from leaves.exceptions import LeaveAlreadyDecided, LeaveRequestNotFound
+from leaves.exceptions import CommentRequiredToReject, LeaveAlreadyDecided, LeaveRequestNotFound
 from leaves.models import LeaveRequest
 
 
@@ -26,8 +26,10 @@ def reject_leave(approver, leave_id, comment) -> LeaveRequest:
     leave = LeaveRequest.objects.get(id=leave_id)
     if leave.status != LeaveRequest.Status.PENDING:
         raise LeaveAlreadyDecided()
+    if not comment.strip():
+        raise CommentRequiredToReject()
     leave.status = LeaveRequest.Status.REJECTED
-    leave.decision_comment = comment
+    leave.decision_comment = comment.strip()
     leave.decided_at = timezone.now()
     leave.save()
     return leave
