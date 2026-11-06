@@ -44,3 +44,7 @@ import pytest
 )
 def test_public_holidays_inside_the_range_are_not_counted(start_date, end_date, holidays, expected_days):
     assert count_working_days(start_date, end_date, holidays) == Decimal(expected_days)
+
+
+def test_range_starting_and_ending_on_a_weekend_counts_only_the_weekdays():
+    assert count_working_days(date(2026, 11, 21), date(2026, 11, 29), NO_HOLIDAYS) == Decimal("5")
