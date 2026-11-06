@@ -127,3 +127,12 @@ def test_preview_shows_probation_status_and_suggestion_for_user_on_probation(peo
     assert preview.probation.ok is False
     assert preview.probation.months[0].over == Decimal("1.5")
     assert preview.probation.suggestion == SuggestedRequest(date(2026, 11, 19), date(2026, 11, 19), half_day=True)
+
+
+@pytest.mark.django_db
+def test_submitting_leave_that_exactly_reaches_the_probation_limit_is_created(people, holidays):
+    give_aarav_one_and_a_half_days_used_in_november(people.aarav)
+
+    leave = submit_leave(people.aarav, date(2026, 11, 19), date(2026, 11, 19), True, "Cousin's wedding")
+
+    assert LeaveRequest.objects.get(id=leave.id).days == Decimal("0.5")
