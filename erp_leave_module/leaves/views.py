@@ -16,6 +16,7 @@ from leaves.serializers import (
     LoginInputSerializer,
     MyLeavesResponseSerializer,
 )
+from leaves.services.approval_service import approve_leave
 from leaves.services.leave_service import list_my_leaves, preview_leave, submit_leave
 
 
@@ -71,3 +72,9 @@ class LeavePreviewView(APIView):
             query.validated_data["half"],
         )
         return Response(LeavePreviewSerializer(preview).data)
+
+
+class ApproveLeaveView(APIView):
+    def post(self, request, leave_id):
+        leave = approve_leave(request.user, leave_id)
+        return Response({"leave": LeaveRequestSerializer(leave).data})

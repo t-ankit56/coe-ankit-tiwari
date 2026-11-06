@@ -5,6 +5,7 @@ from leaves.exceptions import (
     HalfDayNeedsASingleWorkingDay,
     LeaveError,
     LeaveOverlapsExistingLeave,
+    LeaveRequestNotFound,
     NoApproverAssigned,
     ProbationLimitExceeded,
 )
@@ -18,6 +19,7 @@ HTTP_STATUS_FOR_LEAVE_ERROR = {
     LeaveOverlapsExistingLeave: 400,
     ProbationLimitExceeded: 400,
     NoApproverAssigned: 400,
+    LeaveRequestNotFound: 404,
 }
 
 
