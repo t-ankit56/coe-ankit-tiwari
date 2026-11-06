@@ -3,6 +3,7 @@ from django.urls import path
 from leaves import views
 
 urlpatterns = [
+    path("approvals", views.WaitingApprovalsView.as_view()),
     path("leaves", views.MyLeaveRequestsView.as_view()),
     path("leaves/<int:leave_id>/approve", views.ApproveLeaveView.as_view()),
     path("leaves/<int:leave_id>/reject", views.RejectLeaveView.as_view()),

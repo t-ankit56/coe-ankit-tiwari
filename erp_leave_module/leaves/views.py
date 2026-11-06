@@ -7,6 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from leaves.permissions import IsApprover
 from leaves.serializers import (
     CurrentUserSerializer,
     LeavePreviewQueryInputSerializer,
@@ -87,3 +88,10 @@ class RejectLeaveView(APIView):
         rejection.is_valid(raise_exception=True)
         leave = reject_leave(request.user, leave_id, rejection.validated_data["comment"])
         return Response({"leave": LeaveRequestSerializer(leave).data})
+
+
+class WaitingApprovalsView(APIView):
+    permission_classes = [IsApprover]
+
+    def get(self, request):
+        return Response([])
