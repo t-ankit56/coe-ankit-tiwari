@@ -59,3 +59,13 @@ def test_existing_leave_in_the_same_month_counts_towards_the_limit():
     assert status.ok is True
     [november] = status.months
     assert (november.used, november.requested, november.left) == (Decimal("1"), Decimal("1"), Decimal("1"))
+
+
+def test_two_day_request_with_one_and_a_half_days_used_is_over_by_one_and_a_half():
+    status = check(date(2026, 11, 19), date(2026, 11, 20), existing=AARAV_USED)
+
+    assert status.ok is False
+    [november] = status.months
+    assert (november.used, november.requested, november.left, november.over) == (
+        Decimal("1.5"), Decimal("2"), Decimal("0.5"), Decimal("1.5")
+    )
