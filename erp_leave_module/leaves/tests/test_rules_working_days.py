@@ -48,3 +48,7 @@ def test_public_holidays_inside_the_range_are_not_counted(start_date, end_date, 
 
 def test_range_starting_and_ending_on_a_weekend_counts_only_the_weekdays():
     assert count_working_days(date(2026, 11, 21), date(2026, 11, 29), NO_HOLIDAYS) == Decimal("5")
+
+
+def test_range_crossing_a_month_end_is_counted_across_both_months():
+    assert count_working_days(date(2026, 11, 30), date(2026, 12, 1), NO_HOLIDAYS) == Decimal("2")
