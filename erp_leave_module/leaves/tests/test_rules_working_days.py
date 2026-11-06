@@ -58,3 +58,9 @@ def test_range_crossing_a_year_end_is_counted_across_both_years():
     new_year = {date(2027, 1, 1): "New Year"}
 
     assert count_working_days(date(2026, 12, 31), date(2027, 1, 1), new_year) == Decimal("1")
+
+
+def test_a_half_day_on_a_working_day_counts_as_half_a_day():
+    thursday = date(2026, 11, 19)
+
+    assert count_working_days(thursday, thursday, NO_HOLIDAYS, half_day=True) == Decimal("0.5")
