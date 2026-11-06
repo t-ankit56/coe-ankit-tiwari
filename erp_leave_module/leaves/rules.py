@@ -88,32 +88,54 @@ def find_overlapping_leave(start_date, end_date, existing: Sequence[LeaveRecord]
     return None
 
 
+def _counted_days_by_month(start_date, end_date, holidays: Holidays, half_day=False) -> dict[str, Decimal]:
+    """Counted days per "YYYY-MM". Months the range touches appear even if they count 0."""
+    counted: dict[str, Decimal] = {}
+    for day in explain_each_day(start_date, end_date, holidays, half_day):
+        month = day.date.strftime("%Y-%m")
+        counted[month] = counted.get(month, Decimal("0")) + day.counts
+    return counted
+
+
+def _used_days_by_month(existing: Sequence[LeaveRecord], holidays: Holidays) -> dict[str, Decimal]:
+    """Days already pending or approved per month. Rejected leave does not count."""
+    used: dict[str, Decimal] = {}
+    for record in existing:
+        if record.status == "rejected":
+            continue
+        for month, days in _counted_days_by_month(
+            record.start_date, record.end_date, holidays, record.half_day
+        ).items():
+            used[month] = used.get(month, Decimal("0")) + days
+    return used
+
+
+def _month_usage(*, start_date, end_date, half_day, existing, holidays, limit) -> list[MonthUsage]:
+    used_by_month = _used_days_by_month(existing, holidays)
+    months = []
+    for month, requested in _counted_days_by_month(start_date, end_date, holidays, half_day).items():
+        used = used_by_month.get(month, Decimal("0"))
+        months.append(
+            MonthUsage(
+                month=month,
+                used=used,
+                requested=requested,
+                left=max(Decimal("0"), limit - used),
+                over=max(Decimal("0"), used + requested - limit),
+            )
+        )
+    return months
+
+
 def check_probation_limit(*, on_probation: bool, start_date, end_date, half_day: bool,
                           existing: Sequence[LeaveRecord], holidays: Holidays,
                           limit: Decimal = PROBATION_MONTHLY_LIMIT) -> ProbationStatus:
     if not on_probation:
         return ProbationStatus(ok=True, limit=limit, months=[], suggestion=None)
-    requested_by_month: dict[str, Decimal] = {}
-    for day in explain_each_day(start_date, end_date, holidays, half_day):
-        month = day.date.strftime("%Y-%m")
-        requested_by_month[month] = requested_by_month.get(month, Decimal("0")) + day.counts
-    used_by_month: dict[str, Decimal] = {}
-    for record in existing:
-        if record.status == "rejected":
-            continue
-        for day in explain_each_day(record.start_date, record.end_date, holidays, record.half_day):
-            month = day.date.strftime("%Y-%m")
-            used_by_month[month] = used_by_month.get(month, Decimal("0")) + day.counts
-    months = [
-        MonthUsage(
-            month=month,
-            used=used_by_month.get(month, Decimal("0")),
-            requested=requested,
-            left=max(Decimal("0"), limit - used_by_month.get(month, Decimal("0"))),
-            over=max(Decimal("0"), used_by_month.get(month, Decimal("0")) + requested - limit),
-        )
-        for month, requested in requested_by_month.items()
-    ]
+    months = _month_usage(
+        start_date=start_date, end_date=end_date, half_day=half_day,
+        existing=existing, holidays=holidays, limit=limit,
+    )
     return ProbationStatus(ok=all(month.over == 0 for month in months), limit=limit, months=months, suggestion=None)
 
 
