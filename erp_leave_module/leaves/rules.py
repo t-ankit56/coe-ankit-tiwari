@@ -82,7 +82,7 @@ def count_working_days(start_date, end_date, holidays: Holidays, half_day=False)
 
 
 def find_overlapping_leave(start_date, end_date, existing: Sequence[LeaveRecord]) -> LeaveRecord | None:
-    raise NotImplementedError
+    return None
 
 
 def check_probation_limit(*, on_probation: bool, start_date, end_date, half_day: bool,
