@@ -25,7 +25,9 @@ class MyLeaves:
 
 
 def preview_leave(user, start_date, end_date, half_day=False) -> LeavePreview:
-    raise NotImplementedError
+    breakdown = explain_each_day(start_date, end_date, load_holidays(), half_day)
+    days = sum((day.counts for day in breakdown), Decimal("0"))
+    return LeavePreview(days=days, breakdown=breakdown, overlap=None, probation=None)
 
 
 def submit_leave(user, start_date, end_date, half_day, reason) -> LeaveRequest:
