@@ -85,8 +85,9 @@ table.requests td.muted { color: var(--muted); }
 .apply-layout { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
 .form-card { flex: 999 1 520px; min-width: 0; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
 .side-card { flex: 1 1 360px; min-width: 0; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
-.field { display: flex; flex-direction: column; gap: 6px; flex: 1 1 200px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
 .field-row { display: flex; flex-wrap: wrap; gap: 16px; }
+.field-row .field { flex: 1 1 200px; }
 .label { font-size: 13px; font-weight: 600; color: var(--navy); }
 input[type="text"], input[type="email"], input[type="password"], input[type="date"], input:not([type]), textarea {
   width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid var(--field-border); border-radius: 8px; background: #fff; color: var(--navy); font: inherit; font-size: 15px;
