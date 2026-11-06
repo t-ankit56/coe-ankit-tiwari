@@ -78,3 +78,15 @@ def test_a_request_that_was_already_decided_cannot_be_decided_again(people, holi
 
     leave.refresh_from_db()
     assert leave.status == "approved"
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("blank_comment", ["", "   "])
+def test_a_blank_or_whitespace_only_comment_is_refused(people, holidays, blank_comment):
+    leave = make_leave(people.ankit, date(2026, 11, 23), date(2026, 11, 27))
+
+    with pytest.raises(CommentRequiredToReject):
+        reject_leave(people.priya, leave.id, blank_comment)
+
+    leave.refresh_from_db()
+    assert leave.status == "pending"
