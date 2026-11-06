@@ -20,4 +20,9 @@ def approve_leave(approver, leave_id) -> LeaveRequest:
 
 
 def reject_leave(approver, leave_id, comment) -> LeaveRequest:
-    raise NotImplementedError
+    leave = LeaveRequest.objects.get(id=leave_id)
+    leave.status = LeaveRequest.Status.REJECTED
+    leave.decision_comment = comment
+    leave.decided_at = timezone.now()
+    leave.save()
+    return leave
