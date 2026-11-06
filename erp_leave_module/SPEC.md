@@ -372,7 +372,7 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 | E1 | `test_submitting_leave_without_logging_in_returns_401` |
 | E2 | `test_overlap_invalid_dates_and_missing_approver_each_return_400` (parametrized) |
 
-### 1.7 Frontend (8)
+### 1.7 Frontend (9)
 
 | File | Test |
 |---|---|
@@ -383,13 +383,14 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 | `myLeaves.test.ts` | `leaves table › shows "No requests yet" when there are none` |
 | `myLeaves.test.ts` | `leaves table › shows one row per request with its status badge` |
 | `nav.test.ts` | `nav › hides the Apply button when the user has no approver` |
+| `nav.test.ts` | `nav › shows the Apply button when the user has an approver` (added during build: the hide-only test cannot force Apply to ever appear) |
 | `apply.test.ts` | `apply page › shows the day count after valid dates are entered` |
 
 ### 1.8 Finish
 
 `refactor:` commit (extract date parsing and the error-response helper), run `seed`, do the demo.
 
-**Task 1 total: 44 backend + 8 frontend = 52.**
+**Task 1 total: 44 backend + 9 frontend = 53.**
 
 ---
 
@@ -491,10 +492,10 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 
 | | Backend | Frontend | Total |
 |---|---|---|---|
-| Task 1 | 44 | 8 | 52 |
+| Task 1 | 44 | 9 | 53 |
 | Task 2 | 17 | 4 | 21 |
 | Task 3 | 16 | 2 | 18 |
-| **All** | **77** | **14** | **91** |
+| **All** | **77** | **15** | **92** |
 
 Parametrized tests count once. If time is short, merge the API shape tests in `test_api_leaves.py` (Z1, O1, I1) into one and drop `test_api_approvals` I1, since the service layer already covers it. That brings the total to about 75 without dropping any ZOMBIES letter.
 
