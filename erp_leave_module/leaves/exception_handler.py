@@ -8,6 +8,7 @@ from leaves.exceptions import (
     LeaveOverlapsExistingLeave,
     LeaveRequestNotFound,
     NoApproverAssigned,
+    NotTheAssignedApprover,
     ProbationLimitExceeded,
 )
 from rest_framework.response import Response
@@ -22,6 +23,7 @@ HTTP_STATUS_FOR_LEAVE_ERROR = {
     NoApproverAssigned: 400,
     LeaveRequestNotFound: 404,
     LeaveAlreadyDecided: 409,
+    NotTheAssignedApprover: 403,
 }
 
 
