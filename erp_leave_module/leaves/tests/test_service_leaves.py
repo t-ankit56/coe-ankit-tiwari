@@ -3,6 +3,7 @@ from decimal import Decimal
 
 import pytest
 
+from leaves.exceptions import LeaveOverlapsExistingLeave
 from leaves.models import LeaveRequest
 from leaves.tests.factories import make_leave
 from leaves.services.leave_service import list_my_leaves, preview_leave, submit_leave
@@ -62,3 +63,15 @@ def test_preview_returns_days_and_breakdown_with_no_probation_status_for_regular
     assert len(preview.breakdown) == 5
     assert preview.probation is None
     assert preview.overlap is None
+
+
+@pytest.mark.django_db
+def test_submitting_overlapping_leave_is_refused_and_names_the_clashing_dates(people, holidays):
+    existing = make_leave(people.ankit, date(2026, 11, 18), date(2026, 11, 20), status="approved")
+
+    with pytest.raises(LeaveOverlapsExistingLeave) as refusal:
+        submit_leave(people.ankit, date(2026, 11, 20), date(2026, 11, 23), False, "Trip")
+
+    assert refusal.value.leave.id == existing.id
+    assert "2026-11-18" in str(refusal.value)
+    assert LeaveRequest.objects.count() == 1
