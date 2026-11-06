@@ -122,3 +122,20 @@ def test_submitting_leave_over_the_probation_limit_returns_400_even_without_the_
 
     assert response.status_code == 400
     assert response.json() == {"error": "This is over your probation limit."}
+
+
+@pytest.mark.django_db
+def test_preview_for_a_user_on_probation_includes_the_month_breakdown_and_a_suggestion(api_client, people, holidays):
+    make_leave(people.aarav, date(2026, 11, 2), date(2026, 11, 2), status="approved")
+    make_leave(people.aarav, date(2026, 11, 3), date(2026, 11, 3), status="approved", half_day=True)
+    login_as(api_client, people.aarav)
+
+    response = api_client.get("/api/leaves/preview", {"start_date": "2026-11-19", "end_date": "2026-11-20"})
+
+    assert response.status_code == 200
+    assert response.json()["probation"] == {
+        "ok": False,
+        "limit": 2,
+        "months": [{"month": "2026-11", "used": 1.5, "requested": 2, "left": 0.5, "over": 1.5}],
+        "suggestion": {"start_date": "2026-11-19", "end_date": "2026-11-19", "half_day": True},
+    }
