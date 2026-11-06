@@ -101,3 +101,12 @@ def test_submitting_without_an_approver_is_refused(people, holidays):
         submit_leave(people.rohan, date(2026, 11, 23), date(2026, 11, 27), False, "Trip")
 
     assert LeaveRequest.objects.count() == 0
+
+
+@pytest.mark.django_db
+def test_preview_reports_the_clashing_leave_instead_of_refusing(people, holidays):
+    existing = make_leave(people.ankit, date(2026, 11, 18), date(2026, 11, 20), status="approved")
+
+    preview = preview_leave(people.ankit, date(2026, 11, 20), date(2026, 11, 23))
+
+    assert preview.overlap.id == existing.id
