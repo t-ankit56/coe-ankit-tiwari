@@ -97,3 +97,15 @@ def test_waiting_list_shows_each_request_with_who_asked(api_client, people, holi
     assert waiting["requester_email"] == "ankit@incubyte.co"
     assert waiting["status"] == "pending"
     assert waiting["days"] == 4
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "method, path",
+    [("get", "/api/approvals"), ("post", "/api/leaves/1/approve"), ("post", "/api/leaves/1/reject")],
+    ids=["list", "approve", "reject"],
+)
+def test_all_approval_endpoints_return_401_when_not_logged_in(api_client, people, method, path):
+    response = getattr(api_client, method)(path)
+
+    assert response.status_code == 401
