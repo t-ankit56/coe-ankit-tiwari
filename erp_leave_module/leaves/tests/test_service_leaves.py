@@ -52,3 +52,13 @@ def test_summary_counts_approved_days_this_year_and_pending_requests(people, hol
 
     assert my_leaves.days_taken == Decimal("5")
     assert my_leaves.pending_count == 1
+
+
+@pytest.mark.django_db
+def test_preview_returns_days_and_breakdown_with_no_probation_status_for_regular_user(people, holidays):
+    preview = preview_leave(people.ankit, date(2026, 11, 23), date(2026, 11, 27))
+
+    assert preview.days == Decimal("4")
+    assert len(preview.breakdown) == 5
+    assert preview.probation is None
+    assert preview.overlap is None
