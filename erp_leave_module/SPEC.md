@@ -336,7 +336,7 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 | E1 | `test_a_user_cannot_be_their_own_approver` (IntegrityError) |
 | I1 | `test_user_is_an_approver_only_if_someone_has_them_as_approver` |
 
-### 1.4 `test_service_leaves.py` (8 in Task 1)
+### 1.4 `test_service_leaves.py` (9 in Task 1)
 
 | Tag | Test | Expectation |
 |---|---|---|
@@ -345,6 +345,7 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 | M1 | `test_my_leaves_lists_only_my_requests_newest_first` | Others excluded |
 | M2 | `test_summary_counts_approved_days_this_year_and_pending_requests` | Seeded Ankit: 5 days taken, 1 pending |
 | I1 | `test_preview_returns_days_and_breakdown_with_no_probation_status_for_regular_user` | `probation` is null |
+| I2 | `test_preview_reports_the_clashing_leave_instead_of_refusing` | `overlap` is the existing request, no exception (added during build: the Apply page needs it) |
 | E1 | `test_submitting_overlapping_leave_is_refused_and_names_the_clashing_dates` | `LeaveOverlapsExistingLeave` |
 | E2 | `test_submitting_invalid_dates_is_refused` (parametrized) | End before start. Half day over several dates. |
 | E3 | `test_submitting_without_an_approver_is_refused` | Rohan: `NoApproverAssigned` |
@@ -388,7 +389,7 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 
 `refactor:` commit (extract date parsing and the error-response helper), run `seed`, do the demo.
 
-**Task 1 total: 43 backend + 8 frontend = 51.**
+**Task 1 total: 44 backend + 8 frontend = 52.**
 
 ---
 
@@ -490,10 +491,10 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 
 | | Backend | Frontend | Total |
 |---|---|---|---|
-| Task 1 | 43 | 8 | 51 |
+| Task 1 | 44 | 8 | 52 |
 | Task 2 | 17 | 4 | 21 |
 | Task 3 | 16 | 2 | 18 |
-| **All** | **76** | **14** | **90** |
+| **All** | **77** | **14** | **91** |
 
 Parametrized tests count once. If time is short, merge the API shape tests in `test_api_leaves.py` (Z1, O1, I1) into one and drop `test_api_approvals` I1, since the service layer already covers it. That brings the total to about 75 without dropping any ZOMBIES letter.
 
