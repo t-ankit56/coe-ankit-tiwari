@@ -1,7 +1,7 @@
 """Pure leave rules. No Django, no database, no clock."""
 
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 from typing import Mapping, Sequence
 
@@ -56,9 +56,13 @@ def explain_each_day(start_date, end_date, holidays: Holidays, half_day=False) -
 
 
 def count_working_days(start_date, end_date, holidays: Holidays, half_day=False) -> Decimal:
-    if start_date in holidays:
-        return Decimal("0")
-    return Decimal("1") if start_date.weekday() < 5 else Decimal("0")
+    total = Decimal("0")
+    day = start_date
+    while day <= end_date:
+        if day.weekday() < 5 and day not in holidays:
+            total += 1
+        day += timedelta(days=1)
+    return total
 
 
 def find_overlapping_leave(start_date, end_date, existing: Sequence[LeaveRecord]) -> LeaveRecord | None:
