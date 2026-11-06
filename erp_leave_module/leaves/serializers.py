@@ -26,3 +26,29 @@ class CurrentUserSerializer(serializers.Serializer):
     def get_approver(self, user) -> dict | None:
         approver = user.profile.approver
         return {"name": approver.get_full_name()} if approver else None
+
+
+class LeaveRequestSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    start_date = serializers.DateField()
+    end_date = serializers.DateField()
+    half_day = serializers.BooleanField()
+    days = serializers.DecimalField(max_digits=4, decimal_places=1, coerce_to_string=False)
+    reason = serializers.CharField()
+    status = serializers.CharField()
+    approver_name = serializers.SerializerMethodField()
+    decision_comment = serializers.CharField()
+    submitted_at = serializers.DateTimeField(source="created_at")
+
+    def get_approver_name(self, leave_request) -> str:
+        return leave_request.approver.get_full_name()
+
+
+class MyLeavesSummarySerializer(serializers.Serializer):
+    days_taken = serializers.DecimalField(max_digits=5, decimal_places=1, coerce_to_string=False)
+    pending_count = serializers.IntegerField()
+
+
+class MyLeavesResponseSerializer(serializers.Serializer):
+    summary = MyLeavesSummarySerializer(source="*")
+    leaves = LeaveRequestSerializer(many=True)
