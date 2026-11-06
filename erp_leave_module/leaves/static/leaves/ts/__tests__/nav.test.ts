@@ -27,4 +27,9 @@ describe("nav", () => {
 
     expect(html).toContain('href="/apply"');
   });
+
+  it("shows the Approvals link only for approvers", () => {
+    expect(renderNav(makeUser({ is_approver: true }), "/")).toContain('href="/approvals"');
+    expect(renderNav(makeUser({ is_approver: false }), "/")).not.toContain("Approvals");
+  });
 });
