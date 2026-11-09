@@ -4,6 +4,8 @@ Django REST Framework backend, plain TypeScript frontend, PostgreSQL, built test
 
 **Status: all three tasks are built.** Tables in sections 12 to 14 match the tests in code. Section 15 has the final counts and the rows added or skipped during the build, and section 16 has the decisions. How it was built with Claude is in `AI_WORKFLOW.md` and `AI_LOG.md`.
 
+**Layout note:** the app was built in one folder and then split into `backend/` and `frontend/` (two `chore:` commits, no behaviour change). Sections 11 to 14 and `DEVELOPER_GUIDE.md` describe the original single-folder paths, for example `leaves/static/leaves/ts/` is now `frontend/src/`.
+
 ---
 
 ## 1. Scope
@@ -28,14 +30,14 @@ Floating and Leave-without-pay types, withdraw and cancel, team overlap view, Sl
 | Backend | Django + Django REST Framework |
 | Database | PostgreSQL (system install) |
 | Auth | Django session auth. Email is stored in `username`. |
-| Frontend | Plain TypeScript compiled with `tsc` to JS. No framework, no bundler. |
-| Serving | Django serves JSON, plus static HTML shells and the compiled JS from one origin (no CORS) |
+| Frontend | Plain TypeScript in its own `frontend/` project, run with the Vite dev server. No framework. |
+| Serving | Django serves JSON only (port 8000). Vite serves the pages (port 5173) and forwards `/api` to Django, so the browser sees one origin (no CORS) |
 | Backend tests | pytest + pytest-django |
 | Frontend tests | Vitest + jsdom |
 
-**Why TypeScript:** typed API contracts. If a Django response and a page disagree about a field, `tsc` fails at compile time instead of showing a blank cell in the browser.
+**Why TypeScript:** typed API contracts. If a Django response and a page disagree about a field, `npm run typecheck` fails instead of showing a blank cell in the browser.
 
-**Why Django serves the HTML:** one origin means the session cookie and CSRF token work with no extra setup. The HTML files are empty shells. All rendering happens in TypeScript.
+**Why the dev server forwards `/api`:** one origin means the session cookie and CSRF token work with no CORS setup. Django trusts the dev server origin for CSRF (`CSRF_TRUSTED_ORIGINS`). The HTML files are empty shells. All rendering happens in TypeScript.
 
 ---
 
@@ -104,30 +106,30 @@ LeaveRequest   user (FK), approver (FK), start_date, end_date, half_day (bool),
 ### Layers
 
 ```
-leaves/
-  rules.py              # pure functions, no Django, no DB
-  exceptions.py         # domain exceptions
-  services/
-    leave_service.py        # preview, submit, list my leaves
-    approval_service.py     # list waiting, approve, reject
-  serializers.py        # shape and format validation only
-  permissions.py        # IsApprover
-  authentication.py     # SessionAuthenticationWith401
-  exception_handler.py  # translate_leave_errors_to_http
-  views.py              # thin DRF APIViews
-  models.py
-  management/commands/seed.py
-  static/leaves/
-    html/               # login, my_leaves, apply, approvals (empty shells)
-    ts/                 # api.ts, html.ts, types.ts, nav.ts, one file per page
-    js/                 # tsc output (gitignored)
-  tests/
-tsconfig.json
-package.json
-vitest.config.ts
-pytest.ini
-.env.example
-SPEC.md  CLAUDE.md  DEVELOPER_GUIDE.md
+backend/
+  manage.py  pytest.ini  requirements.txt  .env.example
+  config/                   # settings, urls
+  leaves/
+    rules.py              # pure functions, no Django, no DB
+    exceptions.py         # domain exceptions
+    services/
+      leave_service.py        # preview, submit, list my leaves
+      approval_service.py     # list waiting, approve, reject
+    serializers.py        # shape and format validation only
+    permissions.py        # IsApprover
+    authentication.py     # SessionAuthenticationWith401
+    exception_handler.py  # translate_leave_errors_to_http
+    views.py              # thin DRF APIViews
+    models.py
+    management/commands/seed.py
+    tests/
+frontend/
+  package.json  tsconfig.json  vite.config.ts  vitest.config.ts
+  login.html  my_leaves.html  apply.html  approvals.html   # empty shells
+  public/                 # logo
+  src/                    # api.ts, html.ts, types.ts, nav.ts, one file per page, styles.css
+    __tests__/            # Vitest tests
+SPEC.md  CLAUDE.md  DEVELOPER_GUIDE.md  README.md  AI_LOG.md  AI_WORKFLOW.md
 ```
 
 | Layer | Job | Must not |
@@ -190,6 +192,7 @@ One DRF exception handler (`translate_leave_errors_to_http`) turns these into re
 - Each page file has a pure `renderX(data): string` and an `initX()` that fetches, renders and wires events.
 - Working-day and cap logic lives only in Python. The Apply page calls the preview endpoint.
 - Styling: one plain CSS file with a few colour variables. Polish is optional.
+- The pages are plain HTML files in `frontend/`. The dev server maps `/`, `/login`, `/apply` and `/approvals` to them, so the URLs in the code do not change.
 
 ---
 
@@ -252,8 +255,8 @@ CREATE DATABASE leaveapp OWNER leaveapp;
 
 - `CREATEDB` matters because pytest-django creates and drops its own `test_leaveapp` database. It never touches dev data.
 - Install `psycopg[binary]` and `python-dotenv`.
-- `config/settings.py` reads `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` from `.env`. Commit `.env.example`, gitignore `.env`.
-- `pytest.ini` sets `DJANGO_SETTINGS_MODULE` and `addopts = --reuse-db`.
+- `backend/config/settings.py` reads `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` from `.env`. Commit `.env.example`, gitignore `.env` (both live in `backend/`).
+- `backend/pytest.ini` sets `DJANGO_SETTINGS_MODULE` and `addopts = --reuse-db`.
 - Day counts use `DecimalField(max_digits=4, decimal_places=1)` so 0.5 is exact.
 - Pure-rules tests have no `django_db` mark and never touch the database. Service and API tests use `@pytest.mark.django_db`.
 - The seed command is idempotent. `python manage.py seed --reset` wipes and reseeds.

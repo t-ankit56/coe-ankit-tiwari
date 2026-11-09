@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Leave management app. Django REST Framework backend, plain TypeScript frontend, PostgreSQL. Built test-first in three sprint tasks.
+Leave management app. Django REST Framework backend in `backend/`, plain TypeScript frontend in `frontend/`, PostgreSQL. Built test-first in three sprint tasks.
 
 ## Read these first
 
@@ -13,15 +13,23 @@ If these files disagree, `SPEC.md` wins on behaviour and `DEVELOPER_GUIDE.md` wi
 
 ## Commands
 
+Two folders: `backend/` (Django) and `frontend/` (TypeScript). Run each command from its folder.
+
 ```
-python manage.py runserver          # needs `npm run build` first
+# backend/   (activate .venv first)
+python manage.py runserver          # JSON API on port 8000, no pages
 python manage.py migrate
 python manage.py seed               # idempotent. `--reset` wipes and reseeds.
 pytest                              # all backend tests
 pytest leaves/tests/test_rules_working_days.py -x   # one file, stop at first failure
-npm run build                       # tsc -> leaves/static/leaves/js/
+
+# frontend/
+npm run dev                         # Vite on port 5173: serves the pages, forwards /api to Django
 npm test                            # vitest (jsdom)
+npm run typecheck                   # tsc --noEmit
 ```
+
+Open the app at http://localhost:5173/login, not port 8000. Both servers must be running.
 
 ## Architecture (strict layering)
 
@@ -32,18 +40,18 @@ views -> services -> rules
 
 | Layer | File(s) | Does | Never does |
 |---|---|---|---|
-| rules | `leaves/rules.py` | Pure calculations (working days, overlap, probation cap) | Import Django, touch the DB, read the clock |
-| services | `leaves/services/*.py` | Load data, call rules, write, raise domain exceptions | Know about HTTP, `request`, or `Response` |
-| serializers | `leaves/serializers.py` | Field types, required fields, non-blank text, date format | Hold business rules |
-| views | `leaves/views.py` | Authenticate, validate input, call one service, serialize output | Contain `if` logic about leave |
-| exception handler | `leaves/exception_handler.py` | Map domain exceptions to HTTP status and `{"error": "..."}` | Anything else |
+| rules | `backend/leaves/rules.py` | Pure calculations (working days, overlap, probation cap) | Import Django, touch the DB, read the clock |
+| services | `backend/leaves/services/*.py` | Load data, call rules, write, raise domain exceptions | Know about HTTP, `request`, or `Response` |
+| serializers | `backend/leaves/serializers.py` | Field types, required fields, non-blank text, date format | Hold business rules |
+| views | `backend/leaves/views.py` | Authenticate, validate input, call one service, serialize output | Contain `if` logic about leave |
+| exception handler | `backend/leaves/exception_handler.py` | Map domain exceptions to HTTP status and `{"error": "..."}` | Anything else |
 
 - Services that need "today" take a `today: date | None = None` argument. Never call `date.today()` inside rules.
-- Domain errors are exceptions from `leaves/exceptions.py`. Never return error codes or `None` for failure.
+- Domain errors are exceptions from `backend/leaves/exceptions.py`. Never return error codes or `None` for failure.
 - Working-day and probation logic lives only in Python. The frontend calls `GET /api/leaves/preview`. Never reimplement it in TypeScript.
 - Use `Decimal` for days, never `float`.
 - API fields are `start_date` and `end_date` (not `from`/`to`). Dates are ISO strings (`2026-11-19`). Errors are `{"error": "message"}`.
-- Do not use Django templates. Pages are static HTML shells in `leaves/static/leaves/html/`.
+- Do not use Django templates. Django serves JSON only. The pages are plain HTML files in `frontend/`.
 
 ## Naming (readable by someone who has never seen the code)
 
@@ -87,7 +95,7 @@ Rules:
 
 ## Frontend rules
 
-- Plain TypeScript. No React, no framework, no bundler. `tsc` compiles to `leaves/static/leaves/js/` (gitignored).
+- Plain TypeScript in `frontend/src/`. No React, no framework. Vite is only the dev server: it serves the pages and forwards `/api` to Django on port 8000.
 - Relative imports use the `.js` extension: `import { escapeHtml } from "./html.js"`.
 - Each page file exports a pure `renderX(data): string` and an `initX()` that fetches, renders and wires events.
 - All user text (reason, rejection comment, names) goes through `escapeHtml` before it enters HTML.

@@ -45,6 +45,9 @@ One line per suggestion. Rejections matter most.
 | 30 | 3 | Add API row I2 (serialized probation shape) | Accepted *(implicit)* | Nothing else tested that shape. |
 | 31 | 3 | Replace the day list with the warning and limit cards when over the cap | Accepted *(implicit)* | That is what the probation screen shows. |
 | 32 | 3 | Skip the optional "x of 2 days used this month" line on My leaves | Not built | The guide says skip unless I ask, and I did not. |
+| 33 | After 3 | Make the TypeScript a separate project, with a Vite dev server forwarding `/api` to Django instead of CORS | Accepted | I wanted `backend/` and `frontend/` folders in the same repo, running locally. Build and deployment come later. Claude's "no bundler" rule in `CLAUDE.md` and `SPEC.md` was changed to allow Vite as a dev server. |
+| 34 | After 3 | Keep the docs and `screens/` at `erp_leave_module/` and move only the code | Accepted *(implicit)* | The docs describe the whole project. |
+| 35 | After 3 | Leave the build steps in `DEVELOPER_GUIDE.md` as written and add a path-mapping note at the top | Accepted *(implicit)* | It records how the app was built, so its 43 path references were not rewritten. |
 
 ## Things that went wrong
 
@@ -52,6 +55,8 @@ One line per suggestion. Rejections matter most.
 - Task 2: one `red:` commit held two tests, and another failed on a syntax error instead of an assertion. Both were reset and redone as single-test cycles.
 - Task 2: `reject_leave` first skipped the assigned-approver check. Row E3 was added to cover it.
 - After Task 1: form fields on the Apply page were stretched about 200px tall by a flex rule. I reported the gaps and Claude fixed it.
+- Split into `backend/` and `frontend/`: the first commit included 9 compiled `.js` files, because an ignore rule that named a path stopped matching after the move. Claude reset the commit (unpushed) and redid it without them.
+- Split: Claude's plan said the dev proxy would keep the Host header, so Django's CSRF origin check would pass. It did not (403 on every POST). Claude read the error, added `CSRF_TRUSTED_ORIGINS` for the dev server and re-tested login, submit, a missing token, a foreign origin and logout.
 - Planning: the first Christmas example was wrong, ZOMBIES started at One instead of Zero, the first test count was too low, and one test name was vague. All corrected.
 
 ## Tests that passed immediately

@@ -41,12 +41,14 @@ Method in one line: screens, rules list, decisions on gaps, ZOMBIES examples, na
 - A fake Slack and email notifier, Floating holidays, cancel and withdraw: cut from scope.
 - `JsonResponse` views with no DRF, and logic in views: replaced by DRF and the service layer.
 - An optional Playwright test, a time estimate, and trimming to 60-70 tests: not adopted.
+- After the build: I asked to split the app into `backend/` and `frontend/` folders in the same repo, running locally. Claude proposed a Vite dev server with a proxy instead of CORS, and I accepted it. This replaced the "no bundler" rule.
 - During the build: I used a new branch in the COE repo instead of `git init` in the module, and I asked for the UI from `screens/` instead of plain CSS. Claude left out what those mockups show beyond scope (Floating, filters, tabs, Slack text, other menus).
 
 ## 5. Mistakes that were caught
 
 - A `green:` commit with a failing suite, a `red:` commit holding two tests, and a `red:` commit that failed on a syntax error. Each was reset before pushing and redone. Claude added a gate that refuses `green:` or `refactor:` unless the suite passes.
 - The reject endpoint first skipped the assigned-approver check. A new row (E3) now covers it.
+- In the split, a commit picked up compiled `.js` files after an ignore rule stopped matching, and Claude's first proxy plan assumed the wrong Host header, so POSTs failed with 403 until the dev origin was trusted. Both were found by checking, and fixed.
 - A CSS rule stretched the Apply form fields about 200px tall. I reported it and it was fixed.
 - In planning: a wrong Christmas example, ZOMBIES starting at One, a low test count, and a vague test name.
 

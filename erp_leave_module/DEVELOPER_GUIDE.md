@@ -2,6 +2,16 @@
 
 Audience: Claude Code (and the human reviewing it). Read `CLAUDE.md` and `SPEC.md` first. This guide says **how** to build what `SPEC.md` describes.
 
+> **Layout note.** This guide was written for, and followed in, one folder. The project was then split into `backend/` and `frontend/`. Map the paths like this:
+>
+> | In this guide | Now |
+> |---|---|
+> | `manage.py`, `config/`, `leaves/`, `pytest.ini`, `requirements.txt`, `.env`, `.venv` | `backend/` |
+> | `leaves/static/leaves/ts/` (TypeScript and `__tests__/`) | `frontend/src/` |
+> | `leaves/static/leaves/html/`, `css/`, `img/` | `frontend/*.html`, `frontend/src/styles.css`, `frontend/public/` |
+> | `npm run build` (tsc to `js/`) | `npm run typecheck` in `frontend/`. The pages run from the Vite dev server (`npm run dev`) instead of compiled JS. |
+> | Django serves the pages | Vite serves them on port 5173 and forwards `/api` to Django |
+
 ## How to use this guide
 
 1. Do the steps in order. Each step has **Do**, **Commits** and **Verify**.
