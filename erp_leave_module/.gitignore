@@ -2,7 +2,6 @@
 .venv
 node_modules
 __pycache__
-leaves/static/leaves/js/
 .pytest_cache
 screens/
 QA_NOTES.md

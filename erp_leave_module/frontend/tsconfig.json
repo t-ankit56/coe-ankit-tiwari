@@ -4,10 +4,9 @@
     "module": "ES2020",
     "moduleResolution": "Bundler",
     "strict": true,
-    "rootDir": "leaves/static/leaves/ts",
-    "outDir": "leaves/static/leaves/js",
+    "noEmit": true,
     "lib": ["ES2020", "DOM"]
   },
-  "include": ["leaves/static/leaves/ts"],
+  "include": ["src"],
   "exclude": ["**/__tests__"]
 }

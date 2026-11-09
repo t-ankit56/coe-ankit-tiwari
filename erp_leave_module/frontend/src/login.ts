@@ -10,7 +10,7 @@ export async function submitLogin(email: string, password: string): Promise<Curr
 export function initLogin(): void {
   const main = document.getElementById("main")!;
   main.innerHTML = `<div class="login-card card">
-      <img src="/static/leaves/img/incubyte-logo.png" alt="Incubyte" class="login-logo">
+      <img src="/incubyte-logo.png" alt="Incubyte" class="login-logo">
       <h1>Log in</h1>
       <form id="login-form">
         <div class="field"><label class="label" for="email">Email</label><input id="email" type="email" required></div>

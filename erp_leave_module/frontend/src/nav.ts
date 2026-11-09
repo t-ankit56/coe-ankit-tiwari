@@ -23,7 +23,7 @@ export function renderNav(me: CurrentUser, currentPath: string): string {
     .map((link) => `<a href="${link.href}"${link.href === currentPath ? ' aria-current="page"' : ""}>${link.label}</a>`)
     .join("");
   return `<aside class="sidebar">
-    <div class="brand"><img src="/static/leaves/img/incubyte-logo.png" alt="Incubyte"></div>
+    <div class="brand"><img src="/incubyte-logo.png" alt="Incubyte"></div>
     <nav aria-label="Main">
       <p class="nav-group">Leave</p>
       <div class="nav-links">${items}</div>
