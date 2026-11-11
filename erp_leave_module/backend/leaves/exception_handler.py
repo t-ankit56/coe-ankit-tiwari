@@ -10,7 +10,6 @@ from leaves.exceptions import (
     LeaveRequestNotFound,
     NoApproverAssigned,
     NotTheAssignedApprover,
-    ProbationLimitExceeded,
 )
 from rest_framework.response import Response
 from rest_framework.views import exception_handler as drf_default_exception_handler
@@ -20,7 +19,6 @@ HTTP_STATUS_FOR_LEAVE_ERROR = {
     EndDateIsBeforeStartDate: 400,
     HalfDayNeedsASingleWorkingDay: 400,
     LeaveOverlapsExistingLeave: 400,
-    ProbationLimitExceeded: 400,
     NoApproverAssigned: 400,
     CommentRequiredToReject: 400,
     LeaveRequestNotFound: 404,

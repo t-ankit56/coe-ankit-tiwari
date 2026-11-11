@@ -18,12 +18,6 @@ class LeaveOverlapsExistingLeave(LeaveError):
         super().__init__(f"You already have leave on {leave.start_date}-{leave.end_date}.")
 
 
-class ProbationLimitExceeded(LeaveError):
-    def __init__(self, status):
-        self.status = status
-        super().__init__("This is over your probation limit.")
-
-
 class CommentRequiredToReject(LeaveError):
     def __init__(self):
         super().__init__("A comment is required to reject.")
