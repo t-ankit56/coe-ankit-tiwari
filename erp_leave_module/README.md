@@ -85,7 +85,7 @@ The password for everyone is `password123` (local use only).
 | Email | Role | Try this |
 |---|---|---|
 | `ankit@incubyte.co` | Employee, approver Priya | Apply for Mon 23 to Fri 27 Nov: 4 days, Thanksgiving not counted. Apply for 24 to 28 Dec: overlap with the pending request. |
-| `aarav@incubyte.co` | Employee on probation, approver Priya | Apply for Thu 19 to Fri 20 Nov: over the probation limit. Click the suggestion for 0.5 day. |
+| `aarav@incubyte.co` | Employee on probation, approver Priya | Apply for Thu 19 to Fri 20 Nov: over the probation limit. A warning shows, Submit stays enabled, and the suggestion offers 0.5 day. |
 | `priya@incubyte.co` | Approver for Ankit and Aarav, her approver is Rohan | Open Approvals, approve one request, reject another with a comment. She can also apply. |
 | `rohan@incubyte.co` | Approves for Priya, no approver | Approves Priya's request. Cannot apply. |
 

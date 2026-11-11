@@ -14,7 +14,7 @@ Django REST Framework backend, plain TypeScript frontend, PostgreSQL, built test
 1. Login (email and password only)
 2. **Task 1:** My leaves (landing page) and Apply for Personal leave
 3. **Task 2:** Approvals (approve, or reject with a required comment)
-4. **Task 3:** Probation cap (2 days a month), shown as a warning that blocks submit
+4. **Task 3:** Probation cap (2 days a month), shown as a warning, Submit stays enabled
 
 **Out (say so in the walkthrough)**
 Floating and Leave-without-pay types, withdraw and cancel, team overlap view, Slack and email notifications, Contact HR, filters and tabs, Decided tab, signup, password reset, "which half" of a half day.
@@ -81,7 +81,7 @@ All seeded users share the dev password `password123`. This is for local use onl
     - Pending and approved count toward the cap. Rejected does not.
     - A request spanning two months is checked against each month separately.
     - A request that exactly reaches 2.0 is allowed.
-11. An over-cap request is refused by the server. The UI shows a warning, disables Submit, and offers the largest request that fits.
+11. An over-cap request is a warning, not a block. The UI shows the warning and offers the largest request that fits, and Submit stays enabled. The server accepts the request. (Changed after the first build, which refused it with a 400.)
 12. The suggestion is the largest request starting on the same start date that fits the days left. If only 0.5 is left, it is a half day on the start date. If nothing is left (or the start date is not a working day), there is no suggestion.
 
 ---
@@ -165,7 +165,7 @@ One DRF exception handler (`translate_leave_errors_to_http`) turns these into re
 
 | Exception | HTTP |
 |---|---|
-| `EndDateIsBeforeStartDate`, `HalfDayNeedsASingleWorkingDay`, `LeaveOverlapsExistingLeave`, `ProbationLimitExceeded`, `CommentRequiredToReject`, `NoApproverAssigned` | 400 |
+| `EndDateIsBeforeStartDate`, `HalfDayNeedsASingleWorkingDay`, `LeaveOverlapsExistingLeave`, `CommentRequiredToReject`, `NoApproverAssigned` | 400 |
 | `NotTheAssignedApprover` | 403 |
 | `LeaveRequestNotFound` | 404 |
 | `LeaveAlreadyDecided` | 409 |
@@ -485,20 +485,20 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 |---|---|
 | O2 | `test_preview_shows_probation_status_and_suggestion_for_user_on_probation` (Aarav 19-20 Nov: over 1.5, with a suggestion) |
 | B1 | `test_submitting_leave_that_exactly_reaches_the_probation_limit_is_created` (19 Nov half day: created) |
-| E4 | `test_submitting_leave_over_the_probation_limit_is_refused` (`ProbationLimitExceeded`) |
+| E4 | `test_submitting_leave_over_the_probation_limit_is_still_created_because_it_is_only_a_warning` (was a refusal; changed to a warning) |
 
 ### 3.3 `test_api_leaves.py` (2 added)
 
 | Tag | Test |
 |---|---|
 | I2 | `test_preview_for_a_user_on_probation_includes_the_month_breakdown_and_a_suggestion` (added during build: the serialized `probation` shape had no test) |
-| E3 | `test_submitting_leave_over_the_probation_limit_returns_400_even_without_the_ui` |
+| E3 | `test_submitting_leave_over_the_probation_limit_returns_201_because_it_is_only_a_warning` |
 
 ### 3.4 Frontend (2)
 
 | File | Test |
 |---|---|
-| `apply.test.ts` | `over the probation limit › shows the warning and disables Submit` |
+| `apply.test.ts` | `over the probation limit › shows the warning but still lets the user submit` |
 | `apply.test.ts` | `suggestion button › fills in the dates and half-day box and refreshes the preview` |
 
 **Build:** wire `check_probation_limit` into the preview and `submit_leave`. On the Apply page add the red warning card ("This is over your probation limit"), the "Probation limit for November" breakdown, the helper text next to the disabled Submit, and the suggestion button. Optional: a small "x of 2 used this month" line on My leaves for probation users. Finish with a `refactor:` commit and the demo.
