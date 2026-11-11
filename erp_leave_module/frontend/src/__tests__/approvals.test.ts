@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { mountApprovalsPage, renderWaitingList } from "../approvals.js";
+import { mountApprovalsPage } from "../approvals.js";
 import type { WaitingApproval } from "../types.js";
+import { loadPage } from "./loadPage.js";
 
 function makeWaitingApproval(overrides: Partial<WaitingApproval> = {}): WaitingApproval {
   return {
@@ -21,7 +22,7 @@ function makeWaitingApproval(overrides: Partial<WaitingApproval> = {}): WaitingA
 }
 
 beforeEach(() => {
-  document.body.innerHTML = '<main id="main"></main>';
+  loadPage("approvals");
 });
 
 afterEach(() => {
@@ -29,8 +30,13 @@ afterEach(() => {
 });
 
 describe("waiting list", () => {
-  it('shows "No requests waiting" when empty', () => {
-    expect(renderWaitingList([], null)).toContain("No requests waiting");
+  it('shows "No requests waiting" and no decision form when empty', async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => [] }));
+    await mountApprovalsPage();
+
+    expect(document.getElementById("no-waiting")!.hidden).toBe(false);
+    expect(document.getElementById("no-waiting")!.textContent).toContain("No requests waiting");
+    expect(document.getElementById("decision-details")!.hidden).toBe(true);
   });
 });
 
@@ -40,7 +46,7 @@ describe("reject button", () => {
       "fetch",
       vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => [makeWaitingApproval()] }),
     );
-    await mountApprovalsPage(document.getElementById("main")!);
+    await mountApprovalsPage();
     const comment = document.querySelector<HTMLTextAreaElement>("#decision-comment")!;
     const reject = document.querySelector<HTMLButtonElement>("#reject")!;
 
