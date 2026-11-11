@@ -1,0 +1,7 @@
+.env
+.venv
+node_modules
+__pycache__
+.pytest_cache
+screens/
+QA_NOTES.md

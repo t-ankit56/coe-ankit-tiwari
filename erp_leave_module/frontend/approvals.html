@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Approvals · Incubyte Leaves</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inclusive+Sans:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/src/styles.css">
+</head>
+<body data-page="approvals">
+  <div class="app">
+    <!-- include: partials/sidebar.html -->
+    <main id="main">
+      <div class="page">
+        <header class="page-header"><div><span class="breadcrumb">Leave / Approvals</span><h1>Approvals</h1></div></header>
+        <div class="approvals-layout">
+          <section class="card list-card">
+            <div class="list-header"><h2 class="card-title">Requests from your team</h2><span class="muted small">Sorted by start date</span></div>
+            <p id="no-waiting" class="empty" hidden>No requests waiting</p>
+            <div id="waiting-list" class="waiting-items"></div>
+          </section>
+          <section id="decision-panel" class="card side-card">
+            <p id="nothing-to-decide" class="empty" hidden>Nothing to decide right now.</p>
+            <div id="decision-details" hidden>
+              <div class="requester"><span id="requester-initials" class="avatar avatar-light" aria-hidden="true"></span>
+                <div><h2 id="requester-name" class="card-title"></h2><span id="requester-email" class="muted"></span></div></div>
+              <dl class="details">
+                <dt>Dates</dt><dd><strong id="detail-dates"></strong></dd>
+                <dt>Days</dt><dd><strong id="detail-days"></strong></dd>
+                <dt>Reason</dt><dd id="detail-reason"></dd>
+                <dt>Submitted</dt><dd id="detail-submitted"></dd>
+              </dl>
+              <div class="field"><label class="label" for="decision-comment">Comment <span class="muted">(required if you reject)</span></label>
+                <textarea id="decision-comment" rows="3"></textarea></div>
+              <div class="actions">
+                <button id="approve" class="btn btn-primary" type="button">Approve</button>
+                <button id="reject" class="btn btn-reject" type="button" disabled>Reject</button>
+                <span id="decision-message" class="small error"></span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+  <template id="waiting-item">
+    <button type="button" class="waiting-item">
+      <span class="avatar avatar-light item-initials" aria-hidden="true"></span>
+      <span class="waiting-text"><strong class="item-name"></strong>
+        <span class="muted item-dates"></span></span>
+      <span class="waiting-days"><strong class="item-days"></strong><span class="muted small item-unit"></span></span>
+    </button>
+  </template>
+  <script type="module" src="/src/approvals.ts"></script>
+</body>
+</html>
