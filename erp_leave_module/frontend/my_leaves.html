@@ -10,8 +10,41 @@
 <body data-page="myLeaves">
   <div class="app">
     <!-- include: partials/sidebar.html -->
-    <main id="main"></main>
+    <main id="main">
+      <div class="page">
+        <header class="page-header">
+          <div><span class="breadcrumb">Leave / My leaves</span><h1>My leaves</h1></div>
+          <a id="apply-button" class="btn btn-primary" href="/apply" hidden>+ Apply for leave</a>
+        </header>
+        <section class="summary" aria-label="Summary">
+          <div class="summary-cell"><span class="muted">Personal leave in <span id="summary-year"></span></span>
+            <span class="summary-number"><span id="days-taken"></span> <span class="summary-unit">days taken</span></span>
+            <span class="muted" id="limit-note"></span></div>
+          <div class="summary-cell"><span class="muted">Waiting for approval</span>
+            <span class="summary-number"><span id="pending-count"></span> <span class="summary-unit" id="pending-unit"></span></span>
+            <span class="muted" id="waiting-note"></span></div>
+        </section>
+        <section class="card table-card" aria-labelledby="requests-title">
+          <h2 id="requests-title" class="card-title">All my requests</h2>
+          <p id="no-requests" class="empty" hidden>No requests yet</p>
+          <table id="requests-table" class="requests" hidden>
+            <thead><tr><th>Dates</th><th>Days</th><th>Status</th><th>Approver</th><th>Submitted</th></tr></thead>
+            <tbody id="requests-body"></tbody>
+          </table>
+          <p id="table-footer" class="table-footer muted"></p>
+        </section>
+      </div>
+    </main>
   </div>
+  <template id="leave-row">
+    <tr>
+      <td><strong class="dates"></strong><span class="note"></span></td>
+      <td class="days"></td>
+      <td><span class="badge"></span></td>
+      <td class="approver"></td>
+      <td class="muted submitted"></td>
+    </tr>
+  </template>
   <script type="module" src="/src/myLeaves.ts"></script>
 </body>
 </html>
