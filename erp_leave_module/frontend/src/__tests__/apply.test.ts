@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mountApplyPage } from "../apply.js";
 import type { CurrentUser, LeavePreview } from "../types.js";
+import { loadPage } from "./loadPage.js";
 
 const ankit: CurrentUser = {
   id: 1,
@@ -36,8 +37,13 @@ function typeInto(selector: string, value: string) {
   input.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
+function isShown(id: string): boolean {
+  const element = document.getElementById(id);
+  return element !== null && !element.hidden;
+}
+
 beforeEach(() => {
-  document.body.innerHTML = '<main id="main"></main>';
+  loadPage("apply");
 });
 
 afterEach(() => {
@@ -47,14 +53,14 @@ afterEach(() => {
 describe("apply page", () => {
   it("shows the day count after valid dates are entered", async () => {
     const fetchSpy = answerPreviewWith(thanksgivingWeek);
-    mountApplyPage(document.getElementById("main")!, ankit);
+    mountApplyPage(ankit);
 
     typeInto("#start-date", "2026-11-23");
     typeInto("#end-date", "2026-11-27");
 
-    await vi.waitFor(() => {
-      expect(document.getElementById("preview-panel")!.textContent).toContain("4 working days");
-    });
+    await vi.waitFor(() => expect(isShown("preview-result")).toBe(true));
+    expect(isShown("preview-empty")).toBe(false);
+    expect(document.getElementById("preview-days")!.textContent).toBe("4 working days");
     expect(document.getElementById("preview-panel")!.textContent).toContain("Thanksgiving, not counted");
     expect(fetchSpy.mock.calls[0][0]).toBe("/api/leaves/preview?start_date=2026-11-23&end_date=2026-11-27&half=false");
   });
@@ -80,15 +86,14 @@ const overTheProbationLimit: LeavePreview = {
 describe("over the probation limit", () => {
   it("shows the warning and disables Submit", async () => {
     answerPreviewWith(overTheProbationLimit);
-    mountApplyPage(document.getElementById("main")!, aarav);
+    mountApplyPage(aarav);
 
     typeInto("#reason", "Cousin's wedding");
     typeInto("#start-date", "2026-11-19");
     typeInto("#end-date", "2026-11-20");
 
-    await vi.waitFor(() => {
-      expect(document.getElementById("preview-panel")!.textContent).toContain("This is over your probation limit");
-    });
+    await vi.waitFor(() => expect(isShown("probation-warning")).toBe(true));
+    expect(isShown("preview-result")).toBe(false);
     const panelText = document.getElementById("preview-panel")!.textContent!;
     expect(panelText).toContain("1.5 of 2 days used");
     expect(panelText).toContain("1.5 days over the limit");
@@ -115,16 +120,16 @@ describe("suggestion button", () => {
       .mockResolvedValueOnce({ ok: true, status: 200, json: async () => overTheProbationLimit })
       .mockResolvedValue({ ok: true, status: 200, json: async () => halfDayThursday });
     vi.stubGlobal("fetch", fetchSpy);
-    mountApplyPage(document.getElementById("main")!, aarav);
+    mountApplyPage(aarav);
     typeInto("#start-date", "2026-11-19");
     typeInto("#end-date", "2026-11-20");
-    await vi.waitFor(() => expect(document.getElementById("use-suggestion")).not.toBeNull());
+    await vi.waitFor(() => expect(isShown("use-suggestion")).toBe(true));
 
     document.getElementById("use-suggestion")!.click();
 
-    await vi.waitFor(() => {
-      expect(document.getElementById("preview-panel")!.textContent).toContain("Within your probation limit");
-    });
+    await vi.waitFor(() => expect(isShown("preview-result")).toBe(true));
+    expect(isShown("probation-warning")).toBe(false);
+    expect(document.getElementById("preview-panel")!.textContent).toContain("Within your probation limit");
     expect(document.querySelector<HTMLInputElement>("#start-date")!.value).toBe("2026-11-19");
     expect(document.querySelector<HTMLInputElement>("#end-date")!.value).toBe("2026-11-19");
     expect(document.querySelector<HTMLInputElement>("#half-day")!.checked).toBe(true);
