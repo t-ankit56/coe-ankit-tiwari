@@ -460,7 +460,7 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 
 ## 14. Task 3: Probation cap
 
-**Demo:** Aarav tries Thu 19 to Fri 20 Nov and sees "1.5 of 2 days used". The request is 2 days, so it is 1.5 over and Submit is disabled. He clicks "Use 0.5 day on Thu 19 Nov", submits, and it succeeds.
+**Demo:** Aarav tries Thu 19 to Fri 20 Nov and sees "1.5 of 2 days used". The request is 2 days, so it is 1.5 over and a warning shows, but Submit stays enabled. He clicks "Use 0.5 day on Thu 19 Nov", submits, and it succeeds.
 
 ### 3.1 `test_rules_probation.py` (12)
 
@@ -501,7 +501,7 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 | `apply.test.ts` | `over the probation limit › shows the warning but still lets the user submit` |
 | `apply.test.ts` | `suggestion button › fills in the dates and half-day box and refreshes the preview` |
 
-**Build:** wire `check_probation_limit` into the preview and `submit_leave`. On the Apply page add the red warning card ("This is over your probation limit"), the "Probation limit for November" breakdown, the helper text next to the disabled Submit, and the suggestion button. Optional: a small "x of 2 used this month" line on My leaves for probation users. Finish with a `refactor:` commit and the demo.
+**Build:** wire `check_probation_limit` into the preview and `submit_leave`. On the Apply page add the red warning card ("This is over your probation limit"), the "Probation limit for November" breakdown, the helper text next to Submit ("You can still submit this request."), and the suggestion button. Optional: a small "x of 2 used this month" line on My leaves for probation users. Finish with a `refactor:` commit and the demo.
 
 **Task 3 total: 17 backend + 2 frontend = 19.**
 

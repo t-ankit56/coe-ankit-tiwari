@@ -29,7 +29,7 @@ Method in one line: screens, rules list, decisions on gaps, ZOMBIES examples, na
 - A pure `rules.py` (no Django, no database), with working-day and cap logic only in Python and a preview endpoint for the UI.
 - A service layer, domain exceptions and one handler that maps them to 400, 403, 404 and 409.
 - A database constraint so nobody approves their own request, and `is_approver` derived from the data.
-- `escapeHtml`, and Vitest tests for rendering, escaping and button states only.
+- Vitest tests for what the pages show, plain-text output and button states only. (An `escapeHtml` helper was accepted at first and removed later, see section 4.)
 - `red:`, `green:`, `refactor:` commits with ZOMBIES tags, stubs before the first red, and `test:` commits when a test already passes.
 - During the build, Claude proposed seven extra spec rows where behaviour had no test (preview overlap, Apply link, reject's own 404 and 403, waiting list shape, probation shape, 204 on logout). They stayed in.
 
@@ -37,10 +37,12 @@ Method in one line: screens, rules list, decisions on gaps, ZOMBIES examples, na
 
 - Express, SQLite and React as the stack: replaced by Django, DRF, PostgreSQL and plain TypeScript.
 - A seeded user switcher: replaced by a real login page.
-- Django templates and a `/api/csrf` endpoint: dropped after my questions. Static HTML shells instead, and login sets the cookie.
+- Django templates and a `/api/csrf` endpoint: dropped after my questions. Static HTML files instead, and login sets the cookie.
 - A fake Slack and email notifier, Floating holidays, cancel and withdraw: cut from scope.
 - `JsonResponse` views with no DRF, and logic in views: replaced by DRF and the service layer.
 - An optional Playwright test, a time estimate, and trimming to 60-70 tests: not adopted.
+- After the build: I asked for the pages to be full HTML files, with `hidden` for permissions and a shared sidebar partial, instead of HTML strings built in TypeScript. Claude agreed it was safer and easier to read, so `escapeHtml` and `renderX` were replaced by `textContent` and `fillX` functions. The tests were rewritten first, then the code.
+- After the build: I asked for the probation cap to be a warning, not a block. The server now accepts an over-the-limit request and Submit stays enabled, and `ProbationLimitExceeded` was removed.
 - After the build: I asked to split the app into `backend/` and `frontend/` folders in the same repo, running locally. Claude proposed a Vite dev server with a proxy instead of CORS, and I accepted it. This replaced the "no bundler" rule.
 - During the build: I used a new branch in the COE repo instead of `git init` in the module, and I asked for the UI from `screens/` instead of plain CSS. Claude left out what those mockups show beyond scope (Floating, filters, tabs, Slack text, other menus).
 
@@ -54,10 +56,9 @@ Method in one line: screens, rules list, decisions on gaps, ZOMBIES examples, na
 
 ## 6. What I checked and what I did not
 
-- `pytest` (92 cases from 83 test functions), `npm test` (16) and `npm run build` pass. A fresh clone following only `README.md` passes too.
-- Every test name in the `SPEC.md` tables exists in code, and every red commit has a matching green (71 pairs). 28 `test:` commits mark tests that passed immediately.
+- `pytest` (92 cases from 83 test functions), `npm test` (16) and `npm run typecheck` pass. A fresh clone following only `README.md` passes too.
+- Every test name in the `SPEC.md` tables exists in code, and every red commit has a matching green (78 pairs). 28 `test:` commits mark tests that passed immediately.
 - Each task's demo was run against the real server over HTTP with real logins and CSRF tokens.
-- **[Fill in what I checked by hand in the browser.]** Claude cannot see a browser, so the page layout was only checked by me.
 - Not built: the optional probation line on My leaves, Contact HR, and the Decided tab.
 
 ## 7. Open items

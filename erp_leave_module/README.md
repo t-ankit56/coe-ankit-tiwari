@@ -110,7 +110,7 @@ backend/
   leaves/exception_handler.py domain exceptions to HTTP status and {"error": "..."}
   leaves/tests/               pytest tests
 frontend/
-  *.html                      page shells (login, my_leaves, apply, approvals)
+  *.html                      full pages (login, my_leaves, apply, approvals)
   src/                        TypeScript, styles.css and the Vitest tests in __tests__/
   public/                     the logo
   vite.config.ts              dev server, the /api proxy and the page URLs

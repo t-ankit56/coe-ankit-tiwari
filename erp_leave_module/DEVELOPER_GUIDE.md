@@ -114,14 +114,13 @@ Base class `LeaveError(Exception)`. Each takes no required arguments unless note
 | `EndDateIsBeforeStartDate` | End date cannot be before start date. | 400 |
 | `HalfDayNeedsASingleWorkingDay` | A half day needs a single working day. | 400 |
 | `LeaveOverlapsExistingLeave(leave)` | You already have leave on {start}-{end}. | 400 |
-| `ProbationLimitExceeded(status)` | This is over your probation limit. | 400 |
 | `CommentRequiredToReject` | A comment is required to reject. | 400 |
 | `NoApproverAssigned` | No approver is assigned to you. | 400 |
 | `NotTheAssignedApprover` | Only the assigned approver can decide this request. | 403 |
 | `LeaveRequestNotFound` | Leave request not found. | 404 |
 | `LeaveAlreadyDecided` | This request has already been decided. | 409 |
 
-`LeaveOverlapsExistingLeave` keeps the clashing leave as `.leave`. `ProbationLimitExceeded` keeps the status as `.status`.
+`LeaveOverlapsExistingLeave` keeps the clashing leave as `.leave`.
 
 ## A4. Service contracts
 
@@ -150,7 +149,7 @@ def reject_leave(approver, leave_id, comment) -> LeaveRequest
 1. No approver, raise `NoApproverAssigned`.
 2. Dates and half day, via `explain_each_day`.
 3. Overlap, raise `LeaveOverlapsExistingLeave`.
-4. Probation (only if on probation), raise `ProbationLimitExceeded`.
+4. Probation: not checked here. The cap is a warning, so `preview_leave` reports it and `submit_leave` accepts the request.
 5. Create with `status="pending"`, `approver=profile.approver`, and `days` from the breakdown.
 
 `list_my_leaves`: leaves newest first (`-created_at`, then `-id`). `days_taken` is the sum of `days` for **approved** requests whose `start_date.year == today.year`. `pending_count` counts all pending requests. `today` defaults to `timezone.localdate()`.
@@ -438,9 +437,9 @@ Work in `leaves/static/leaves/ts/`, tests in `__tests__/`.
 | 4 | `apply.ts` | `apply page › shows the day count after valid dates are entered` |
 
 Build notes:
-- `renderLeavesTable(leaves: Leave[]): string` is pure. Rows show dates, days, status badge, approver, submitted date. Empty list shows "No requests yet".
-- `renderSummaryCards(summary)` shows "Personal days taken in {year}" and "Requests waiting for approval".
-- `initMyLeaves()` calls `/api/me`, draws the nav (with an Apply button only if allowed), then `/api/leaves`, then renders.
+- `fillLeavesTable(leaves: Leave[])` fills the page's table. Rows show dates, days, status badge, approver, submitted date. Empty list shows "No requests yet".
+- `fillSummary(summary, year, onProbation)` shows "Personal days taken in {year}" and "Requests waiting for approval".
+- `initMyLeaves()` calls `/api/me`, draws the nav (with an Apply button only if allowed), then `/api/leaves`, then fills the page.
 - `apply.ts`: form (start, end, half-day checkbox that is enabled only when start equals end, reason, read-only approver from `/api/me`). On any input change with both dates set, call `/api/leaves/preview` and render the "What this request uses" panel from the breakdown (day rows, total, green checks). Show the overlap message if `overlap` is not null. Submit calls `POST /api/leaves` then goes to `/`. Submit is disabled when dates are empty, the reason is blank, the preview failed, or `overlap` is not null.
 - Write `styles.css` once, plain and small.
 
@@ -505,7 +504,7 @@ File: `leaves/tests/test_api_approvals.py` (8 tests, `SPEC.md` 13.2).
 Build notes:
 - Left list sorted by start date as returned by the API. Click a row to fill the detail panel (requester, dates, days, reason, submitted). Comment box with label "Comment (required if you reject)". Approve calls `/approve`. Reject calls `/reject` and stays disabled until the trimmed comment is non-empty. After a decision, reload the list.
 - Show server errors (403, 409) in a message area using `ApiError.message`.
-- My leaves shows `decision_comment` under the dates for rejected requests, passed through `escapeHtml`.
+- My leaves shows `decision_comment` under the dates for rejected requests, written with `textContent`, so it shows as plain text.
 
 **Verify:** `npm test` shows 12 frontend tests passing, `npm run build` is clean.
 
@@ -559,7 +558,7 @@ Order the commits Z, O, M, B, I, E as in `CLAUDE.md`. O2 and Z3 are listed last 
 **Do:** wire `check_probation_limit` into `preview_leave` (returns the status only when `on_probation`) and into `submit_leave` (step 4 of A4).
 
 Tests:
-- `test_service_leaves.py` adds 3 tests (`SPEC.md` 14.2): Aarav preview 19-20 Nov shows not ok with a suggestion; Aarav submit 19 Nov half day is created; Aarav submit 19-20 Nov raises `ProbationLimitExceeded` and creates nothing.
+- `test_service_leaves.py` adds 3 tests (`SPEC.md` 14.2): Aarav preview 19-20 Nov shows not ok with a suggestion; Aarav submit 19 Nov half day is created; Aarav submit 19-20 Nov is still created, because the cap is only a warning.
 - `test_api_leaves.py` adds 1 test (`SPEC.md` 14.3): `POST /api/leaves` for Aarav 19-20 Nov returns 400 with the message "This is over your probation limit." even though no UI is involved.
 - Serialize `ProbationStatusSerializer` and `MonthUsageSerializer` per A6. Make sure `Decimal` fields come out as numbers.
 
@@ -569,12 +568,12 @@ Tests:
 
 | Order | File | Test (`SPEC.md` 14.4) |
 |---|---|---|
-| 1 | `apply.ts` | `over the probation limit › shows the warning and disables Submit` |
+| 1 | `apply.ts` | `over the probation limit › shows the warning but still lets the user submit` |
 | 2 | `apply.ts` | `suggestion button › fills in the dates and half-day box and refreshes the preview` |
 
 Build notes:
 - When `preview.probation && !preview.probation.ok`: replace the right panel with a red warning card ("This is over your probation limit", the explanatory line, and the suggestion button "Use {0.5 day} on {Thu 19 Nov}" when `suggestion` is not null). Below it show "Probation limit for {Month}" with `used of 2 days used`, a progress bar, `left`, a line for this request, and "{over} days over the limit if submitted as it is."
-- Disable Submit and show "Change the dates to continue." beside it.
+- Keep Submit enabled and show "You can still submit this request." beside it.
 - The suggestion button sets the start date, end date and half-day checkbox from `suggestion`, then re-calls the preview.
 - Optional, only if time allows: a "x of 2 days used this month" line on My leaves for users with `on_probation`. This needs no new endpoint if `/api/me` is extended, so skip it unless the human asks.
 
@@ -583,7 +582,7 @@ Build notes:
 ## Step 3.4: Refactor and demo
 
 1. `refactor:` commit (for example, extract `renderProbationCard`).
-2. Manual demo: log in as aarav@incubyte.co, Apply, pick 19 to 20 Nov. Confirm the warning, "1.5 of 2 days used", 1.5 over, disabled Submit. Click "Use 0.5 day on Thu 19 Nov", confirm the panel turns green, submit, and see it Pending. Then try another day in November and confirm it is blocked (the month is now full). Try 30 Nov to 1 Dec and confirm November is flagged while December is fine.
+2. Manual demo: log in as aarav@incubyte.co, Apply, pick 19 to 20 Nov. Confirm the warning, "1.5 of 2 days used", 1.5 over, and that Submit is still enabled. Click "Use 0.5 day on Thu 19 Nov", confirm the panel turns green, submit, and see it Pending. Then try another day in November and confirm the warning shows again (the month is now full) but Submit is still enabled. Try 30 Nov to 1 Dec and confirm November is flagged while December is fine.
 3. Confirm Ankit is never blocked for any dates.
 
 **Verify:** `pytest` (76 backend) and `npm test` (14 frontend) are green, giving 90 tests in total.
