@@ -84,7 +84,7 @@ const overTheProbationLimit: LeavePreview = {
 };
 
 describe("over the probation limit", () => {
-  it("shows the warning and disables Submit", async () => {
+  it("shows the warning but still lets the user submit", async () => {
     answerPreviewWith(overTheProbationLimit);
     mountApplyPage(aarav);
 
@@ -97,8 +97,8 @@ describe("over the probation limit", () => {
     const panelText = document.getElementById("preview-panel")!.textContent!;
     expect(panelText).toContain("1.5 of 2 days used");
     expect(panelText).toContain("1.5 days over the limit");
-    expect(document.querySelector<HTMLButtonElement>("#submit")!.disabled).toBe(true);
-    expect(document.getElementById("apply-form")!.textContent).toContain("Change the dates to continue.");
+    expect(document.querySelector<HTMLButtonElement>("#submit")!.disabled).toBe(false);
+    expect(document.getElementById("apply-form")!.textContent).toContain("You can still submit this request.");
   });
 });
 
