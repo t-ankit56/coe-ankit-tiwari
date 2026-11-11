@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
-import { renderNav } from "../nav.js";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { drawNav } from "../nav.js";
 import type { CurrentUser } from "../types.js";
+import { loadPage } from "./loadPage.js";
 
 function makeUser(overrides: Partial<CurrentUser> = {}): CurrentUser {
   return {
@@ -14,22 +15,44 @@ function makeUser(overrides: Partial<CurrentUser> = {}): CurrentUser {
   };
 }
 
+async function drawNavFor(user: CurrentUser): Promise<void> {
+  vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => user }));
+  await drawNav("/");
+}
+
+function linkIsShown(id: string): boolean {
+  const link = document.getElementById(id);
+  return link !== null && !link.hidden;
+}
+
+beforeEach(() => {
+  loadPage("my_leaves");
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
 describe("nav", () => {
-  it("hides the Apply button when the user has no approver", () => {
-    const html = renderNav(makeUser({ approver: null }), "/");
+  it("hides the Apply link when the user has no approver", async () => {
+    await drawNavFor(makeUser({ approver: null }));
 
-    expect(html).toContain("My leaves");
-    expect(html).not.toContain("Apply");
+    expect(linkIsShown("nav-my-leaves")).toBe(true);
+    expect(linkIsShown("nav-apply")).toBe(false);
   });
 
-  it("shows the Apply button when the user has an approver", () => {
-    const html = renderNav(makeUser(), "/");
+  it("shows the Apply link when the user has an approver", async () => {
+    await drawNavFor(makeUser());
 
-    expect(html).toContain('href="/apply"');
+    expect(linkIsShown("nav-apply")).toBe(true);
   });
 
-  it("shows the Approvals link only for approvers", () => {
-    expect(renderNav(makeUser({ is_approver: true }), "/")).toContain('href="/approvals"');
-    expect(renderNav(makeUser({ is_approver: false }), "/")).not.toContain("Approvals");
+  it("shows the Approvals link only for approvers", async () => {
+    await drawNavFor(makeUser({ is_approver: true }));
+    expect(linkIsShown("nav-approvals")).toBe(true);
+
+    loadPage("my_leaves");
+    await drawNavFor(makeUser({ is_approver: false }));
+    expect(linkIsShown("nav-approvals")).toBe(false);
   });
 });
