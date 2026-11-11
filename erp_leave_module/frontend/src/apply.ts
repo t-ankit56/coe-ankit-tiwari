@@ -167,8 +167,8 @@ export function mountApplyPage(me: CurrentUser): void {
       const preview = await apiGet<LeavePreview>(`/api/leaves/preview?${query}`);
       showPreview(preview);
       const overProbationLimit = preview.probation !== null && !preview.probation.ok;
-      previewIsUsable = preview.overlap === null && !overProbationLimit;
-      submitHelp.textContent = overProbationLimit ? "Change the dates to continue." : "";
+      previewIsUsable = preview.overlap === null;
+      submitHelp.textContent = overProbationLimit ? "You can still submit this request." : "";
       startDate.classList.toggle("invalid", overProbationLimit);
       endDate.classList.toggle("invalid", overProbationLimit);
     } catch (error) {
