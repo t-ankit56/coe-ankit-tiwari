@@ -8,7 +8,18 @@
   <link rel="stylesheet" href="/src/styles.css">
 </head>
 <body data-page="login" class="login-page">
-  <main id="main"></main>
+  <main id="main">
+    <div class="login-card card">
+      <img src="/incubyte-logo.png" alt="Incubyte" class="login-logo">
+      <h1>Log in</h1>
+      <form id="login-form">
+        <div class="field"><label class="label" for="email">Email</label><input id="email" type="email" required></div>
+        <div class="field"><label class="label" for="password">Password</label><input id="password" type="password" required></div>
+        <button type="submit" class="btn btn-primary">Log in</button>
+        <p id="message" class="small error"></p>
+      </form>
+    </div>
+  </main>
   <script type="module" src="/src/login.ts"></script>
 </body>
 </html>
