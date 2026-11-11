@@ -5,7 +5,7 @@ from decimal import Decimal
 from django.db import transaction
 from django.utils import timezone
 
-from leaves.exceptions import LeaveOverlapsExistingLeave, NoApproverAssigned, ProbationLimitExceeded
+from leaves.exceptions import LeaveOverlapsExistingLeave, NoApproverAssigned
 from leaves.models import LeaveRequest, Profile
 from leaves.rules import (
     DayInRange,
@@ -77,9 +77,6 @@ def submit_leave(user, start_date, end_date, half_day, reason) -> LeaveRequest:
         clashing = _find_clashing_leave(user, start_date, end_date)
         if clashing:
             raise LeaveOverlapsExistingLeave(clashing)
-        probation = _check_probation(user, start_date, end_date, half_day)
-        if probation is not None and not probation.ok:
-            raise ProbationLimitExceeded(probation)
         return LeaveRequest.objects.create(
             user=user,
             approver=profile.approver,

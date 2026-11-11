@@ -109,7 +109,7 @@ def test_overlap_invalid_dates_and_missing_approver_each_return_400(
 
 
 @pytest.mark.django_db
-def test_submitting_leave_over_the_probation_limit_returns_400_even_without_the_ui(api_client, people, holidays):
+def test_submitting_leave_over_the_probation_limit_returns_201_because_it_is_only_a_warning(api_client, people, holidays):
     make_leave(people.aarav, date(2026, 11, 2), date(2026, 11, 2), status="approved")
     make_leave(people.aarav, date(2026, 11, 3), date(2026, 11, 3), status="approved", half_day=True)
     login_as(api_client, people.aarav)
@@ -120,8 +120,8 @@ def test_submitting_leave_over_the_probation_limit_returns_400_even_without_the_
         format="json",
     )
 
-    assert response.status_code == 400
-    assert response.json() == {"error": "This is over your probation limit."}
+    assert response.status_code == 201
+    assert response.json()["leave"]["status"] == "pending"
 
 
 @pytest.mark.django_db

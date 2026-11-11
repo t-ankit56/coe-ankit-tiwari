@@ -8,7 +8,6 @@ from leaves.exceptions import (
     HalfDayNeedsASingleWorkingDay,
     LeaveOverlapsExistingLeave,
     NoApproverAssigned,
-    ProbationLimitExceeded,
 )
 from leaves.models import LeaveRequest
 from leaves.tests.factories import make_leave
