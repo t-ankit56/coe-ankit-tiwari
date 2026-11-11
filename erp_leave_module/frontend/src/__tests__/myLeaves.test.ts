@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
-import { renderLeavesTable } from "../myLeaves.js";
+import { beforeEach, describe, expect, it } from "vitest";
+import { fillLeavesTable } from "../myLeaves.js";
 import type { Leave } from "../types.js";
+import { loadPage } from "./loadPage.js";
 
 function makeLeave(overrides: Partial<Leave> = {}): Leave {
   return {
@@ -18,36 +19,47 @@ function makeLeave(overrides: Partial<Leave> = {}): Leave {
   };
 }
 
+beforeEach(() => {
+  loadPage("my_leaves");
+});
+
 describe("leaves table", () => {
-  it('shows "No requests yet" when there are none', () => {
-    expect(renderLeavesTable([])).toContain("No requests yet");
+  it('shows "No requests yet" and no table when there are none', () => {
+    fillLeavesTable([]);
+
+    expect(document.getElementById("no-requests")!.hidden).toBe(false);
+    expect(document.getElementById("no-requests")!.textContent).toContain("No requests yet");
+    expect(document.getElementById("requests-table")!.hidden).toBe(true);
   });
 
   it("shows one row per request with its status badge", () => {
-    const html = renderLeavesTable([
+    fillLeavesTable([
       makeLeave({ id: 1, status: "pending" }),
       makeLeave({ id: 2, status: "approved", start_date: "2026-07-08", end_date: "2026-07-10" }),
     ]);
+    const table = document.getElementById("requests-table")!;
 
-    expect(html.match(/<tr data-leave-id/g)).toHaveLength(2);
-    expect(html).toContain('class="badge badge-pending"');
-    expect(html).toContain('class="badge badge-approved"');
-    expect(html).toContain("23 – 27 Nov 2026");
-    expect(html).toContain("Mon to Fri");
-    expect(html).toContain("8 – 10 Jul 2026");
-    expect(html).toContain("6 Nov");
-    expect(html).toContain("Priya Nair");
-    expect(html).not.toContain("No requests yet");
+    expect(table.hidden).toBe(false);
+    expect(document.getElementById("no-requests")!.hidden).toBe(true);
+    expect(document.querySelectorAll("#requests-body tr")).toHaveLength(2);
+    expect(table.querySelector(".badge-pending")).not.toBeNull();
+    expect(table.querySelector(".badge-approved")).not.toBeNull();
+    expect(table.textContent).toContain("23 – 27 Nov 2026");
+    expect(table.textContent).toContain("Mon to Fri");
+    expect(table.textContent).toContain("8 – 10 Jul 2026");
+    expect(table.textContent).toContain("6 Nov");
+    expect(table.textContent).toContain("Priya Nair");
   });
 });
 
 describe("rejected request", () => {
-  it("shows the rejection comment under the dates, escaped", () => {
-    const html = renderLeavesTable([
+  it("shows the rejection comment under the dates as plain text", () => {
+    fillLeavesTable([
       makeLeave({ status: "rejected", decision_comment: "<b>x</b> Release day", approver_name: "Priya Nair" }),
     ]);
+    const row = document.querySelector("#requests-body tr")!;
 
-    expect(html).toContain("Priya Nair: &lt;b&gt;x&lt;/b&gt; Release day");
-    expect(html).not.toContain("<b>x</b>");
+    expect(row.querySelector(".note")!.textContent).toBe("Priya Nair: <b>x</b> Release day");
+    expect(row.querySelector("b")).toBeNull();
   });
 });
