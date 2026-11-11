@@ -37,7 +37,7 @@ Floating and Leave-without-pay types, withdraw and cancel, team overlap view, Sl
 
 **Why TypeScript:** typed API contracts. If a Django response and a page disagree about a field, `npm run typecheck` fails instead of showing a blank cell in the browser.
 
-**Why the dev server forwards `/api`:** one origin means the session cookie and CSRF token work with no CORS setup. Django trusts the dev server origin for CSRF (`CSRF_TRUSTED_ORIGINS`). The HTML files are empty shells. All rendering happens in TypeScript.
+**Why the dev server forwards `/api`:** one origin means the session cookie and CSRF token work with no CORS setup. Django trusts the dev server origin for CSRF (`CSRF_TRUSTED_ORIGINS`). The HTML files hold the full page. TypeScript fetches data, fills it in with `textContent`, and shows or hides parts with the `hidden` attribute. The shared sidebar is `frontend/partials/sidebar.html`, included into each page by a small Vite plugin.
 
 ---
 
@@ -125,9 +125,10 @@ backend/
     tests/
 frontend/
   package.json  tsconfig.json  vite.config.ts  vitest.config.ts
-  login.html  my_leaves.html  apply.html  approvals.html   # empty shells
+  login.html  my_leaves.html  apply.html  approvals.html   # full pages
+  partials/               # sidebar.html, included into the three logged-in pages
   public/                 # logo
-  src/                    # api.ts, html.ts, types.ts, nav.ts, one file per page, styles.css
+  src/                    # api.ts, partials.ts, types.ts, nav.ts, one file per page, styles.css
     __tests__/            # Vitest tests
 SPEC.md  CLAUDE.md  DEVELOPER_GUIDE.md  README.md  AI_LOG.md  AI_WORKFLOW.md
 ```
@@ -182,14 +183,14 @@ One DRF exception handler (`translate_leave_errors_to_http`) turns these into re
 | `/apply` | Apply for Personal leave: dates, half day, reason, read-only approver, live "What this request uses" panel | Users with an approver | Task 1, extended in Task 3 |
 | `/approvals` | Waiting list sorted by start date, detail panel, comment box, Approve and Reject | Approvers | Task 2 |
 
-**Nav (drawn by TypeScript from `/api/me`):** My leaves for everyone, Apply when `approver` is not null, Approvals when `is_approver` is true.
+**Nav (in `partials/sidebar.html`, links shown by TypeScript from `/api/me`):** My leaves for everyone, Apply when `approver` is not null, Approvals when `is_approver` is true.
 
 **Frontend rules**
 - Every page calls `GET /api/me` first. A 401 redirects to `/login`. This also draws the nav.
 - Exception: the login page redirects straight to `/` using the login response, with no extra call.
 - `api.ts` sends the CSRF token (read from the `csrftoken` cookie) as `X-CSRFToken` on every POST.
-- `html.ts` escapes all user text (reason, rejection comment).
-- Each page file has a pure `renderX(data): string` and an `initX()` that fetches, renders and wires events.
+- All user text (reason, rejection comment) goes in with `textContent`, so it is never read as HTML.
+- Each page file has an `initX()` that fetches data, fills the page and wires events. Permissions use the `hidden` attribute.
 - Working-day and cap logic lives only in Python. The Apply page calls the preview endpoint.
 - Styling: one plain CSS file with a few colour variables. Polish is optional.
 - The pages are plain HTML files in `frontend/`. The dev server maps `/`, `/login`, `/apply` and `/approvals` to them, so the URLs in the code do not change.
@@ -382,15 +383,15 @@ For each unit, write tests in this order. Each test is a `red:` commit (failing)
 
 | File | Test |
 |---|---|
-| `html.test.ts` | `escapeHtml › turns a <script> tag in user text into harmless text` |
+| `partials.test.ts` | `including a partial › replaces the include comment with the contents of the partial file` |
 | `api.test.ts` | `post › sends the CSRF token from the cookie in the X-CSRFToken header` |
 | `api.test.ts` | `any call › redirects to the login page when the server answers 401` |
 | `api.test.ts` | `any call › returns nothing, instead of failing to read a body, when the server answers 204` (added during build: logout answers 204 with no body) |
 | `login.test.ts` | `successful login › goes to My leaves without calling /api/me again` |
-| `myLeaves.test.ts` | `leaves table › shows "No requests yet" when there are none` |
+| `myLeaves.test.ts` | `leaves table › shows "No requests yet" and no table when there are none` |
 | `myLeaves.test.ts` | `leaves table › shows one row per request with its status badge` |
-| `nav.test.ts` | `nav › hides the Apply button when the user has no approver` |
-| `nav.test.ts` | `nav › shows the Apply button when the user has an approver` (added during build: the hide-only test cannot force Apply to ever appear) |
+| `nav.test.ts` | `nav › hides the Apply link when the user has no approver` |
+| `nav.test.ts` | `nav › shows the Apply link when the user has an approver` (added during build: the hide-only test cannot force Apply to ever appear) |
 | `apply.test.ts` | `apply page › shows the day count after valid dates are entered` |
 
 ### 1.8 Setup and tooling tests (2)
@@ -566,7 +567,7 @@ Parametrized tests count once (pytest reports 92 cases for the 83 backend test f
    4. Task 3 demo as Aarav.
    5. Say what was cut and why.
    6. Describe one suggestion you rejected and what you did instead.
-   7. One line: "Backend rules are tested in pytest. Frontend tests cover rendering, escaping and button states."
+   7. One line: "Backend rules are tested in pytest. Frontend tests cover what the real pages show, hidden and plain-text output, and button states."
 
 ---
 

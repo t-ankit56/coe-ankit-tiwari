@@ -11,6 +11,7 @@ Audience: Claude Code (and the human reviewing it). Read `CLAUDE.md` and `SPEC.m
 > | `leaves/static/leaves/html/`, `css/`, `img/` | `frontend/*.html`, `frontend/src/styles.css`, `frontend/public/` |
 > | `npm run build` (tsc to `js/`) | `npm run typecheck` in `frontend/`. The pages run from the Vite dev server (`npm run dev`) instead of compiled JS. |
 > | Django serves the pages | Vite serves them on port 5173 and forwards `/api` to Django |
+> | A8 and the frontend tasks: empty HTML shells, `renderX(data): string`, `escapeHtml` | Later changed: full HTML pages, `partials/sidebar.html` included by a Vite plugin, `fillX`/`showX` functions writing into the DOM with `textContent`, permissions by the `hidden` attribute. `html.ts` is gone. See `CLAUDE.md` Frontend rules. |
 
 ## How to use this guide
 

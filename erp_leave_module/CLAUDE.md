@@ -96,9 +96,13 @@ Rules:
 ## Frontend rules
 
 - Plain TypeScript in `frontend/src/`. No React, no framework. Vite is only the dev server: it serves the pages and forwards `/api` to Django on port 8000.
-- Relative imports use the `.js` extension: `import { escapeHtml } from "./html.js"`.
-- Each page file exports a pure `renderX(data): string` and an `initX()` that fetches, renders and wires events.
-- All user text (reason, rejection comment, names) goes through `escapeHtml` before it enters HTML.
+- Relative imports use the `.js` extension: `import { drawNav } from "./nav.js"`.
+- The page markup is written in full in the `.html` files. The shared sidebar is `frontend/partials/sidebar.html`, pulled in with `<!-- include: partials/sidebar.html -->` (a small Vite plugin, `src/partials.ts`).
+- Each page file has an `initX()` that fetches data, fills the page and wires events. Fill functions (`fillLeavesTable`, `showPreview`) write into the existing DOM.
+- Permissions and state are shown with the `hidden` attribute (for example `#nav-apply.hidden = me.approver === null`). Do not build the page as an HTML string.
+- Repeating parts (table rows, list items, day rows) are a `<template>` in the page, copied with `cloneNode(true)`.
+- All user text (reason, rejection comment, names) goes in with `textContent`. Never put it in `innerHTML`.
+- Tests load the real page with `loadPage("apply")` (`src/__tests__/loadPage.ts`) and assert on the DOM. A hidden element still has `textContent`, so check `hidden`, not text, to see what is shown.
 - `api.ts` is the only place that calls `fetch`. It sends `X-CSRFToken` on every POST and redirects to `/login` on 401.
 - Every page except login calls `GET /api/me` first. The login page uses the login response and does not call `/api/me`.
 - Styling: one plain `styles.css` with a few CSS variables. Do not spend time on polish.
