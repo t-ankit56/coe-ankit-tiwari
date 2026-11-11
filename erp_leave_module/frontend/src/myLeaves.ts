@@ -21,6 +21,10 @@ function renderLeaveRow(leave: Leave): string {
   </tr>`;
 }
 
+export function fillLeavesTable(leaves: Leave[]): void {
+  throw new Error("NotImplementedError: fillLeavesTable");
+}
+
 export function renderLeavesTable(leaves: Leave[]): string {
   if (leaves.length === 0) {
     return '<p class="empty">No requests yet</p>';
