@@ -1,87 +1,66 @@
 import { apiGet, apiPost } from "./api.js";
 import { formatDateRange, formatShortDate } from "./dates.js";
-import { escapeHtml } from "./html.js";
-import { drawNav } from "./nav.js";
+import { drawNav, initialsOf } from "./nav.js";
 import type { WaitingApproval } from "./types.js";
 
-function initialsOf(name: string): string {
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0].toUpperCase())
-    .join("");
+function setText(id: string, text: string | number): void {
+  document.getElementById(id)!.textContent = String(text);
 }
 
-export function renderWaitingList(items: WaitingApproval[], selectedId: number | null): string {
-  if (items.length === 0) {
-    return '<p class="empty">No requests waiting</p>';
-  }
-  const rows = items
-    .map(
-      (item) => `<button type="button" class="waiting-item${item.id === selectedId ? " selected" : ""}" data-leave-id="${item.id}">
-        <span class="avatar avatar-light" aria-hidden="true">${escapeHtml(initialsOf(item.requester_name))}</span>
-        <span class="waiting-text"><strong>${escapeHtml(item.requester_name)}</strong>
-          <span class="muted">Personal · ${formatDateRange(item.start_date, item.end_date)}</span></span>
-        <span class="waiting-days"><strong>${item.days}</strong><span class="muted small">${item.days === 1 ? "day" : "days"}</span></span>
-      </button>`,
-    )
-    .join("");
-  return `<div class="waiting-items">${rows}</div>`;
+function dayWord(days: number): string {
+  return days === 1 ? "day" : "days";
 }
 
-export function renderDecisionPanel(item: WaitingApproval): string {
-  return `<div class="requester"><span class="avatar avatar-light" aria-hidden="true">${escapeHtml(initialsOf(item.requester_name))}</span>
-      <div><h2 class="card-title">${escapeHtml(item.requester_name)}</h2><span class="muted">${escapeHtml(item.requester_email)}</span></div></div>
-    <dl class="details">
-      <dt>Dates</dt><dd><strong>${formatDateRange(item.start_date, item.end_date)}</strong></dd>
-      <dt>Days</dt><dd><strong>${item.days} working ${item.days === 1 ? "day" : "days"}</strong></dd>
-      <dt>Reason</dt><dd>${escapeHtml(item.reason)}</dd>
-      <dt>Submitted</dt><dd>${formatShortDate(item.submitted_at)}</dd>
-    </dl>
-    <div class="field"><label class="label" for="decision-comment">Comment <span class="muted">(required if you reject)</span></label>
-      <textarea id="decision-comment" rows="3"></textarea></div>
-    <div class="actions">
-      <button id="approve" class="btn btn-primary" type="button">Approve</button>
-      <button id="reject" class="btn btn-reject" type="button" disabled>Reject</button>
-      <span id="decision-message" class="small error"></span>
-    </div>`;
+function fillWaitingList(items: WaitingApproval[], selectedId: number | null): void {
+  document.getElementById("no-waiting")!.hidden = items.length > 0;
+  const template = document.getElementById("waiting-item") as HTMLTemplateElement;
+  const rows = items.map((item) => {
+    const row = template.content.cloneNode(true) as DocumentFragment;
+    const button = row.querySelector<HTMLElement>(".waiting-item")!;
+    button.dataset.leaveId = String(item.id);
+    button.classList.toggle("selected", item.id === selectedId);
+    row.querySelector(".item-initials")!.textContent = initialsOf(item.requester_name);
+    row.querySelector(".item-name")!.textContent = item.requester_name;
+    row.querySelector(".item-dates")!.textContent = `Personal · ${formatDateRange(item.start_date, item.end_date)}`;
+    row.querySelector(".item-days")!.textContent = String(item.days);
+    row.querySelector(".item-unit")!.textContent = dayWord(item.days);
+    return row;
+  });
+  document.getElementById("waiting-list")!.replaceChildren(...rows);
 }
 
-export async function mountApprovalsPage(main: HTMLElement): Promise<void> {
+function fillDecisionPanel(item: WaitingApproval | undefined): void {
+  document.getElementById("nothing-to-decide")!.hidden = item !== undefined;
+  document.getElementById("decision-details")!.hidden = item === undefined;
+  if (!item) return;
+  setText("requester-initials", initialsOf(item.requester_name));
+  setText("requester-name", item.requester_name);
+  setText("requester-email", item.requester_email);
+  setText("detail-dates", formatDateRange(item.start_date, item.end_date));
+  setText("detail-days", `${item.days} working ${dayWord(item.days)}`);
+  setText("detail-reason", item.reason);
+  setText("detail-submitted", formatShortDate(item.submitted_at));
+  (document.getElementById("decision-comment") as HTMLTextAreaElement).value = "";
+  (document.getElementById("reject") as HTMLButtonElement).disabled = true;
+  setText("decision-message", "");
+}
+
+export async function mountApprovalsPage(): Promise<void> {
   let items = await apiGet<WaitingApproval[]>("/api/approvals");
   let selectedId: number | null = items.length > 0 ? items[0].id : null;
-
-  main.innerHTML = `<div class="page">
-    <header class="page-header"><div><span class="breadcrumb">Leave / Approvals</span><h1>Approvals</h1></div></header>
-    <div class="approvals-layout">
-      <section class="card list-card"><div class="list-header"><h2 class="card-title">Requests from your team</h2><span class="muted small">Sorted by start date</span></div>
-        <div id="waiting-list"></div></section>
-      <section id="decision-panel" class="card side-card"></section>
-    </div>
-  </div>`;
-  const list = main.querySelector<HTMLElement>("#waiting-list")!;
-  const panel = main.querySelector<HTMLElement>("#decision-panel")!;
+  const comment = document.getElementById("decision-comment") as HTMLTextAreaElement;
+  const reject = document.getElementById("reject") as HTMLButtonElement;
 
   function render(): void {
-    list.innerHTML = renderWaitingList(items, selectedId);
-    const selected = items.find((item) => item.id === selectedId);
-    panel.innerHTML = selected ? renderDecisionPanel(selected) : '<p class="empty">Nothing to decide right now.</p>';
-    const comment = panel.querySelector<HTMLTextAreaElement>("#decision-comment");
-    const reject = panel.querySelector<HTMLButtonElement>("#reject");
-    comment?.addEventListener("input", () => {
-      reject!.disabled = comment.value.trim() === "";
-    });
-    panel.querySelector("#approve")?.addEventListener("click", () => void decide("approve"));
-    reject?.addEventListener("click", () => void decide("reject", { comment: comment!.value }));
+    fillWaitingList(items, selectedId);
+    fillDecisionPanel(items.find((item) => item.id === selectedId));
   }
 
   async function decide(action: "approve" | "reject", body?: unknown): Promise<void> {
     try {
       await apiPost(`/api/leaves/${selectedId}/${action}`, body);
     } catch (error) {
-      const message = panel.querySelector("#decision-message");
-      if (message) message.textContent = error instanceof Error ? error.message : "Could not save the decision.";
+      setText("decision-message", error instanceof Error ? error.message : "Could not save the decision.");
       return;
     }
     items = await apiGet<WaitingApproval[]>("/api/approvals");
@@ -89,7 +68,12 @@ export async function mountApprovalsPage(main: HTMLElement): Promise<void> {
     render();
   }
 
-  list.addEventListener("click", (event) => {
+  comment.addEventListener("input", () => {
+    reject.disabled = comment.value.trim() === "";
+  });
+  document.getElementById("approve")!.addEventListener("click", () => void decide("approve"));
+  reject.addEventListener("click", () => void decide("reject", { comment: comment.value }));
+  document.getElementById("waiting-list")!.addEventListener("click", (event) => {
     const row = (event.target as HTMLElement).closest<HTMLElement>("[data-leave-id]");
     if (row) {
       selectedId = Number(row.dataset.leaveId);
@@ -101,7 +85,7 @@ export async function mountApprovalsPage(main: HTMLElement): Promise<void> {
 
 export async function initApprovals(): Promise<void> {
   await drawNav("/approvals");
-  await mountApprovalsPage(document.getElementById("main")!);
+  await mountApprovalsPage();
 }
 
 if (typeof document !== "undefined" && document.body?.dataset.page === "approvals") void initApprovals();
