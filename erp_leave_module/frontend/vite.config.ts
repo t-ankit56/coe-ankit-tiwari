@@ -1,4 +1,7 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { defineConfig } from "vite";
+import { inlinePartials } from "./src/partials";
 
 // The browser only talks to this dev server. It forwards /api to Django, so the session
 // cookie and the CSRF header keep working on one origin. Leave changeOrigin off: Django
@@ -17,6 +20,13 @@ export default defineConfig({
     proxy: { "/api": "http://localhost:8000" },
   },
   plugins: [
+    {
+      name: "html-partials",
+      transformIndexHtml: {
+        order: "pre",
+        handler: (html: string) => inlinePartials(html, (path) => readFileSync(resolve(__dirname, path), "utf8")),
+      },
+    },
     {
       name: "page-routes",
       configureServer(server) {
