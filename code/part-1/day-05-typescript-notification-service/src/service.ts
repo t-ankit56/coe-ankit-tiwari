@@ -1,9 +1,11 @@
 import type { Channel, Notification } from "./models";
 import { fail, ok, type Result } from "./result";
 
+/** Routes a notification to a channel by name and reports the outcome as a Result. */
 export class NotificationService {
   constructor(private readonly channels: Map<string, Channel>) {}
 
+  /** Sends through the named channel; an unknown name or a failing channel gives a failed Result. */
   send(channelName: string, notification: Notification): Result<Notification> {
     const channel = this.channelFor(channelName);
     if (channel === undefined) {
