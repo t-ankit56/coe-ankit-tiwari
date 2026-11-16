@@ -20,10 +20,7 @@ export class NotificationService {
     try {
       channel.send(notification);
     } catch (error) {
-      if (error instanceof Error) {
-        return fail(error.message);
-      }
-      throw error;
+      return fail(error instanceof Error ? error.message : String(error));
     }
     return ok(notification);
   }
