@@ -5,3 +5,4 @@
 - Cycle 5: the unknown-name test replaced the non-null assertion with a check that returns fail(...), so an unknown channel is part of the return type instead of a crash.
 - Cycle 6: the throwing-channel test wrapped the channel call in try/catch, so a channel failure becomes fail(message) and send never throws for an Error. Non-Error values are rethrown for now.
 - Cycle 7: the non-Error test removed the rethrow, because a TypeScript catch variable is unknown and anything can be thrown, so send now turns it into a message with String(error).
+- Cycle 8: final cleanup found nothing to rename or remove; added one-line doc comments and src/index.ts so the public API is the six exports the spec lists.
