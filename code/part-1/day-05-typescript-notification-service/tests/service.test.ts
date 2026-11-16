@@ -1,4 +1,5 @@
-import { expect, it } from "vitest";
+import { expect, expectTypeOf, it } from "vitest";
+import type { Notification } from "../src/models";
 import { makeService } from "./fakes";
 
 it("a new service has sent nothing", () => {
@@ -14,5 +15,15 @@ it.each(["email", "sms"])("sending through %s reaches only that channel", (name)
   service.send(name, notification);
   for (const [channelName, channel] of channels) {
     expect(channel.sent).toEqual(channelName === name ? [notification] : []);
+  }
+});
+
+it("a successful send returns ok with the notification as its value", () => {
+  const { service } = makeService();
+  const notification = { to: "a@x.com", body: "hi" };
+  const result = service.send("email", notification);
+  expect(result).toEqual({ ok: true, value: notification });
+  if (result.ok) {
+    expectTypeOf(result.value).toEqualTypeOf<Notification>();
   }
 });
