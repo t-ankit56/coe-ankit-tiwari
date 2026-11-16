@@ -1,7 +1,8 @@
 import { expect, expectTypeOf, it } from "vitest";
 import type { Notification } from "../src/models";
 import { fail, type Result } from "../src/result";
-import { makeService } from "./fakes";
+import { NotificationService } from "../src/service";
+import { FakeChannel, makeService } from "./fakes";
 
 it("a new service has sent nothing", () => {
   const { channels } = makeService();
@@ -44,4 +45,10 @@ it.each(["fax", "", "EMAIL"])("an unknown channel name %j returns a failed resul
   if (!result.ok) {
     expect(result.error).toContain(name);
   }
+});
+
+it("a channel that throws gives a failed result with its message", () => {
+  const service = new NotificationService(new Map([["email", new FakeChannel("gateway down")]]));
+  const result = service.send("email", { to: "a@x.com", body: "hi" });
+  expect(result).toEqual({ ok: false, error: "gateway down" });
 });
