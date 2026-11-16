@@ -9,7 +9,14 @@ export class NotificationService {
     if (channel === undefined) {
       return fail(`unknown channel "${channelName}"`);
     }
-    channel.send(notification);
+    try {
+      channel.send(notification);
+    } catch (error) {
+      if (error instanceof Error) {
+        return fail(error.message);
+      }
+      throw error;
+    }
     return ok(notification);
   }
 
