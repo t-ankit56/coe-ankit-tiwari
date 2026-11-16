@@ -9,6 +9,14 @@ export class NotificationService {
     if (channel === undefined) {
       return fail(`unknown channel "${channelName}"`);
     }
+    return this.deliver(channel, notification);
+  }
+
+  private channelFor(channelName: string): Channel | undefined {
+    return this.channels.get(channelName);
+  }
+
+  private deliver(channel: Channel, notification: Notification): Result<Notification> {
     try {
       channel.send(notification);
     } catch (error) {
@@ -18,9 +26,5 @@ export class NotificationService {
       throw error;
     }
     return ok(notification);
-  }
-
-  private channelFor(channelName: string): Channel | undefined {
-    return this.channels.get(channelName);
   }
 }
