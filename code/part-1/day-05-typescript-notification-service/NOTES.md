@@ -1,2 +1,3 @@
 - Cycle 1: the Zero test forced channels to be passed into the constructor as a Map, so tests can hand in fakes.
 - Cycle 2: one it.each test for both names forced send to look the channel up by name, so there was no hardcoded-email step.
+- Cycle 3: asserting on the return value forced send to return a Result<Notification> instead of nothing, and introduced the generic ok<T> helper.
