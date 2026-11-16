@@ -36,3 +36,12 @@ it("a failed result carries an error message and no value", () => {
     expectTypeOf(result.error).toEqualTypeOf<string>();
   }
 });
+
+it.each(["fax", "", "EMAIL"])("an unknown channel name %j returns a failed result", (name) => {
+  const { service } = makeService();
+  const result = service.send(name, { to: "a@x.com", body: "hi" });
+  expect(result.ok).toBe(false);
+  if (!result.ok) {
+    expect(result.error).toContain(name);
+  }
+});
