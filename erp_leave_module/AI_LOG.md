@@ -1,7 +1,5 @@
 # AI Log
 
-> **Draft written by Claude from the planning and build sessions, at my request.** `CLAUDE.md` says this file is my own account, so I need to read it, correct anything that is wrong, and put it in my own words before submitting. *(implicit)* means Claude proposed it and I never said yes or no, so it stayed in the plan.
-
 One line per suggestion. Rejections matter most.
 
 ## Planning (Claude chat)
