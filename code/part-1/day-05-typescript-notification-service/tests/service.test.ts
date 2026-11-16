@@ -16,3 +16,13 @@ it("a new service has sent nothing", () => {
   expect(email.sent).toEqual([]);
   expect(sms.sent).toEqual([]);
 });
+
+it.each(["email", "sms"])("sending through %s reaches only that channel", (name) => {
+  const channels = new Map([["email", new FakeChannel()], ["sms", new FakeChannel()]]);
+  const service = new NotificationService(channels);
+  const notification = { to: "someone", body: "hi" };
+  service.send(name, notification);
+  for (const [channelName, channel] of channels) {
+    expect(channel.sent).toEqual(channelName === name ? [notification] : []);
+  }
+});
