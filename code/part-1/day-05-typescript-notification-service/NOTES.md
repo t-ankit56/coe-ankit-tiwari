@@ -2,3 +2,4 @@
 - Cycle 2: one it.each test for both names forced send to look the channel up by name, so there was no hardcoded-email step.
 - Cycle 3: asserting on the return value forced send to return a Result<Notification> instead of nothing, and introduced the generic ok<T> helper.
 - Cycle 4: the failed-result test added fail<T = never>, so a failure can be typed as Result<anything> without carrying a value.
+- Cycle 5: the unknown-name test replaced the non-null assertion with a check that returns fail(...), so an unknown channel is part of the return type instead of a crash.
