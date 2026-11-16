@@ -1,0 +1,1 @@
+- Cycle 1: the Zero test forced channels to be passed into the constructor as a Map, so tests can hand in fakes.
