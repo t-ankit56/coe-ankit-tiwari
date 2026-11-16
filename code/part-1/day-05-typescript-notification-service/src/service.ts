@@ -5,11 +5,15 @@ export class NotificationService {
   constructor(private readonly channels: Map<string, Channel>) {}
 
   send(channelName: string, notification: Notification): Result<Notification> {
-    const channel = this.channels.get(channelName);
+    const channel = this.channelFor(channelName);
     if (channel === undefined) {
       return fail(`unknown channel "${channelName}"`);
     }
     channel.send(notification);
     return ok(notification);
+  }
+
+  private channelFor(channelName: string): Channel | undefined {
+    return this.channels.get(channelName);
   }
 }
