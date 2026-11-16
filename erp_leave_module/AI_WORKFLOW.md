@@ -1,7 +1,5 @@
 # AI Workflow Note
 
-> **Draft written by Claude from the sessions, at my request.** I need to read it, correct anything that does not match what I decided, and put it in my own words. The full one-line-per-suggestion list is in `AI_LOG.md`.
-
 ## 1. How I used Claude
 
 | Phase | Tool | Used for |
