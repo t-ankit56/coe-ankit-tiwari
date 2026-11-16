@@ -1,5 +1,6 @@
 import { expect, expectTypeOf, it } from "vitest";
 import type { Notification } from "../src/models";
+import { fail, type Result } from "../src/result";
 import { makeService } from "./fakes";
 
 it("a new service has sent nothing", () => {
@@ -25,5 +26,13 @@ it("a successful send returns ok with the notification as its value", () => {
   expect(result).toEqual({ ok: true, value: notification });
   if (result.ok) {
     expectTypeOf(result.value).toEqualTypeOf<Notification>();
+  }
+});
+
+it("a failed result carries an error message and no value", () => {
+  const result: Result<Notification> = fail("gateway down");
+  expect(result).toEqual({ ok: false, error: "gateway down" });
+  if (!result.ok) {
+    expectTypeOf(result.error).toEqualTypeOf<string>();
   }
 });
