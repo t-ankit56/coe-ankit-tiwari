@@ -1,5 +1,5 @@
 import { expect, expectTypeOf, it } from "vitest";
-import type { Notification } from "../src/models";
+import type { Channel, Notification } from "../src/models";
 import { fail, type Result } from "../src/result";
 import { NotificationService } from "../src/service";
 import { FakeChannel, makeService } from "./fakes";
@@ -51,4 +51,11 @@ it("a channel that throws gives a failed result with its message", () => {
   const service = new NotificationService(new Map([["email", new FakeChannel("gateway down")]]));
   const result = service.send("email", { to: "a@x.com", body: "hi" });
   expect(result).toEqual({ ok: false, error: "gateway down" });
+});
+
+it("a channel that throws something that is not an Error still gives a failed result", () => {
+  const throwing: Channel = { send() { throw "plain string"; } };
+  const service = new NotificationService(new Map([["email", throwing]]));
+  const result = service.send("email", { to: "a@x.com", body: "hi" });
+  expect(result).toEqual({ ok: false, error: "plain string" });
 });
