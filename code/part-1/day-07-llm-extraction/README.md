@@ -40,6 +40,33 @@ What each one tests: `02` has no date or amount (must be `None`, not invented). 
 | `reference` | INV-20431 |
 | `purpose` | supply of stationery (A4 paper and pens) |
 
+## Harder samples
+
+Added after the v1 baseline scored 28/30 on the first five emails, because that left little room to show improvement. The expected values below were written before these were run. The matching rules above apply.
+
+### Emails
+
+| File | sender | date | amount | currency | reference | purpose |
+| --- | --- | --- | --- | --- | --- | --- |
+| `06-correction` | Daniel Okafor | 2026-07-20 | 1020.00 | USD | QT-3382 | paying the conference booth fee |
+| `07-date-format` | Hannah Boyd | `None` | `None` | `None` | `None` | announcing a training session |
+| `08-european-format` | Klaus Weber | 2026-09-30 | 1234.50 | EUR | RE-20871 | paying an invoice |
+
+What each one tests: `06` has a corrected amount, so the old figure 1,200 and the old date in the quoted text are distractors. `07` has the date `03/04/2026`, which is 3 April or 4 March, so it must be `None`. `08` has the amount `1.234,50 €` (European format), and the reference is the invoice number, not the purchase order `PO-4412`.
+
+### Invoice (hard): [samples/invoice-hard.pdf](samples/invoice-hard.pdf)
+
+One page with a discount, shipping, VAT, a balance brought forward, and an invoice total that differs from the amount due.
+
+| Field | Expected (from the PDF) |
+| --- | --- |
+| `sender` | Lakeshore Print & Pack Ltd |
+| `date` | 2026-05-12 (the invoice date, not the 11 June due date) |
+| `amount` | 1380.00 (the "Amount due", which includes the 150.00 brought forward, not the 1,230.00 invoice total) |
+| `currency` | USD |
+| `reference` | LP-77231 (the invoice number, not `PO-5590` or the old `LP-76902`) |
+| `purpose` | supply of custom boxes and printed labels |
+
 ## Results
 
 Outputs are saved in [samples/outputs/](samples/outputs/). Each cell is what the model returned, marked ✓ or ✗ against the expected value above.
