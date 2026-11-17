@@ -1,0 +1,157 @@
+[
+  {
+    "question": "How many leave days can I carry over, and when do they expire?",
+    "answer": "You can carry over up to 5 unused annual leave days to the next year, and these carried-over days expire on 31 March [1].",
+    "total_seconds": 1.753,
+    "steps": [
+      {
+        "step": "embed_query",
+        "seconds": 0.557,
+        "input_tokens": 16,
+        "output_tokens": 0,
+        "cost_usd": 2.4e-06,
+        "tokens_estimated": true
+      },
+      {
+        "step": "vector_search",
+        "seconds": 0.011,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_usd": 0.0,
+        "tokens_estimated": false
+      },
+      {
+        "step": "generate_answer",
+        "seconds": 1.148,
+        "input_tokens": 394,
+        "output_tokens": 32,
+        "cost_usd": 0.0001465,
+        "tokens_estimated": false
+      }
+    ]
+  },
+  {
+    "question": "Do I need a medical certificate if I am sick for one day?",
+    "answer": "No, you do not need a medical certificate if you are sick for one day. A medical certificate is only required when sick leave runs for more than 2 consecutive days [1].",
+    "total_seconds": 1.675,
+    "steps": [
+      {
+        "step": "embed_query",
+        "seconds": 0.483,
+        "input_tokens": 14,
+        "output_tokens": 0,
+        "cost_usd": 2.1000000000000002e-06,
+        "tokens_estimated": true
+      },
+      {
+        "step": "vector_search",
+        "seconds": 0.011,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_usd": 0.0,
+        "tokens_estimated": false
+      },
+      {
+        "step": "generate_answer",
+        "seconds": 1.159,
+        "input_tokens": 393,
+        "output_tokens": 37,
+        "cost_usd": 0.00015375,
+        "tokens_estimated": false
+      }
+    ]
+  },
+  {
+    "question": "What is the hotel cap per night in a small city, and where do I book?",
+    "answer": "The hotel cap is 120 USD per night in cities other than major cities [1]. You must book through the travel portal [1].",
+    "total_seconds": 1.204,
+    "steps": [
+      {
+        "step": "embed_query",
+        "seconds": 0.498,
+        "input_tokens": 17,
+        "output_tokens": 0,
+        "cost_usd": 2.5499999999999997e-06,
+        "tokens_estimated": true
+      },
+      {
+        "step": "vector_search",
+        "seconds": 0.009,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_usd": 0.0,
+        "tokens_estimated": false
+      },
+      {
+        "step": "generate_answer",
+        "seconds": 0.675,
+        "input_tokens": 393,
+        "output_tokens": 30,
+        "cost_usd": 0.00014325,
+        "tokens_estimated": false
+      }
+    ]
+  },
+  {
+    "question": "My laptop was stolen. How fast must I report it?",
+    "answer": "You must report a lost or stolen device to the security team within 1 hour [2].",
+    "total_seconds": 1.667,
+    "steps": [
+      {
+        "step": "embed_query",
+        "seconds": 0.523,
+        "input_tokens": 12,
+        "output_tokens": 0,
+        "cost_usd": 1.8e-06,
+        "tokens_estimated": true
+      },
+      {
+        "step": "vector_search",
+        "seconds": 0.01,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_usd": 0.0,
+        "tokens_estimated": false
+      },
+      {
+        "step": "generate_answer",
+        "seconds": 1.109,
+        "input_tokens": 353,
+        "output_tokens": 19,
+        "cost_usd": 0.00011675,
+        "tokens_estimated": false
+      }
+    ]
+  },
+  {
+    "question": "Can I work remotely during probation, and how much is the monthly internet reimbursement?",
+    "answer": "No, you cannot work remotely during your probation; employees must work from the office 5 days a week during this period [2]. The monthly internet reimbursement is 40 USD [1].",
+    "total_seconds": 1.498,
+    "steps": [
+      {
+        "step": "embed_query",
+        "seconds": 0.472,
+        "input_tokens": 22,
+        "output_tokens": 0,
+        "cost_usd": 3.2999999999999997e-06,
+        "tokens_estimated": true
+      },
+      {
+        "step": "vector_search",
+        "seconds": 0.009,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_usd": 0.0,
+        "tokens_estimated": false
+      },
+      {
+        "step": "generate_answer",
+        "seconds": 0.995,
+        "input_tokens": 401,
+        "output_tokens": 39,
+        "cost_usd": 0.00015875,
+        "tokens_estimated": false
+      }
+    ]
+  }
+]
