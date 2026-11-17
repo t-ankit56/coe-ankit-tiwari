@@ -1,2 +1,3 @@
 - Cycle 1: response body is held as unknown; isUser (value is User) is the only way to get a User. No casts.
 - Cycle 3: isUser now narrows with 'in' and typeof, starting with email.
+- Cycle 4: full guard, one check per field; isObject helper because typeof null is 'object'.
