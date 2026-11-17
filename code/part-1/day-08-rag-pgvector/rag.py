@@ -95,11 +95,39 @@ def show_sources(sources: list[dict]) -> str:
     )
 
 
+SYSTEM = (
+    "Answer the question using only the numbered context chunks. Cite the chunks you used like [1]. "
+    "If the context does not contain the answer, say you do not know."
+)
+
+
+def answer(question: str, size: int) -> dict:
+    """Answer from the retrieved chunks and return the answer together with those chunks."""
+    sources = retrieve(question, size)
+    context = "\n\n".join(f"[{i}] ({s['source']}) {s['content']}" for i, s in enumerate(sources, 1))
+    gemini = client()
+    response = gemini.models.generate_content(
+        model=GEN_MODEL,
+        contents=f"Context:\n{context}\n\nQuestion: {question}",
+        config=types.GenerateContentConfig(system_instruction=SYSTEM, temperature=0.0, max_output_tokens=400),
+    )
+    return {"question": question, "answer": response.text, "sources": sources}
+
+
+def show(result: dict) -> str:
+    return f"Q: {result['question']}\nA: {result['answer'].strip()}\n\nSources:\n{show_sources(result['sources'])}"
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
     ingest_parser = sub.add_parser("ingest", help="chunk, embed and store the documents")
     ingest_parser.add_argument("--size", type=int, default=600)
+    ask_parser = sub.add_parser("ask", help="answer a question from the stored chunks")
+    ask_parser.add_argument("question")
+    ask_parser.add_argument("--size", type=int, default=600)
     args = parser.parse_args()
     if args.command == "ingest":
         print(f"stored {ingest(args.size)} chunks of up to {args.size} characters")
+    else:
+        print(show(answer(args.question, args.size)))
