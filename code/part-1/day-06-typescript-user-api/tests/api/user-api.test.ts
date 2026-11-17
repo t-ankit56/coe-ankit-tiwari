@@ -41,4 +41,10 @@ describe("fetchUser", () => {
       "Response is not a valid user",
     );
   });
+
+  it("rejects with the status when the request is not ok", async () => {
+    await expect(fetchUser(9999, fakeFetch({}, 404))).rejects.toThrow(
+      "Request failed with status 404",
+    );
+  });
 });
