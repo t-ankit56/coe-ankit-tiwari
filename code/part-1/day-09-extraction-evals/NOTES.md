@@ -1,0 +1,1 @@
+- Step 2: v1 and v2 both pass 9 of 12 cases (75%), so the pass rate alone does not tell them apart. v2 fixed `03`, `05` and `07` and broke `08` (sender) and both invoices (date). `PASS_RATE` set to 0.75, the v2 result: it catches a drop, not a swap of fixed and broken cases.
