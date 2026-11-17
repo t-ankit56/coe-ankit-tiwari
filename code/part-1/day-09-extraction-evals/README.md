@@ -69,3 +69,35 @@ REUSE_SAVED=1 PROMPT_VERSION=v2 pytest tests/test_extraction.py::test_purpose_sc
 `PURPOSE_THRESHOLD` is 0.85, just under the mean, so a prompt that makes purposes clearly worse fails and one unlucky score does not.
 
 **Judge against my hand judgement (Day 7):** it agrees on 10 of 12 cases. On `09` it is stricter than I was: "order confirmation" drops the card charge and the item, and I think the judge is right. On `10` it penalises the missing quantity of 12, which is stricter than the evaluation steps intend ("ignore level of detail"). So the score depends on how the steps are worded, and with 12 cases and an LLM judge it is a noisy number, not a fixed measurement.
+
+## CI (Step 4)
+
+[.github/workflows/evals.yml](../../../.github/workflows/evals.yml) runs the whole suite on every push and pull request: it installs `requirements.txt` on Python 3.14 and runs `pytest` from this folder, with `GEMINI_API_KEY` from the repository secrets (never printed). Each run makes 24 live calls: 12 extraction and 12 judge, no retries. The check is named `extraction-evals`. Pull requests from forks do not receive repository secrets, so the key is empty there and the check fails.
+
+**Runs: pending.** The workflow is committed, but no run has happened yet. The green run, the red run on a pull request that makes the v2 prompt worse, and the branch protection rule on `main` are still to be done and linked here. Until then CI is untested.
+
+## Calls made
+
+| What | Calls |
+| --- | --- |
+| Extraction on v1 (Step 2) | 12 |
+| Extraction on v2 (Step 2) | 12 |
+| DeepEval judge on the saved v2 outputs (Step 3) | 12 |
+| **Total so far** | **36** |
+
+Each CI run adds 24 more.
+
+## Decisions
+
+| Question | Decision |
+| --- | --- |
+| Why exact match for most fields? | The value is either right or wrong, so no judge is needed and the result is free and repeatable. |
+| Why a judge only for `purpose`? | It is the one free-text field. A judge costs a call per case. |
+| Why a Gemini judge? | DeepEval's default is a paid OpenAI model. The same free key is enough. |
+| Why the Day 7 samples as the test set? | They already hold the edge cases, with expected values written before any run. |
+| Why copy Day 7 and not import it? | The CI demo worsens the prompt, which must not touch the Day 7 submission. The cost is two copies that can drift. |
+| Why live API calls in CI? | A saved output cannot show that a prompt change lowered accuracy. |
+| Why a pass-rate threshold, not 100%? | The output is probabilistic. A threshold from the v2 result catches a drop without failing on noise. v1 and v2 both score 75%, so the gate catches a drop but not a swap of fixed and broken cases. |
+| Why one assert on the rate, not one per case? | A per-case assert would turn CI red on any single miss and make the threshold meaningless. Per-case detail is in the failure message and `results/`. |
+| Why `REUSE_SAVED`? | Judging the saved v2 outputs cost 12 judge calls instead of 24. It is dev only and CI never sets it. |
+| Why no result caching otherwise? | The suite is 12 cases. Caching would hide the very change the suite is meant to catch. |
