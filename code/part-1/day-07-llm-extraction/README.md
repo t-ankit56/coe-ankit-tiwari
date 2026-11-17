@@ -39,3 +39,18 @@ What each one tests: `02` has no date or amount (must be `None`, not invented). 
 | `currency` | GBP |
 | `reference` | INV-20431 |
 | `purpose` | supply of stationery (A4 paper and pens) |
+
+## Results
+
+Outputs are saved in [samples/outputs/](samples/outputs/). Each cell is what the model returned, marked ✓ or ✗ against the expected value above.
+
+### Prompt v1 (baseline): `Extract the information from this document.`
+
+| File | sender | date | amount | currency | reference | purpose | Score |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `01-clean` | ✓ Priya Nair (with address) | ✓ 14 March 2026 | ✓ 1250.0 | ✓ USD | ✓ BL-4821 | ✓ annual software licence renewal | 6/6 |
+| `02-missing` | ✓ Marcus Webb | ✓ `None` | ✓ `None` | ✓ `None` | ✓ TKT-7730 | ✓ inquiry about parcel delivery status | 6/6 |
+| `03-ambiguous` | ✓ Lena Fischer | ✓ `None` | ✗ 500.0 (expected `None`) | ✓ EUR | ✓ `None` | ✓ deposit for the venue | 5/6 |
+| `04-meeting` | ✓ Tom Alvarez (with address) | ✓ 22 April 2026 | ✓ `None` | ✓ `None` | ✓ `None` | ✓ project kickoff meeting | 6/6 |
+| `05-two-amounts` | ✓ Sofia Rossi (with address) | ✗ 15 June 2026 (expected 30 June, the deadline) | ✓ 200.0 | ✓ GBP | ✓ INV-884 | ✓ outstanding balance payment | 5/6 |
+| **Total** | | | | | | | **28/30** |

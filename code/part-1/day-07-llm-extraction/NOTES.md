@@ -1,0 +1,4 @@
+- v1 (bare prompt) already scores 28/30. The model left the missing fields as `None` without being told to.
+- v1 turned "about 500 euros" into a precise 500.0 (03-ambiguous). A vague value became a precise one.
+- v1 picked the wrong date in 05-two-amounts: the date of the earlier payment (15 June) instead of the deadline (30 June).
+- Fields are inconsistent in form: `sender` has the address on some emails and not on others, dates are in the original wording.
