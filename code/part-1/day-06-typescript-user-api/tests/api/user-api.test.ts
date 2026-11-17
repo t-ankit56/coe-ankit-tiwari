@@ -17,4 +17,12 @@ describe("fetchUser", () => {
 
     expect(fetchFn.urls).toEqual(["https://jsonplaceholder.typicode.com/users/7"]);
   });
+
+  it("rejects when the response is missing the email field", async () => {
+    const { email: _email, ...withoutEmail } = validUser;
+
+    await expect(fetchUser(1, fakeFetch(withoutEmail))).rejects.toThrow(
+      "Response is not a valid user",
+    );
+  });
 });
