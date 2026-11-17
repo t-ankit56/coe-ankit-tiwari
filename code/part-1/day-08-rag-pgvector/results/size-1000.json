@@ -1,0 +1,107 @@
+[
+  {
+    "question": "How many leave days can I carry over, and when do they expire?",
+    "answer": "You can carry over up to 5 unused annual leave days to the next year, and these carried-over days expire on 31 March [1].",
+    "sources": [
+      {
+        "source": "leave-policy.md",
+        "content": "# Leave Policy (Fictional Co.) ## Annual leave Every full-time employee gets 24 days of paid annual leave per calendar year. Leave accrues monthly at 2 days per month. New joiners get a pro-rated amount based on their joining month. Up to 5 unused days can be carried over to the next year, and carried-over days expire on 31 March. ## Sick leave Employees get 10 days of paid sick leave per year. A medical certificate is needed only when sick leave runs for more than 2 consecutive days. Sick leave does not carry over. ## Parental leave Primary caregivers get 26 weeks of paid parental leave. Secondary caregivers get 4 weeks. Leave can be taken in one block or split into two blocks within 12 months of the birth or adoption. ## Applying for leave Leave requests go through the HR portal and are approved by the line manager. Requests for more than 5 consecutive days need 2 weeks of notice. Unapproved absence of 3 days or more is treated as a disciplinary matter.",
+        "distance": 0.3567950357778461
+      },
+      {
+        "source": "expenses.md",
+        "content": "# Expenses and Travel (Fictional Co.) ## Submitting expenses Expenses must be submitted within 30 days of the purchase, with a receipt. Claims older than 30 days are rejected unless Finance approves an exception. Claims under 25 USD do not need a receipt but need a short note. ## Travel Flights under 6 hours are booked in economy. Flights of 6 hours or more may be booked in premium economy. Hotels are capped at 180 USD per night in major cities and 120 USD elsewhere. Book through the travel portal; bookings made outside it are reimbursed only up to the portal price. ## Meals The daily meal allowance on business trips is 60 USD. Alcohol is not reimbursed. Client dinners are reimbursed up to 100 USD per person with the guest list written on the claim. ## Learning budget Each employee has a learning budget of 1,200 USD per year for courses, books and conferences. The budget does not roll over. Conference travel is paid from the travel budget, not the learning budget.",
+        "distance": 0.4313466005366928
+      },
+      {
+        "source": "remote-work.md",
+        "content": "written sign-off.",
+        "distance": 0.44719331227259074
+      }
+    ]
+  },
+  {
+    "question": "Do I need a medical certificate if I am sick for one day?",
+    "answer": "No, you do not need a medical certificate if you are sick for one day. A medical certificate is only required when sick leave runs for more than 2 consecutive days [1].",
+    "sources": [
+      {
+        "source": "leave-policy.md",
+        "content": "# Leave Policy (Fictional Co.) ## Annual leave Every full-time employee gets 24 days of paid annual leave per calendar year. Leave accrues monthly at 2 days per month. New joiners get a pro-rated amount based on their joining month. Up to 5 unused days can be carried over to the next year, and carried-over days expire on 31 March. ## Sick leave Employees get 10 days of paid sick leave per year. A medical certificate is needed only when sick leave runs for more than 2 consecutive days. Sick leave does not carry over. ## Parental leave Primary caregivers get 26 weeks of paid parental leave. Secondary caregivers get 4 weeks. Leave can be taken in one block or split into two blocks within 12 months of the birth or adoption. ## Applying for leave Leave requests go through the HR portal and are approved by the line manager. Requests for more than 5 consecutive days need 2 weeks of notice. Unapproved absence of 3 days or more is treated as a disciplinary matter.",
+        "distance": 0.37730862482522887
+      },
+      {
+        "source": "remote-work.md",
+        "content": "written sign-off.",
+        "distance": 0.3929321039260918
+      },
+      {
+        "source": "expenses.md",
+        "content": "# Expenses and Travel (Fictional Co.) ## Submitting expenses Expenses must be submitted within 30 days of the purchase, with a receipt. Claims older than 30 days are rejected unless Finance approves an exception. Claims under 25 USD do not need a receipt but need a short note. ## Travel Flights under 6 hours are booked in economy. Flights of 6 hours or more may be booked in premium economy. Hotels are capped at 180 USD per night in major cities and 120 USD elsewhere. Book through the travel portal; bookings made outside it are reimbursed only up to the portal price. ## Meals The daily meal allowance on business trips is 60 USD. Alcohol is not reimbursed. Client dinners are reimbursed up to 100 USD per person with the guest list written on the claim. ## Learning budget Each employee has a learning budget of 1,200 USD per year for courses, books and conferences. The budget does not roll over. Conference travel is paid from the travel budget, not the learning budget.",
+        "distance": 0.4437552583700455
+      }
+    ]
+  },
+  {
+    "question": "What is the hotel cap per night in a small city, and where do I book?",
+    "answer": "The hotel cap is 120 USD per night in cities other than major cities, and you must book through the travel portal [1].",
+    "sources": [
+      {
+        "source": "expenses.md",
+        "content": "# Expenses and Travel (Fictional Co.) ## Submitting expenses Expenses must be submitted within 30 days of the purchase, with a receipt. Claims older than 30 days are rejected unless Finance approves an exception. Claims under 25 USD do not need a receipt but need a short note. ## Travel Flights under 6 hours are booked in economy. Flights of 6 hours or more may be booked in premium economy. Hotels are capped at 180 USD per night in major cities and 120 USD elsewhere. Book through the travel portal; bookings made outside it are reimbursed only up to the portal price. ## Meals The daily meal allowance on business trips is 60 USD. Alcohol is not reimbursed. Client dinners are reimbursed up to 100 USD per person with the guest list written on the claim. ## Learning budget Each employee has a learning budget of 1,200 USD per year for courses, books and conferences. The budget does not roll over. Conference travel is paid from the travel budget, not the learning budget.",
+        "distance": 0.37384847134389243
+      },
+      {
+        "source": "remote-work.md",
+        "content": "written sign-off.",
+        "distance": 0.44012070632029066
+      },
+      {
+        "source": "remote-work.md",
+        "content": "# Remote Work Guide (Fictional Co.) ## Eligibility Employees may work remotely up to 3 days per week after completing their 3-month probation. During probation, employees work from the office 5 days a week so mentors can pair with them. ## Core hours Everyone must be reachable between 11:00 and 16:00 in their own time zone. Outside core hours people may arrange their day freely, but meetings should not be scheduled before 09:00 or after 18:00. ## Home office allowance A one-time home office allowance of 800 USD is paid after probation for a desk, chair or monitor. A monthly internet reimbursement of up to 40 USD is paid against a bill. Equipment bought with the allowance belongs to the employee after 2 years of service. ## Working from abroad Working from another country is allowed for up to 20 days per year with manager approval. Longer stays need approval from HR because of tax and visa rules. Employees must not work from a country where the company has no legal entity without",
+        "distance": 0.4402468605764829
+      }
+    ]
+  },
+  {
+    "question": "My laptop was stolen. How fast must I report it?",
+    "answer": "You must report a lost or stolen device to the security team within 1 hour [1].",
+    "sources": [
+      {
+        "source": "security.md",
+        "content": "# Security Basics (Fictional Co.) ## Accounts and passwords All company accounts use single sign-on with a hardware security key or authenticator app. Passwords are never shared, even with the IT team. A password manager is provided and is the only approved place to store credentials. ## Devices Laptops must have full-disk encryption and an automatic screen lock after 5 minutes. Lost or stolen devices must be reported to the security team within 1 hour, day or night, using the hotline or the security channel. ## Data handling Customer data must stay in approved systems. It must not be copied to personal drives, email or chat tools. Production data may not be used in test environments unless it has been anonymised. ## Reporting incidents Anything suspicious, such as a phishing email or an unexpected login alert, is reported to the security team straight away. Reporting a mistake quickly is never punished; hiding one is.",
+        "distance": 0.40415249065706804
+      },
+      {
+        "source": "remote-work.md",
+        "content": "written sign-off.",
+        "distance": 0.43698132225580555
+      },
+      {
+        "source": "expenses.md",
+        "content": "# Expenses and Travel (Fictional Co.) ## Submitting expenses Expenses must be submitted within 30 days of the purchase, with a receipt. Claims older than 30 days are rejected unless Finance approves an exception. Claims under 25 USD do not need a receipt but need a short note. ## Travel Flights under 6 hours are booked in economy. Flights of 6 hours or more may be booked in premium economy. Hotels are capped at 180 USD per night in major cities and 120 USD elsewhere. Book through the travel portal; bookings made outside it are reimbursed only up to the portal price. ## Meals The daily meal allowance on business trips is 60 USD. Alcohol is not reimbursed. Client dinners are reimbursed up to 100 USD per person with the guest list written on the claim. ## Learning budget Each employee has a learning budget of 1,200 USD per year for courses, books and conferences. The budget does not roll over. Conference travel is paid from the travel budget, not the learning budget.",
+        "distance": 0.4639134463569716
+      }
+    ]
+  },
+  {
+    "question": "Can I work remotely during probation, and how much is the monthly internet reimbursement?",
+    "answer": "No, you cannot work remotely during your 3-month probation; during this time, employees must work from the office 5 days a week [1]. The monthly internet reimbursement is up to 40 USD [1].",
+    "sources": [
+      {
+        "source": "remote-work.md",
+        "content": "# Remote Work Guide (Fictional Co.) ## Eligibility Employees may work remotely up to 3 days per week after completing their 3-month probation. During probation, employees work from the office 5 days a week so mentors can pair with them. ## Core hours Everyone must be reachable between 11:00 and 16:00 in their own time zone. Outside core hours people may arrange their day freely, but meetings should not be scheduled before 09:00 or after 18:00. ## Home office allowance A one-time home office allowance of 800 USD is paid after probation for a desk, chair or monitor. A monthly internet reimbursement of up to 40 USD is paid against a bill. Equipment bought with the allowance belongs to the employee after 2 years of service. ## Working from abroad Working from another country is allowed for up to 20 days per year with manager approval. Longer stays need approval from HR because of tax and visa rules. Employees must not work from a country where the company has no legal entity without",
+        "distance": 0.294302447703917
+      },
+      {
+        "source": "expenses.md",
+        "content": "# Expenses and Travel (Fictional Co.) ## Submitting expenses Expenses must be submitted within 30 days of the purchase, with a receipt. Claims older than 30 days are rejected unless Finance approves an exception. Claims under 25 USD do not need a receipt but need a short note. ## Travel Flights under 6 hours are booked in economy. Flights of 6 hours or more may be booked in premium economy. Hotels are capped at 180 USD per night in major cities and 120 USD elsewhere. Book through the travel portal; bookings made outside it are reimbursed only up to the portal price. ## Meals The daily meal allowance on business trips is 60 USD. Alcohol is not reimbursed. Client dinners are reimbursed up to 100 USD per person with the guest list written on the claim. ## Learning budget Each employee has a learning budget of 1,200 USD per year for courses, books and conferences. The budget does not roll over. Conference travel is paid from the travel budget, not the learning budget.",
+        "distance": 0.3893646191547866
+      },
+      {
+        "source": "remote-work.md",
+        "content": "written sign-off.",
+        "distance": 0.4177864648785454
+      }
+    ]
+  }
+]

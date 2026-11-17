@@ -33,7 +33,9 @@ def chunk(text: str, size: int) -> list[str]:
 
 
 def client() -> genai.Client:
-    return genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+    # attempts=1 means no automatic retry (the SDK default is 5, which would spend quota on failures)
+    options = types.HttpOptions(retry_options=types.HttpRetryOptions(attempts=1))
+    return genai.Client(api_key=os.environ["GEMINI_API_KEY"], http_options=options)
 
 
 def connect() -> psycopg.Connection:
