@@ -25,4 +25,20 @@ describe("fetchUser", () => {
       "Response is not a valid user",
     );
   });
+
+  it.each([
+    ["id is missing", { ...validUser, id: undefined }],
+    ["id is a string", { ...validUser, id: "1" }],
+    ["name is a number", { ...validUser, name: 42 }],
+    ["address is missing", { ...validUser, address: undefined }],
+    ["address has no city", { ...validUser, address: {} }],
+    ["address.city is a number", { ...validUser, address: { city: 5 } }],
+    ["body is null", null],
+    ["body is a string", "not a user"],
+    ["body is an array", [validUser]],
+  ])("rejects when %s", async (_label, body) => {
+    await expect(fetchUser(1, fakeFetch(body))).rejects.toThrow(
+      "Response is not a valid user",
+    );
+  });
 });
