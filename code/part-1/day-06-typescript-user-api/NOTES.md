@@ -1,1 +1,2 @@
 - Cycle 1: response body is held as unknown; isUser (value is User) is the only way to get a User. No casts.
+- Cycle 3: isUser now narrows with 'in' and typeof, starting with email.
