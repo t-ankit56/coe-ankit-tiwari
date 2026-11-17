@@ -2,3 +2,4 @@
 - Cycle 3: isUser now narrows with 'in' and typeof, starting with email.
 - Cycle 4: full guard, one check per field; isObject helper because typeof null is 'object'.
 - Cycle 5: a non-ok status throws; a rejected fetch is caught around that one call only and rethrown with context and the original error as cause.
+- Cycle 6: no behaviour change; added index.ts for the public exports and corrected the fetchUser doc comment.

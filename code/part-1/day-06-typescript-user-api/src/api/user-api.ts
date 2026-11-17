@@ -10,7 +10,7 @@ export type FetchFn = (url: string) => Promise<{
 
 const BASE_URL = "https://jsonplaceholder.typicode.com";
 
-/** Fetches one user and returns it only if the JSON passes isUser. */
+/** Fetches one user. Rejects on a network error, a bad status or JSON that fails isUser. */
 export async function fetchUser(id: number, fetchFn: FetchFn): Promise<User> {
   let response;
   try {
