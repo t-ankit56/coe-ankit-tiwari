@@ -1,0 +1,29 @@
+name: evals
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: evals-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  extraction-evals:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: code/part-1/day-09-extraction-evals
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      DEEPEVAL_TELEMETRY_OPT_OUT: "YES"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - run: pip install -r requirements.txt
+      - run: pytest -W ignore
