@@ -94,9 +94,53 @@ Outputs are saved in [samples/outputs/](samples/outputs/). Each cell is what the
 | `06-correction` | ✓ Daniel Okafor | ✓ 20 July 2026 | ✓ 1020.0 | ✓ USD | ✓ QT-3382 | ✓ conference booth fee | 6/6 |
 | `07-date-format` | ✓ Hannah Boyd (with address) | ✗ `03/04/2026` (expected `None`; it kept the raw text and did not pick a reading) | ✓ `None` | ✓ `None` | ✓ `None` | ✓ training session | 5/6 |
 | `08-european-format` | ✓ Klaus Weber (with address) | ✓ 30 September 2026 | ✓ 1234.5 | ✓ EUR | ✓ RE-20871 | ✗ `PO-4412` (that is a reference, not a purpose) | 5/6 |
-| **Total (8 emails)** | | | | | | | **44/48** |
+| `09-card-charge` | ✓ Maya Chen (with address) | ✓ Aug 9, 2026 | ✓ 85.0 | ✓ USD | ✓ OR-5521 | ✓ one wireless mouse | 6/6 |
+| `10-quote` | ✓ Arjun Mehta | ✓ `None` | ✓ 4800.0 | ✓ INR | ✓ Q-3307 | ✓ office chairs | 6/6 |
+| **Total (10 emails)** | | | | | | | **56/60** |
 
-The first five emails alone scored 28/30. The three harder ones scored 16/18.
+The first five emails scored 28/30, the three harder ones 16/18, and the two unseen ones 12/12.
+
+### Prompt v2 (one complete prompt)
+
+The full text is in [prompts.py](prompts.py): field definitions, "null when not stated, never guess", rules for relative, ambiguous and approximate values, and tie-breaking for corrected figures and amounts due.
+
+| File | sender | date | amount | currency | reference | purpose | Score |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `01-clean` | ✓ Priya Nair | ✓ 2026-03-14 | ✓ 1250.0 | ✓ USD | ✓ BL-4821 | ✓ annual software licence renewal | 6/6 |
+| `02-missing` | ✓ Marcus Webb | ✓ `None` | ✓ `None` | ✓ `None` | ✓ TKT-7730 | ✓ delivery status inquiry | 6/6 |
+| `03-ambiguous` | ✓ Lena Fischer | ✓ `None` | ✓ `None` (was 500.0) | ✓ EUR | ✓ `None` | ✓ venue deposit | 6/6 |
+| `04-meeting` | ✓ Tom Alvarez | ✓ 2026-04-22 | ✓ `None` | ✓ `None` | ✓ `None` | ✓ project kickoff meeting | 6/6 |
+| `05-two-amounts` | ✓ Sofia Rossi | ✓ 2026-06-30 (was 15 June) | ✓ 200.0 | ✓ GBP | ✓ INV-884 | ✓ outstanding balance payment | 6/6 |
+| `06-correction` | ✓ Daniel Okafor | ✓ 2026-07-20 | ✓ 1020.0 | ✓ USD | ✓ QT-3382 | ✓ conference booth fee | 6/6 |
+| `07-date-format` | ✓ Hannah Boyd | ✓ `None` (was `03/04/2026`) | ✓ `None` | ✓ `None` | ✓ `None` | ✓ training session | 6/6 |
+| `08-european-format` | ✗ Alpenwerk (expected Klaus Weber; the company name comes only from the email domain) | ✓ 2026-09-30 | ✓ 1234.5 | ✓ EUR | ✓ RE-20871 | ✓ invoice payment (was `PO-4412`) | 5/6 |
+| `09-card-charge` | ✓ Maya Chen | ✓ 2026-08-09 | ✓ 85.0 | ✓ USD | ✓ OR-5521 | ✓ order confirmation | 6/6 |
+| `10-quote` | ✓ Arjun Mehta | ✓ `None` | ✓ 4800.0 | ✓ INR | ✓ Q-3307 | ✓ quotation for office chairs | 6/6 |
+| **Total (10 emails)** | | | | | | | **59/60** |
+
+### Hard invoice, prompt v2
+
+| Field | Expected | Got | Correct? |
+| --- | --- | --- | --- |
+| `sender` | Lakeshore Print & Pack Ltd | Lakeshore Print & Pack Ltd | ✓ |
+| `date` | 2026-05-12 | 2026-06-11 | ✗ (the due date; v1 had the invoice date right) |
+| `amount` | 1380.00 | 1380.0 | ✓ |
+| `currency` | USD | USD | ✓ |
+| `reference` | LP-77231 | LP-77231 | ✓ |
+| `purpose` | custom boxes and printed labels | payment for custom boxes and printed labels | ✓ |
+
+Score 5/6.
+
+### v1 against v2
+
+| Set | v1 | v2 |
+| --- | --- | --- |
+| Emails 01 to 08 (v2 was written knowing their misses) | 44/48 | 47/48 |
+| Unseen emails 09 and 10 | 12/12 | 12/12 |
+| All 10 emails | 56/60 | 59/60 |
+| Hard invoice | 6/6 | 5/6 |
+
+v2 fixed four misses (the approximate amount in `03`, the wrong deadline in `05`, the raw date in `07`, the PO number in `purpose` for `08`). It added two: `sender` in `08` (it guessed a company from the email domain) and `date` on the hard invoice (it took the due date). The unseen emails show no difference, because v1 already got them all right, so they cannot show whether v2 generalizes.
 
 ### Hard invoice, prompt v1
 

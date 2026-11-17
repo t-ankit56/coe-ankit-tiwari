@@ -6,3 +6,8 @@
 - v1 did not guess a reading of 03/04/2026, but it kept the raw string as the date instead of null.
 - v1 put the purchase order number into `purpose` for 08-european-format (a field mix-up).
 - The hard invoice was easy for v1: it chose "Amount due" (1380.00) and the invoice number, not the PO. The PDF path is stronger than expected, so the emails will carry the comparison.
+- v2 (one complete prompt): 59/60 on ten emails against v1's 56/60. It fixed the approximate amount (03), the wrong deadline (05), the raw date (07) and the PO in `purpose` (08).
+- v2 added two misses. In 08 it returned "Alpenwerk" as the sender, a company guessed from the email domain, which breaks its own "never guess" rule. On the hard invoice it picked the due date (2026-06-11) instead of the invoice date.
+- Likely cause of the invoice miss: the v2 date rule says "for a payment request use the payment deadline" and an invoice is also a payment request, so the two rules compete. v1 had no such rule and got it right.
+- The unseen emails (09, 10) scored 12/12 for both versions, so they show no gain. v1 was already perfect on them.
+- The gain on emails 01 to 08 is partly because v2 was written knowing those misses.
