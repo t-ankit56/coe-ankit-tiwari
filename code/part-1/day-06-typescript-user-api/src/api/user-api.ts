@@ -12,7 +12,12 @@ const BASE_URL = "https://jsonplaceholder.typicode.com";
 
 /** Fetches one user and returns it only if the JSON passes isUser. */
 export async function fetchUser(id: number, fetchFn: FetchFn): Promise<User> {
-  const response = await fetchFn(`${BASE_URL}/users/${id}`);
+  let response;
+  try {
+    response = await fetchFn(`${BASE_URL}/users/${id}`);
+  } catch (error) {
+    throw new Error(`Could not reach the API for user ${id}`, { cause: error });
+  }
   if (!response.ok) {
     throw new Error(`Request failed with status ${response.status}`);
   }
