@@ -6,12 +6,12 @@
 
 | Criterion (copied from the planner) | Done? | Evidence (link or section below) |
 | --- | --- | --- |
-| Calls an LLM API from Python with sensible settings | ✓ | [extract.py](../code/part-1/day-07-llm-extraction/extract.py) · [settings and decisions](../code/part-1/day-07-llm-extraction/README.md#settings-and-decisions) |
-| Writes prompts for accuracy and consistency | ✓ | [prompts.py](../code/part-1/day-07-llm-extraction/prompts.py) · [v2 results](../code/part-1/day-07-llm-extraction/README.md#prompt-v2-one-complete-prompt) |
-| Gets schema-valid JSON with structured outputs | ✓ | [schema.py](../code/part-1/day-07-llm-extraction/schema.py) · [saved outputs](../code/part-1/day-07-llm-extraction/samples/outputs/) |
-| Extracts fields from a PDF | ✓ | [invoice results](../code/part-1/day-07-llm-extraction/README.md#invoice-results) · [PDF limits](../code/part-1/day-07-llm-extraction/README.md#pdf-limits) |
-| Handles missing or ambiguous input | ✓ | [02-missing](../code/part-1/day-07-llm-extraction/samples/emails/02-missing.txt) · [03-ambiguous](../code/part-1/day-07-llm-extraction/samples/emails/03-ambiguous.txt) · [07-date-format](../code/part-1/day-07-llm-extraction/samples/emails/07-date-format.txt) · [results](../code/part-1/day-07-llm-extraction/README.md#results) |
-| Measures the effect of a prompt change | ✓ | [v1 against v2](../code/part-1/day-07-llm-extraction/README.md#v1-against-v2) · [NOTES.md](../code/part-1/day-07-llm-extraction/NOTES.md) |
+| Calls an LLM API from Python with sensible settings | Yes | [extract.py](../code/part-1/day-07-llm-extraction/extract.py) · [settings and decisions](../code/part-1/day-07-llm-extraction/README.md#settings-and-decisions) |
+| Writes prompts for accuracy and consistency | Yes | [prompts.py](../code/part-1/day-07-llm-extraction/prompts.py) · [v2 results](../code/part-1/day-07-llm-extraction/README.md#prompt-v2-one-complete-prompt) |
+| Gets schema-valid JSON with structured outputs | Yes | [schema.py](../code/part-1/day-07-llm-extraction/schema.py) · [saved outputs](../code/part-1/day-07-llm-extraction/samples/outputs/) |
+| Extracts fields from a PDF | Yes | [invoice results](../code/part-1/day-07-llm-extraction/README.md#invoice-results) · [PDF limits](../code/part-1/day-07-llm-extraction/README.md#pdf-limits) |
+| Handles missing or ambiguous input | Yes | [02-missing](../code/part-1/day-07-llm-extraction/samples/emails/02-missing.txt) · [03-ambiguous](../code/part-1/day-07-llm-extraction/samples/emails/03-ambiguous.txt) · [07-date-format](../code/part-1/day-07-llm-extraction/samples/emails/07-date-format.txt) · [results](../code/part-1/day-07-llm-extraction/README.md#results) |
+| Measures the effect of a prompt change | Yes | [v1 against v2](../code/part-1/day-07-llm-extraction/README.md#v1-against-v2) · [NOTES.md](../code/part-1/day-07-llm-extraction/NOTES.md) |
 
 ## Key learnings
 
@@ -56,3 +56,7 @@ I used Claude Code (Sonnet 5.5) for this day. It wrote the code, the sample emai
 - What are the real free-tier limits for this model? The documentation only points to the AI Studio page.
 - v2 changed many things at once, so which of them did the work? Single-change versions would show it.
 - How would scanned or multi-page PDFs behave? I only tried one-page invoices.
+
+## Changes after review
+
+- 
