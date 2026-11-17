@@ -39,3 +39,33 @@ Each live run saves its outcome to [results/](results/) (`v1.json`, `v2.json`). 
 Both prompts score the same, so the pass rate alone does not separate them. v2 fixed three of v1's misses and caused three new ones (the same trade Day 7 recorded by hand). A gate on the rate catches a drop but not a swap of fixed and broken cases, so the per-case results in `results/` matter as much as the number. `PASS_RATE` is set to 0.75, the v2 result. With 12 cases, one case is about 8 points, and the output is probabilistic, so this is a small sample.
 
 `purpose` is not scored yet. DeepEval judges it in Step 3.
+
+## Judging `purpose` with DeepEval (Step 3)
+
+`purpose` is free text, so a DeepEval `GEval` metric ([judge.py](judge.py) is a small Gemini judge, because DeepEval's default is a paid OpenAI model) scores whether it means the same as the expected purpose. The evaluation steps are in `PURPOSE_STEPS` in [tests/test_extraction.py](tests/test_extraction.py). `GEval` returns an integer from 0 to 10, rescaled to 0 to 1.
+
+The judge was run once on the saved v2 outputs: 12 calls, using `REUSE_SAVED=1` so the extraction was not called again. Scores and reasons are in [results/v2-purpose.json](results/v2-purpose.json).
+
+```
+REUSE_SAVED=1 PROMPT_VERSION=v2 pytest tests/test_extraction.py::test_purpose_score
+```
+
+| Case | Got | Expected | Score |
+| --- | --- | --- | --- |
+| `01-clean` | annual software licence renewal | payment received for an annual software licence renewal | 1.0 |
+| `02-missing` | delivery status inquiry | asking for the status of a delayed parcel | 0.9 |
+| `03-ambiguous` | venue deposit | paying a venue deposit | 1.0 |
+| `04-meeting` | project kickoff meeting | scheduling the project kickoff meeting | 1.0 |
+| `05-two-amounts` | outstanding balance payment | asking for payment of the remaining balance | 1.0 |
+| `06-correction` | conference booth fee | paying the conference booth fee | 1.0 |
+| `07-date-format` | Training session | announcing a training session | 1.0 |
+| `08-european-format` | invoice payment | paying an invoice | 1.0 |
+| `09-card-charge` | order confirmation | a card charge for an order of one wireless mouse | **0.3** |
+| `10-quote` | quotation for office chairs | quotation for 12 office chairs | **0.5** |
+| `invoice` | payment for stationery supplies | supply of stationery (A4 paper and pens) | 1.0 |
+| `invoice-hard` | payment for custom boxes and printed labels | supply of custom boxes and printed labels | 1.0 |
+| **Mean** | | | **0.89** |
+
+`PURPOSE_THRESHOLD` is 0.85, just under the mean, so a prompt that makes purposes clearly worse fails and one unlucky score does not.
+
+**Judge against my hand judgement (Day 7):** it agrees on 10 of 12 cases. On `09` it is stricter than I was: "order confirmation" drops the card charge and the item, and I think the judge is right. On `10` it penalises the missing quantity of 12, which is stricter than the evaluation steps intend ("ignore level of detail"). So the score depends on how the steps are worded, and with 12 cases and an LLM judge it is a noisy number, not a fixed measurement.
