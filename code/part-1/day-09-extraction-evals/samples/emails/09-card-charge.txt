@@ -1,0 +1,9 @@
+From: Maya Chen <maya.chen@shopsphere.example>
+Subject: Your order OR-5521 is confirmed
+
+Hi,
+
+Thanks for your order! Your card was charged $85.00 on Aug 9, 2026 for
+order OR-5521 (one wireless mouse). It will ship within two working days.
+
+Maya
