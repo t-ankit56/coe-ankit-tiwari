@@ -13,6 +13,9 @@ const BASE_URL = "https://jsonplaceholder.typicode.com";
 /** Fetches one user and returns it only if the JSON passes isUser. */
 export async function fetchUser(id: number, fetchFn: FetchFn): Promise<User> {
   const response = await fetchFn(`${BASE_URL}/users/${id}`);
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
+  }
   const body: unknown = await response.json();
   if (!isUser(body)) {
     throw new Error("Response is not a valid user");
