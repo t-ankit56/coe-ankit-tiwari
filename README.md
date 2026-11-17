@@ -12,4 +12,5 @@
 | 5 | TypeScript for Python Developers: Foundations | [day-05](part-1/day-05-typescript-foundations.md) | [Notification service in TypeScript](code/part-1/day-05-typescript-notification-service/) |
 | 6 | TypeScript in Practice | [day-06](part-1/day-06-typescript-in-practice.md) | [Typed user API module](code/part-1/day-06-typescript-user-api/) |
 | 7 | LLM APIs, Prompting & Structured Outputs | [day-07](part-1/day-07-llm-apis-structured-outputs.md) | [LLM extraction from email and PDF](code/part-1/day-07-llm-extraction/) |
+| 8 | Embeddings, RAG & pgvector | [day-08](part-1/day-08-embeddings-rag-pgvector.md) | [RAG over documents with pgvector](code/part-1/day-08-rag-pgvector/) |
 | 11 | Leave Module | [day-11](part-1/day-11-leave-module.md) | [ERP leave module](erp_leave_module/) |
