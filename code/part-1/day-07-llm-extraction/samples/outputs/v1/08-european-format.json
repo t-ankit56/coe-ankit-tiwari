@@ -1,0 +1,8 @@
+{
+  "sender": "Klaus Weber <klaus.weber@alpenwerk.example>",
+  "date": "30 September 2026",
+  "amount": 1234.5,
+  "currency": "EUR",
+  "reference": "RE-20871",
+  "purpose": "PO-4412"
+}

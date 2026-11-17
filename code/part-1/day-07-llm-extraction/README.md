@@ -67,6 +67,17 @@ One page with a discount, shipping, VAT, a balance brought forward, and an invoi
 | `reference` | LP-77231 (the invoice number, not `PO-5590` or the old `LP-76902`) |
 | `purpose` | supply of custom boxes and printed labels |
 
+## Unseen emails
+
+Two more emails, added to check that the improved prompt (v2) works beyond the cases it was written for. v2 was drafted knowing the misses on emails 01 to 08, so scores on those are weaker evidence. These two use situations v2 does not mention. The matching rules above apply.
+
+| File | sender | date | amount | currency | reference | purpose |
+| --- | --- | --- | --- | --- | --- | --- |
+| `09-card-charge` | Maya Chen | 2026-08-09 | 85.00 | USD | OR-5521 | a card charge for an order of one wireless mouse |
+| `10-quote` | Arjun Mehta | `None` | 4800.00 | INR | Q-3307 | quotation for 12 office chairs |
+
+What each one tests: `09` has a `$` sign and a US-style date ("Aug 9, 2026"). `10` has a total and a GST amount (the total is the figure), and "valid for 30 days", which is a period and not a date, so `date` must be `None`.
+
 ## Results
 
 Outputs are saved in [samples/outputs/](samples/outputs/). Each cell is what the model returned, marked ✓ or ✗ against the expected value above.
@@ -80,4 +91,22 @@ Outputs are saved in [samples/outputs/](samples/outputs/). Each cell is what the
 | `03-ambiguous` | ✓ Lena Fischer | ✓ `None` | ✗ 500.0 (expected `None`) | ✓ EUR | ✓ `None` | ✓ deposit for the venue | 5/6 |
 | `04-meeting` | ✓ Tom Alvarez (with address) | ✓ 22 April 2026 | ✓ `None` | ✓ `None` | ✓ `None` | ✓ project kickoff meeting | 6/6 |
 | `05-two-amounts` | ✓ Sofia Rossi (with address) | ✗ 15 June 2026 (expected 30 June, the deadline) | ✓ 200.0 | ✓ GBP | ✓ INV-884 | ✓ outstanding balance payment | 5/6 |
-| **Total** | | | | | | | **28/30** |
+| `06-correction` | ✓ Daniel Okafor | ✓ 20 July 2026 | ✓ 1020.0 | ✓ USD | ✓ QT-3382 | ✓ conference booth fee | 6/6 |
+| `07-date-format` | ✓ Hannah Boyd (with address) | ✗ `03/04/2026` (expected `None`; it kept the raw text and did not pick a reading) | ✓ `None` | ✓ `None` | ✓ `None` | ✓ training session | 5/6 |
+| `08-european-format` | ✓ Klaus Weber (with address) | ✓ 30 September 2026 | ✓ 1234.5 | ✓ EUR | ✓ RE-20871 | ✗ `PO-4412` (that is a reference, not a purpose) | 5/6 |
+| **Total (8 emails)** | | | | | | | **44/48** |
+
+The first five emails alone scored 28/30. The three harder ones scored 16/18.
+
+### Hard invoice, prompt v1
+
+| Field | Expected | Got | Correct? |
+| --- | --- | --- | --- |
+| `sender` | Lakeshore Print & Pack Ltd | Lakeshore Print & Pack Ltd | ✓ |
+| `date` | 2026-05-12 | 12 May 2026 | ✓ |
+| `amount` | 1380.00 | 1380.0 | ✓ (it chose "Amount due", not the invoice total) |
+| `currency` | USD | USD | ✓ |
+| `reference` | LP-77231 | LP-77231 | ✓ |
+| `purpose` | custom boxes and printed labels | Custom boxes and Printed labels | ✓ |
+
+Score 6/6.

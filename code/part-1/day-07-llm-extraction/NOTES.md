@@ -2,3 +2,7 @@
 - v1 turned "about 500 euros" into a precise 500.0 (03-ambiguous). A vague value became a precise one.
 - v1 picked the wrong date in 05-two-amounts: the date of the earlier payment (15 June) instead of the deadline (30 June).
 - Fields are inconsistent in form: `sender` has the address on some emails and not on others, dates are in the original wording.
+- Harder set, v1: 06-correction 6/6 (took the corrected amount, ignored the quoted old figure), 07-date-format 5/6, 08-european-format 5/6, hard invoice 6/6. Eight emails total 44/48.
+- v1 did not guess a reading of 03/04/2026, but it kept the raw string as the date instead of null.
+- v1 put the purchase order number into `purpose` for 08-european-format (a field mix-up).
+- The hard invoice was easy for v1: it chose "Amount due" (1380.00) and the invoice number, not the PO. The PDF path is stronger than expected, so the emails will carry the comparison.
