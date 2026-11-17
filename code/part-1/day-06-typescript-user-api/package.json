@@ -1,0 +1,17 @@
+{
+  "name": "day-06-typescript-user-api",
+  "version": "1.0.0",
+  "description": "Day 6: a typed JSONPlaceholder user fetcher, built test-first",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json",
+    "check": "tsc --noEmit && vitest run"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  },
+  "private": true,
+  "type": "module"
+}
