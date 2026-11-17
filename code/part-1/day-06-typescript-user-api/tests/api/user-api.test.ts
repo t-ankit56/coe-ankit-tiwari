@@ -47,4 +47,16 @@ describe("fetchUser", () => {
       "Request failed with status 404",
     );
   });
+
+  it("rejects with context and the original error when the fetch itself fails", async () => {
+    const networkError = new Error("network down");
+    const offline = async () => {
+      throw networkError;
+    };
+
+    await expect(fetchUser(1, offline)).rejects.toMatchObject({
+      message: "Could not reach the API for user 1",
+      cause: networkError,
+    });
+  });
 });
