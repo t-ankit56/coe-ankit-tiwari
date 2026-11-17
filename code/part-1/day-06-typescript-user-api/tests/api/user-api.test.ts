@@ -9,4 +9,12 @@ describe("fetchUser", () => {
 
     expect(user).toEqual(validUser);
   });
+
+  it("requests the JSONPlaceholder URL for the given id", async () => {
+    const fetchFn = fakeFetch(validUser);
+
+    await fetchUser(7, fetchFn);
+
+    expect(fetchFn.urls).toEqual(["https://jsonplaceholder.typicode.com/users/7"]);
+  });
 });
