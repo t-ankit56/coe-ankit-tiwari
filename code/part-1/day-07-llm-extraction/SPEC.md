@@ -12,7 +12,7 @@ Build one function, `extract(source)`, that pulls named fields out of a short em
 4. **Keep API calls to a minimum.** The free-tier limits could not be confirmed (per-model figures are only shown in AI Studio). Every call must be named in the step's plan and approved. Never loop, never retry automatically, never re-run to see if the answer changes. Save every output to a file and fill the README from the saved files.
 5. **Never print or commit the key.** `GEMINI_API_KEY` is read from `.env` (gitignored). Do not echo it, log it, or put it in the README, `NOTES.md` or the day file. Only `.env.example` with a placeholder is committed.
 6. **No tests.** Do not add pytest, a fake client or an eval script. Checking is manual: expected against got, recorded in the README.
-7. **Do not "fix" v1.** The first prompt is deliberately weak so there is something to improve. Change one thing per version, never several at once, and never edit an old version. Add a new one.
+7. **Do not "fix" v1.** The first prompt is deliberately weak so there is something to improve. Never edit an old version. Add a new one. (Changed during the build: v2 is one complete prompt rather than several one-change versions, so it measures the whole prompt and not each part.)
 8. **Never invent data.** The samples are made up, with no real names, emails or amounts. No real mailbox is read.
 9. **Simplest real thing first.** Dependencies are `google-genai`, `pydantic` and `python-dotenv` only. No frameworks, no retries, no caching layer.
 10. **Keep notes.** Whenever a prompt change moves a score, append one line to `NOTES.md`. The user will use these for the reflection.
@@ -41,7 +41,7 @@ Google Gemini API, free tier. The model is one constant at the top of `extract.p
 | `extract` | Text goes to the model as a text part, a PDF as a PDF part. Everything else is shared. Raises a clear error on an API failure, or on a reply that is not valid JSON or fails the schema. It never repairs a reply silently. |
 | `__main__` | Reads the file from the command line, picks the prompt version, prints the result as JSON. Redirecting stdout saves it. |
 
-Missing or unclear information must come back as `None`. The schema allows it, and from v3 onward the prompt says so.
+Missing or unclear information must come back as `None`. The schema allows it, and prompt v2 says so.
 
 ## Folder layout
 
@@ -123,23 +123,20 @@ Write these before any API call, with the expected values recorded in the README
 
 **Suggested commit message:** `docs: baseline results for prompt v1`
 
-### Step 5: improve the prompt, one change per version
+### Step 5: one complete improved prompt (v2)
 
-Each version is its own pass of the same four actions: add the new entry in `prompts.py`, run the five emails once with it, save to `samples/outputs/<version>/`, and add a column to the README table. Stop after each version.
+Changed from the original plan of v2, v3 and v4: calls were limited, and the middle versions would mostly repeat each other, so v2 is one complete prompt.
 
-| Version | One change | What it should fix |
-| --- | --- | --- |
-| `v2` | Define each field (what `sender`, `reference`, `purpose` mean, the date format, the amount as a number) | Wrong or inconsistent fields |
-| `v3` | Add "use null when a value is not stated; never guess" | Invented values on the missing and ambiguous emails |
-| `v4` | Add one worked example (input and expected output) | Remaining format and choice errors |
+1. Add `v2` to `prompts.py`: field definitions, "null when not stated, never guess", rules for relative, ambiguous and approximate values, and tie-breaking for corrected figures and amounts due. The user approves the exact text first.
+2. Because v1 scored 28/30 on the first five emails, add harder samples (emails 06 to 08 and a harder invoice) and two unseen emails (09 and 10) that v2 was not written against. Write the expected values before running.
+3. Run v1 on the new samples, then v2 on all ten emails and the hard invoice, once each, saved to `samples/outputs/<version>/`.
+4. In the README, add a table per version and a v1 against v2 comparison. If v2 scores worse on something, say so and do not remove it.
 
-If a version scores worse or no better, keep it in the table and say so. Do not remove it. If v1 already scores full marks, say that plainly in the README and add a harder email rather than faking a gap.
-
-**Suggested commit messages:** `feat: prompt v2 with field definitions`, `feat: prompt v3 with null for missing values`, `feat: prompt v4 with a worked example`, each followed by `docs: results for prompt vN`
+**Suggested commit messages:** `feat: prompt v2 with field definitions and null rules`, `docs: v2 results and comparison with v1`
 
 ### Step 6: the invoice with the best prompt
 
-1. Run `invoice.pdf` once with the best-scoring version, saving to `samples/outputs/invoice.json`.
+1. Run `invoice.pdf` once with the best-scoring version, saving to `samples/outputs/v2/invoice.json`.
 2. In the README, add a field-by-field table of the PDF's value, the extracted value and correct or not.
 3. Note the PDF limits from the docs.
 
@@ -165,7 +162,7 @@ Fill this table in the README once the code is written. Starting questions:
 
 Write `README.md` with these parts:
 
-1. What it is and how to run it (`pip install -r requirements.txt`, `python extract.py <file> --prompt v3`).
+1. What it is and how to run it (`pip install -r requirements.txt`, `python extract.py <file> --prompt v2`).
 2. The settings chosen and why (the Decisions above).
 3. The expected-values table, the per-version results, and the invoice table.
 4. The PDF limits and the free-tier note, with the model ID used.
@@ -180,7 +177,7 @@ The Key learnings, the reflection and the AI use section go in `part-1/day-07-ll
 | Writes prompts for accuracy and consistency | `prompts.py` holds the versions, and the README table shows the effect of each |
 | Gets schema-valid JSON with structured outputs | The `Extraction` model is the response schema and the reply is validated against it |
 | Extracts fields from a PDF | `extract("samples/invoice.pdf")` and the invoice table in the README |
-| Handles missing or ambiguous input | Samples 02 and 03 return `None` or a hedged value, not an invented one (from v3 onward) |
-| Measures the effect of a prompt change | The README table, one column per version, on the same five emails |
+| Handles missing or ambiguous input | Samples 02 and 03 return `None` or a hedged value, not an invented one (v2 fixes the ambiguous amount and date that v1 turned into precise values) |
+| Measures the effect of a prompt change | The README tables for v1 and v2 on the same emails, and the v1 against v2 comparison |
 
 Finally, confirm `git status` shows no `.env` and `git diff` contains no key, then suggest the commit message `docs: README and notes`. The user commits.

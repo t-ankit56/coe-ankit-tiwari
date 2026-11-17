@@ -2,9 +2,39 @@
 
 Spec: [SPEC.md](SPEC.md) · Notes: [NOTES.md](NOTES.md)
 
+`extract(source)` takes email text or a path to a PDF, sends it to the Gemini API with a system prompt, and returns an `Extraction` (sender, date, amount, currency, reference, purpose). Missing values come back as `None`. Prompt v1 is a deliberately bare baseline and v2 is one complete prompt, and every result below is checked by hand against the source. There are no automated tests (evals are Day 9).
+
+## How to run
+
+```
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env        # then put a Gemini API key in .env
+python extract.py samples/emails/01-clean.txt --prompt v2
+python extract.py samples/invoice.pdf --prompt v2
+```
+
+The model is the `MODEL` constant at the top of [extract.py](extract.py) (`gemini-3.1-flash-lite`, on the free tier). Free-tier limits could not be confirmed from the documentation, so every output was saved and the README was filled from the saved files. In total 25 calls were made.
+
+## Settings and decisions
+
+| Question | Decision |
+| --- | --- |
+| Why a low temperature (0.0)? | Extraction wants the same answer for the same input, not variety. |
+| Why `max_output_tokens` 500? | The output is six short fields. A cap stops a runaway reply and limits cost. |
+| Why structured output and not "reply in JSON"? | The Pydantic schema constrains the reply and gives a place to validate it. A prompt alone can be ignored. |
+| Why is every field Optional? | The input may not contain the value. `None` is a correct answer, and a required field would push the model to invent one. |
+| Why one function for text and PDF? | The task is the same extraction. Only the input part differs. A PDF is sent as the file itself, not as extracted text. |
+| Why a Flash-Lite model, pinned by name? | Cheapest class and enough for extraction. A `-latest` alias could change between runs and spoil the comparison. |
+| Why no retries? | A retry loop uses the quota fastest. A failed call raises an error instead. |
+| Why only v1 and v2? | v1 is the baseline and v2 is one complete prompt. Intermediate versions would mostly repeat each other, and calls were limited. The cost is that v2 does not show which of its changes did the work. |
+| Where do prompts live? | In [prompts.py](prompts.py), so a prompt change is a visible diff. |
+
+Where to find the evidence: [samples and expected values](#samples-and-expected-values), [harder samples](#harder-samples), [unseen emails](#unseen-emails), [invoice results](#invoice-results), [v1 and v2 results](#results).
+
 ## Samples and expected values
 
-Five made-up emails in [samples/emails/](samples/emails/) and one made-up invoice in [samples/invoice.pdf](samples/invoice.pdf). The expected values below were written from the sample texts before the emails were run (the invoice was tried once with prompt v1 before this table was written, so its values come from the PDF itself).
+Ten made-up emails in [samples/emails/](samples/emails/) and two made-up invoices ([simple](samples/invoice.pdf), [hard](samples/invoice-hard.pdf)). The expected values were written from the sample texts before each set was run. The first five emails are below, and the harder samples and the two unseen emails have their own sections further down. (The simple invoice was tried once with prompt v1 before its table was written, so its values come from the PDF itself.)
 
 ### How a field is marked correct
 
