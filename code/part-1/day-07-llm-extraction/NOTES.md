@@ -11,3 +11,4 @@
 - Likely cause of the invoice miss: the v2 date rule says "for a payment request use the payment deadline" and an invoice is also a payment request, so the two rules compete. v1 had no such rule and got it right.
 - The unseen emails (09, 10) scored 12/12 for both versions, so they show no gain. v1 was already perfect on them.
 - The gain on emails 01 to 08 is partly because v2 was written knowing those misses.
+- v2 on the simple invoice: 5/6. It chose the due date (2026-03-05) instead of the invoice date, the same miss as on the hard invoice. Two invoices out of two, so the date rule in v2 is the likely cause.

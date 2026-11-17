@@ -78,6 +78,30 @@ Two more emails, added to check that the improved prompt (v2) works beyond the c
 
 What each one tests: `09` has a `$` sign and a US-style date ("Aug 9, 2026"). `10` has a total and a GST amount (the total is the figure), and "valid for 30 days", which is a period and not a date, so `date` must be `None`.
 
+## Invoice results
+
+The same extraction on a PDF: `extract("samples/invoice.pdf")` sends the file itself to the model, with no text extraction first. Saved outputs: [v1](samples/outputs/invoice-v1.json), [v2](samples/outputs/v2/invoice.json).
+
+### Simple invoice: [samples/invoice.pdf](samples/invoice.pdf)
+
+| Field | Expected (from the PDF) | v1 | v2 |
+| --- | --- | --- | --- |
+| `sender` | Northwind Stationery Ltd | ✓ Northwind Stationery Ltd | ✓ Northwind Stationery Ltd |
+| `date` | 2026-02-03 (invoice date) | ✓ 3 February 2026 | ✗ 2026-03-05 (the due date) |
+| `amount` | 266.40 (total due) | ✓ 266.4 | ✓ 266.4 |
+| `currency` | GBP | ✓ GBP | ✓ GBP |
+| `reference` | INV-20431 | ✓ INV-20431 | ✓ INV-20431 |
+| `purpose` | supply of stationery (A4 paper and pens) | ✓ A4 paper and pens (the line items) | ✓ payment for stationery supplies |
+| **Score** | | **6/6** | **5/6** |
+
+Both invoices lost the same point with v2: it picks the due date, not the invoice date. So the date rule in v2 ("for a payment request use the payment deadline") is the likely cause, since an invoice is also a payment request. The hard invoice is in the harder samples section above.
+
+### PDF limits
+
+From the Gemini documentation (document understanding): a PDF can be up to 50 MB or 1,000 pages, and each page costs about 258 tokens. This applies to inline data, which is how `extract()` sends the file, and to the Files API. Larger documents that are reused across several requests are better sent through the Files API. Each sample invoice here is one page and under 50 KB. Scanned and multi-page PDFs were not tried.
+
+Source: [Document understanding | Gemini API](https://ai.google.dev/gemini-api/docs/document-processing)
+
 ## Results
 
 Outputs are saved in [samples/outputs/](samples/outputs/). Each cell is what the model returned, marked ✓ or ✗ against the expected value above.
@@ -138,9 +162,10 @@ Score 5/6.
 | Emails 01 to 08 (v2 was written knowing their misses) | 44/48 | 47/48 |
 | Unseen emails 09 and 10 | 12/12 | 12/12 |
 | All 10 emails | 56/60 | 59/60 |
+| Simple invoice | 6/6 | 5/6 |
 | Hard invoice | 6/6 | 5/6 |
 
-v2 fixed four misses (the approximate amount in `03`, the wrong deadline in `05`, the raw date in `07`, the PO number in `purpose` for `08`). It added two: `sender` in `08` (it guessed a company from the email domain) and `date` on the hard invoice (it took the due date). The unseen emails show no difference, because v1 already got them all right, so they cannot show whether v2 generalizes.
+v2 fixed four misses (the approximate amount in `03`, the wrong deadline in `05`, the raw date in `07`, the PO number in `purpose` for `08`). It added two kinds of miss: `sender` in `08` (it guessed a company from the email domain) and `date` on both invoices (it took the due date). The unseen emails show no difference, because v1 already got them all right, so they cannot show whether v2 generalizes.
 
 ### Hard invoice, prompt v1
 
