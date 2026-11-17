@@ -77,6 +77,24 @@ def ingest(size: int) -> int:
     return len(pieces)
 
 
+def retrieve(question: str, size: int, k: int = TOP_K) -> list[dict]:
+    """The k chunks of this size closest to the question, by cosine distance."""
+    (vector,) = embed([question], "RETRIEVAL_QUERY")
+    with connect() as conn:
+        rows = conn.execute(
+            """select source, content, embedding <=> %s::vector as distance
+               from chunks where chunk_size = %s order by distance limit %s""",
+            (literal(vector), size, k),
+        ).fetchall()
+    return [{"source": source, "content": content, "distance": float(distance)} for source, content, distance in rows]
+
+
+def show_sources(sources: list[dict]) -> str:
+    return "\n".join(
+        f"[{i}] {s['source']} (distance {s['distance']:.3f})\n    {s['content']}" for i, s in enumerate(sources, 1)
+    )
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
