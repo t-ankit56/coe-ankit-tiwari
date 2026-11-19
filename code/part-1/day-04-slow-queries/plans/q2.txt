@@ -1,0 +1,16 @@
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..27640.77 rows=21 width=33) (actual time=2.648..44.173 rows=24.00 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   Buffers: shared hit=564 read=15658
+   ->  Parallel Seq Scan on orders  (cost=0.00..26638.67 rows=9 width=33) (actual time=2.121..38.289 rows=8.00 loops=3)
+         Filter: (customer_id = 4242)
+         Rows Removed by Filter: 666659
+         Buffers: shared hit=564 read=15658
+ Planning:
+   Buffers: shared hit=69
+ Planning Time: 0.414 ms
+ Execution Time: 44.264 ms
+(12 rows)
+

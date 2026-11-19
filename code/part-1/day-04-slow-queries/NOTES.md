@@ -1,0 +1,1 @@
+Q2: the second run still shows read=15658 buffers, so the table is not fully cached (the OS cache is warm, shared_buffers is not). The plan is a Parallel Seq Scan with 2 workers, not a plain Seq Scan. Recorded as is.
