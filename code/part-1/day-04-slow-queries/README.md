@@ -60,4 +60,36 @@ SELECT * FROM orders WHERE customer_id = 4242;
 
 Cause: `orders.customer_id` has no index, so Postgres scans the whole table, in parallel with two workers. It reads about 2,000,000 rows and removes all but 24 of them. Only about 8 rows per worker survive the filter.
 
+### Q3: sorting the whole table for a few rows
+
+```sql
+SELECT * FROM orders ORDER BY created_at DESC LIMIT 20;
+```
+
+```
+                                                                  QUERY PLAN                                                                  
+----------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=47730.05..47732.38 rows=20 width=33) (actual time=95.220..98.148 rows=20.00 loops=1)
+   Buffers: shared hit=1204 read=15094
+   ->  Gather Merge  (cost=47730.05..280662.89 rows=1999999 width=33) (actual time=95.217..98.141 rows=20.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=1204 read=15094
+         ->  Sort  (cost=46730.02..48813.36 rows=833333 width=33) (actual time=91.287..91.289 rows=16.00 loops=3)
+               Sort Key: created_at DESC
+               Sort Method: top-N heapsort  Memory: 27kB
+               Buffers: shared hit=1204 read=15094
+               Worker 0:  Sort Method: top-N heapsort  Memory: 27kB
+               Worker 1:  Sort Method: top-N heapsort  Memory: 27kB
+               ->  Parallel Seq Scan on orders  (cost=0.00..24555.33 rows=833333 width=33) (actual time=0.197..34.238 rows=666666.67 loops=3)
+                     Buffers: shared hit=1128 read=15094
+ Planning:
+   Buffers: shared hit=89
+ Planning Time: 0.642 ms
+ Execution Time: 98.232 ms
+(18 rows)
+```
+
+Cause: there is no index on `created_at`, so Postgres reads all 2,000,000 rows (about 666,667 per process) and sorts them to keep 20. The sort is a top-N heapsort, so it uses little memory, but every row is still read.
+
 ## Before and after
