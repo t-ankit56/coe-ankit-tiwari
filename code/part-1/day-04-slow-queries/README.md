@@ -93,3 +93,16 @@ SELECT * FROM orders ORDER BY created_at DESC LIMIT 20;
 Cause: there is no index on `created_at`, so Postgres reads all 2,000,000 rows (about 666,667 per process) and sorts them to keep 20. The sort is a top-N heapsort, so it uses little memory, but every row is still read.
 
 ## Before and after
+
+The index is in [indexes.sql](indexes.sql). It is not part of `seed.sql`, so the "before" state can be rebuilt by reloading the seed. Q2 is the query, and the plans are [plans/q2.txt](plans/q2.txt) (before) and [plans/q2-after.txt](plans/q2-after.txt) (after). Both are second runs.
+
+| | Before | After |
+| --- | --- | --- |
+| Scan type | Parallel Seq Scan (2 workers) | Bitmap Index Scan, then Bitmap Heap Scan |
+| Rows removed by filter | 666,659 per worker | none (no filter step) |
+| Buffers | hit=564 read=15658 | hit=27 |
+| Execution time | 44.264 ms | 0.340 ms |
+
+The same 24 rows come back. The query went from reading the whole table to reading 24 heap blocks and 3 index blocks.
+
+This index does not help Q1 or Q3. Q1 is on `customers`, and the `orders` index is on a different table and column. Q3 sorts by `created_at`, and an index on `customer_id` does not give that order.
