@@ -40,7 +40,7 @@ A `GEval` metric with a custom Gemini judge scored the saved v2 outputs at a mea
 
 ### Exercise 1: run the evals in CI
 
-A GitHub Actions workflow runs the suite on every push and pull request, 24 live calls per run. **Pending:** no run has happened, so the gate is untested (no green run, no red run on a worse prompt, no branch protection yet). See the [CI section](../code/part-1/day-09-extraction-evals/README.md#ci-step-4).
+A GitHub Actions workflow runs the suite on every push and pull request, 12 live calls per run (the DeepEval judge is skipped unless switched on in a manual run, to stay under the free-tier rate limit). **Pending:** no run has happened, so the gate is untested (no green run, no red run on a worse prompt, no branch protection yet). See the [CI section](../code/part-1/day-09-extraction-evals/README.md#ci-step-4).
 
 ### Exercise 2: trace the Day 8 RAG flow
 

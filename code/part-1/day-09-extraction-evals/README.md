@@ -47,7 +47,7 @@ Both prompts score the same, so the pass rate alone does not separate them. v2 f
 The judge was run once on the saved v2 outputs: 12 calls, using `REUSE_SAVED=1` so the extraction was not called again. Scores and reasons are in [results/v2-purpose.json](results/v2-purpose.json).
 
 ```
-REUSE_SAVED=1 PROMPT_VERSION=v2 pytest tests/test_extraction.py::test_purpose_score
+RUN_JUDGE=1 REUSE_SAVED=1 PROMPT_VERSION=v2 pytest tests/test_extraction.py::test_purpose_score
 ```
 
 | Case | Got | Expected | Score |
@@ -72,7 +72,7 @@ REUSE_SAVED=1 PROMPT_VERSION=v2 pytest tests/test_extraction.py::test_purpose_sc
 
 ## CI (Step 4)
 
-[.github/workflows/evals.yml](../../../.github/workflows/evals.yml) runs the whole suite on every push and pull request: it installs `requirements.txt` on Python 3.14 and runs `pytest` from this folder, with `GEMINI_API_KEY` from the repository secrets (never printed). Each run makes 24 live calls: 12 extraction and 12 judge, no retries. The check is named `extraction-evals`. Pull requests from forks do not receive repository secrets, so the key is empty there and the check fails.
+[.github/workflows/evals.yml](../../../.github/workflows/evals.yml) runs the whole suite on every push and pull request: it installs `requirements.txt` on Python 3.14 and runs `pytest` from this folder, with `GEMINI_API_KEY` from the repository secrets (never printed). Each run makes 12 live calls (one extraction per case, no retries) and gates on the pass rate. The DeepEval judge test is skipped unless `RUN_JUDGE=1`; it can be switched on with the `run_judge` input of a manual run (`workflow_dispatch`), because 24 calls in one run go over the free-tier limit of 15 requests per minute. The check is named `extraction-evals`. Pull requests from forks do not receive repository secrets, so the key is empty there and the check fails.
 
 **Runs: pending.** The workflow is committed, but no run has happened yet. The green run, the red run on a pull request that makes the v2 prompt worse, and the branch protection rule on `main` are still to be done and linked here. Until then CI is untested.
 
@@ -85,7 +85,7 @@ REUSE_SAVED=1 PROMPT_VERSION=v2 pytest tests/test_extraction.py::test_purpose_sc
 | DeepEval judge on the saved v2 outputs (Step 3) | 12 |
 | **Total so far** | **36** |
 
-Each CI run adds 24 more.
+Each CI run adds 12 more (24 on a manual run with `run_judge` on).
 
 ## Decisions
 
