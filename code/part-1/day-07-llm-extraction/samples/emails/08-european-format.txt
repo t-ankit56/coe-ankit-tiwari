@@ -1,0 +1,10 @@
+From: Klaus Weber <klaus.weber@alpenwerk.example>
+Subject: Invoice RE-20871 (our PO-4412)
+
+Dear all,
+
+Please find the details for invoice RE-20871, which relates to purchase order
+PO-4412. The total is 1.234,50 € and it is due on 30 September 2026.
+
+Best regards,
+Klaus

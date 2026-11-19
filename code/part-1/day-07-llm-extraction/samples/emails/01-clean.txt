@@ -1,0 +1,10 @@
+From: Priya Nair <priya.nair@brightleaf.example>
+Subject: Payment confirmation for order BL-4821
+
+Hi team,
+
+This is to confirm that we received your payment of 1,250.00 USD on 14 March 2026
+for order BL-4821 (annual software licence renewal).
+
+Thanks,
+Priya

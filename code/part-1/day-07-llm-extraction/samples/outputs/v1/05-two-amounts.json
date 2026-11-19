@@ -1,0 +1,8 @@
+{
+  "sender": "Sofia Rossi <sofia.rossi@harborline.example>",
+  "date": "15 June 2026",
+  "amount": 200.0,
+  "currency": "GBP",
+  "reference": "INV-884",
+  "purpose": "Outstanding balance payment"
+}

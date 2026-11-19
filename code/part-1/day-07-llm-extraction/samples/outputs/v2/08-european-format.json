@@ -1,0 +1,8 @@
+{
+  "sender": "Alpenwerk",
+  "date": "2026-09-30",
+  "amount": 1234.5,
+  "currency": "EUR",
+  "reference": "RE-20871",
+  "purpose": "invoice payment"
+}

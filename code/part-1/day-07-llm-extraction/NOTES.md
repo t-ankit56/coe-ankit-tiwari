@@ -1,0 +1,14 @@
+- v1 (bare prompt) already scores 28/30. The model left the missing fields as `None` without being told to.
+- v1 turned "about 500 euros" into a precise 500.0 (03-ambiguous). A vague value became a precise one.
+- v1 picked the wrong date in 05-two-amounts: the date of the earlier payment (15 June) instead of the deadline (30 June).
+- Fields are inconsistent in form: `sender` has the address on some emails and not on others, dates are in the original wording.
+- Harder set, v1: 06-correction 6/6 (took the corrected amount, ignored the quoted old figure), 07-date-format 5/6, 08-european-format 5/6, hard invoice 6/6. Eight emails total 44/48.
+- v1 did not guess a reading of 03/04/2026, but it kept the raw string as the date instead of null.
+- v1 put the purchase order number into `purpose` for 08-european-format (a field mix-up).
+- The hard invoice was easy for v1: it chose "Amount due" (1380.00) and the invoice number, not the PO. The PDF path is stronger than expected, so the emails will carry the comparison.
+- v2 (one complete prompt): 59/60 on ten emails against v1's 56/60. It fixed the approximate amount (03), the wrong deadline (05), the raw date (07) and the PO in `purpose` (08).
+- v2 added two misses. In 08 it returned "Alpenwerk" as the sender, a company guessed from the email domain, which breaks its own "never guess" rule. On the hard invoice it picked the due date (2026-06-11) instead of the invoice date.
+- Likely cause of the invoice miss: the v2 date rule says "for a payment request use the payment deadline" and an invoice is also a payment request, so the two rules compete. v1 had no such rule and got it right.
+- The unseen emails (09, 10) scored 12/12 for both versions, so they show no gain. v1 was already perfect on them.
+- The gain on emails 01 to 08 is partly because v2 was written knowing those misses.
+- v2 on the simple invoice: 5/6. It chose the due date (2026-03-05) instead of the invoice date, the same miss as on the hard invoice. Two invoices out of two, so the date rule in v2 is the likely cause.
