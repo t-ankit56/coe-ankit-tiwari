@@ -3,6 +3,12 @@ name: evals
 on:
   push:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      run_judge:
+        description: Also run the DeepEval judge on purpose (12 extra calls)
+        type: boolean
+        default: false
 
 concurrency:
   group: evals-${{ github.ref }}
@@ -20,6 +26,7 @@ jobs:
     env:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       DEEPEVAL_TELEMETRY_OPT_OUT: "YES"
+      RUN_JUDGE: ${{ inputs.run_judge && '1' || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

@@ -18,6 +18,7 @@ PAUSE_SECONDS = 2  # between calls, to stay inside free-tier rate limits
 PASS_RATE = 0.75  # 9 of 12 cases on the first real v2 run, see NOTES.md
 PURPOSE_THRESHOLD = 0.85  # mean GEval score for `purpose`: 0.89 on the first real v2 run, see NOTES.md
 REUSE_SAVED = os.environ.get("REUSE_SAVED") == "1"  # dev only: judge saved outputs without calling extract()
+RUN_JUDGE = os.environ.get("RUN_JUDGE") == "1"  # the judge costs 12 more calls and pushes a CI run over the free-tier rate limit
 
 
 @pytest.fixture(scope="session")
@@ -73,6 +74,7 @@ def purpose_metric() -> GEval:
     )
 
 
+@pytest.mark.skipif(not RUN_JUDGE, reason="set RUN_JUDGE=1 to run the DeepEval judge (12 extra calls)")
 def test_purpose_score(outputs):
     metric = purpose_metric()
     rows = []
