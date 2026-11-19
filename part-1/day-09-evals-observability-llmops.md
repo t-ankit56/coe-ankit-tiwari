@@ -11,7 +11,7 @@
 | Writes LLM tests with DeepEval | Yes | [judge.py](../code/part-1/day-09-extraction-evals/judge.py) · [GEval test](../code/part-1/day-09-extraction-evals/tests/test_extraction.py) · [scores](../code/part-1/day-09-extraction-evals/results/v2-purpose.json) |
 | Traces calls and reads latency and cost | Yes | [tracing README](../code/part-1/day-09-rag-tracing/README.md#results) · [LangSmith run list](../code/part-1/day-09-rag-tracing/results/langsmith-runs.png) |
 | Versions and tests prompt changes | Yes | [prompts.py](../code/part-1/day-09-extraction-evals/prompts.py) in git · [v1 and v2 results](../code/part-1/day-09-extraction-evals/README.md#results-step-2) |
-| Runs evals in CI | Pending | [workflow](../.github/workflows/evals.yml) is committed. No run yet: the green run, the red run on a worse prompt and the branch protection are still to do |
+| Runs evals in CI | Yes | [workflow](../.github/workflows/evals.yml) · [green run](https://github.com/t-ankit56/coe-ankit-tiwari/actions/runs/44608252061) · [CI section](../code/part-1/day-09-extraction-evals/README.md#ci-step-4) |
 
 ## Why LLM features need evals
 
@@ -40,7 +40,7 @@ A `GEval` metric with a custom Gemini judge scored the saved v2 outputs at a mea
 
 ### Exercise 1: run the evals in CI
 
-A GitHub Actions workflow runs the suite on every push and pull request, 12 live calls per run (the DeepEval judge is skipped unless switched on in a manual run, to stay under the free-tier rate limit). **Pending:** no run has happened, so the gate is untested (no green run, no red run on a worse prompt, no branch protection yet). See the [CI section](../code/part-1/day-09-extraction-evals/README.md#ci-step-4).
+A GitHub Actions workflow runs the suite on every push and pull request, 12 live calls per run (the DeepEval judge is skipped unless switched on in a manual run, to stay under the free-tier rate limit). The [first run](https://github.com/t-ankit56/coe-ankit-tiwari/actions/runs/44608252061) failed on a Gemini 503 and passed when I re-ran it. **Not done:** a red run on a worse prompt and branch protection on `main`, so the gate has not been shown to block a bad prompt. See the [CI section](../code/part-1/day-09-extraction-evals/README.md#ci-step-4).
 
 ### Exercise 2: trace the Day 8 RAG flow
 

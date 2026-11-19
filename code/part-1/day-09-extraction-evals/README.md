@@ -74,7 +74,9 @@ RUN_JUDGE=1 REUSE_SAVED=1 PROMPT_VERSION=v2 pytest tests/test_extraction.py::tes
 
 [.github/workflows/evals.yml](../../../.github/workflows/evals.yml) runs the whole suite on every push and pull request: it installs `requirements.txt` on Python 3.14 and runs `pytest` from this folder, with `GEMINI_API_KEY` from the repository secrets (never printed). Each run makes 12 live calls (one extraction per case, no retries) and gates on the pass rate. The DeepEval judge test is skipped unless `RUN_JUDGE=1`; it can be switched on with the `run_judge` input of a manual run (`workflow_dispatch`), because 24 calls in one run go over the free-tier limit of 15 requests per minute. The check is named `extraction-evals`. Pull requests from forks do not receive repository secrets, so the key is empty there and the check fails.
 
-**Runs: pending.** The workflow is committed, but no run has happened yet. The green run, the red run on a pull request that makes the v2 prompt worse, and the branch protection rule on `main` are still to be done and linked here. Until then CI is untested.
+**Runs.** The first run on push ([run 44608252061](https://github.com/t-ankit56/coe-ankit-tiwari/actions/runs/44608252061)) failed on attempt 1 because Gemini answered 503 ("high demand") to one call, then passed on attempt 2 after re-running the failed job. So a run can fail for a reason that has nothing to do with the prompt, because there are no retries.
+
+**Not done:** the red run on a pull request that makes the v2 prompt worse, and the branch protection rule on `main`. Until then the gate has not been shown to block a worse prompt, and a failing check does not stop a merge.
 
 ## Calls made
 
