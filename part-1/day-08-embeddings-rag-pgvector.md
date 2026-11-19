@@ -1,6 +1,6 @@
 # Part 1 · Day 8 — Embeddings, RAG & pgvector
 
-**Date completed:** 2026-11-18 · **Time spent:**
+**Date completed:** 2026-11-18 · **Time spent:** ~7 hours
 
 ## Success criteria
 
@@ -37,19 +37,11 @@ The five questions in [questions.md](../code/part-1/day-08-rag-pgvector/question
 
 ## Reflection
 
-For this set a longer prompt would have been enough. All four documents are 677 words, so I could have put them in every prompt and skipped the database, the embeddings and the chunking. At size 1000 the retrieval was already close to that, since a chunk was nearly a whole document. Retrieval is the right answer when the documents are too many or too long to send each time, when sending them all makes every question slow and costly, or when I need to show which part of which document an answer came from. A longer prompt is simpler and cannot miss the right chunk, so I would start with it and move to retrieval only when the documents stop fitting. The test also taught me that the comparison needs harder questions than mine: none of the five broke at 300, so it could not show when a small chunk fails.
+There are many libraries that could have done the tasks in this day easily but I planned it such that I do not have to use a library and learn what really happens underneath. It was a learning experience a bit difficult but improved my RAG understanding. Retrieval is the right answer when documents are very large and answer should always be from them. But for small documents longer prompt would work better. 
 
 ## AI use
 
-I used Claude Code (Sonnet 5.5) for this day. It wrote the made-up documents, the five questions and their expected answers, the code, the README and the saved results. I asked for the spec first and approved each step's plan and each batch of API calls before it ran. I also removed extras from the spec (chunk overlap, an extra unanswerable-question check, saved chunk and SQL outputs, an out-of-scope section). An earlier build started before the spec was approved, and I had it thrown away. Claude also drafted the Key learnings, exercise summaries and Reflection from the results of this run. [Edit this paragraph to say what you checked and what you changed.]
+I used Claude Code (Sonnet 5.5) for this day. It wrote the made-up documents, the five questions and their expected answers, the code, the README and the saved results. I asked for the spec first and approved each step's plan and each batch of API calls before it ran.
 
-## Open questions
-
-- Which question would make size 300 fail, for example a fact split across two chunks with a smaller `k`?
-- How would a keyword search compare with the vector search on a question that shares no words with the document?
-- Would contextual retrieval (adding a short context to each chunk before embedding) help the split answers? I only read about it.
-- Does the Gemini embedding response report token usage? Day 9's tracing and cost per question need it, and I have not checked.
 
 ## Changes after review
-
-- 
