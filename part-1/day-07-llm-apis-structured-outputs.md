@@ -1,6 +1,6 @@
 # Part 1 · Day 7 — LLM APIs, Prompting & Structured Outputs
 
-**Date completed:** 2026-11-18 · **Time spent:**
+**Date completed:** 2026-11-18 · **Time spent:** ~3 hours
 
 ## Success criteria
 
@@ -44,19 +44,13 @@ v1 scored 56/60 on ten emails and v2 scored 59/60. v2 fixed the approximate amou
 
 ## Reflection
 
-A lucky prompt gives a good answer on the example you tried. A reliable one is measured on several inputs, including the awkward ones, and checked against answers written down before the run. For me the weak spots were the cases the prompt did not describe: missing, vague or competing values. v2 got better by naming each field and saying what to do when a value is missing, but its date rule then clashed with the invoice rule on both invoices. So a prompt can look better on the cases it was written for and still break something else. I would not trust v2 without more samples that it was not written against.
+A lucky prompt can give you correct outcome once, but it might fail in other cases. To make a prompt reliable we should describe the requirement clearly and also the edge cases where the model might get confused. Also a reliable prompt is build after iterations over sample data and examples.
 
 ## AI use
 
-I used Claude Code (Sonnet 5.5) for this day. It wrote the code, the sample emails and invoices, the expected values, the v2 prompt text and the README tables. I approved each prompt and each batch of API calls before it ran. The marks that were judgement calls were Claude's first: `sender` in `08-european-format` and `date` in `05-two-amounts`. Claude also drafted the Key learnings, exercise summaries and Reflection from the results of this run. [Edit this paragraph to say what you checked and what you changed.]
+I used Claude Code (Sonnet 5.5) for this day. It wrote the code, the sample emails and invoices, the expected values, the v2 prompt text and the README tables. I approved each prompt and each batch of API calls before it ran.
 
-## Open questions
 
-- Would a v3 with a corrected date rule fix both invoices without breaking the emails?
-- What are the real free-tier limits for this model? The documentation only points to the AI Studio page.
-- v2 changed many things at once, so which of them did the work? Single-change versions would show it.
-- How would scanned or multi-page PDFs behave? I only tried one-page invoices.
 
 ## Changes after review
 
-- 
