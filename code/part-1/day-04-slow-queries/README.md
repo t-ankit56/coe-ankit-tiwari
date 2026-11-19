@@ -106,3 +106,13 @@ The index is in [indexes.sql](indexes.sql). It is not part of `seed.sql`, so the
 The same 24 rows come back. The query went from reading the whole table to reading 24 heap blocks and 3 index blocks.
 
 This index does not help Q1 or Q3. Q1 is on `customers`, and the `orders` index is on a different table and column. Q3 sorts by `created_at`, and an index on `customer_id` does not give that order.
+
+## Decisions
+
+| Question | Decision |
+| --- | --- |
+| Why `EXPLAIN (ANALYZE, BUFFERS)` and not plain `EXPLAIN`? | Plain `EXPLAIN` only estimates. `ANALYZE` runs the query and shows real rows and time, and `BUFFERS` shows how much data it read. |
+| Why can the plain index on `email` not serve `lower(email)`? | The index stores the raw values, not the lowered ones. An index on `lower(email)` would be needed. |
+| Why index `orders.customer_id`? | Postgres does not index foreign keys automatically, and Q2 read the whole table. |
+| Why compare the second run? | The first run warms the cache, which would make the "before" look worse than it is. The second Q2 run still read buffers from disk, so the cache was only partly warm (see `NOTES.md`). |
+| Why restrict the window function exercise to some customers? | A self join over 2,000,000 rows would take too long to show anything. |

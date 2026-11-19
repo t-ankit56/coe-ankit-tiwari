@@ -55,7 +55,7 @@ The task: for each order, show the same customer's previous order amount. Both v
 (39 rows)
 ```
 
-The plan scans `orders` twice, once for each side of the join, and also runs the subquery 38,686 times, which is a third pass over the customer's rows each time. Execution time is 523.101 ms.
+The plan scans `orders` twice, once for each side of the join, and runs the subquery 38,686 times, each time looking up the customer's earlier orders through the index. Execution time is 523.101 ms.
 
 
 ## Window function
