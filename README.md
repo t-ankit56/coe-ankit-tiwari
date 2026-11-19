@@ -10,4 +10,5 @@
 | 2 | TDD in Python | [day-02](part-1/day-02-tdd-in-python.md) | [Notification service](code/part-1/day-02-notification-service/) |
 | 3 | Python Craft & Object-Oriented Design | [day-03](part-1/day-03-python-craft-oop.md) | [Observer refactor](code/part-1/day-03-notification-service-observer-refactor/) · [Context manager](code/part-1/day-03-context-manager/) |
 | 5 | TypeScript for Python Developers: Foundations | [day-05](part-1/day-05-typescript-foundations.md) | [Notification service in TypeScript](code/part-1/day-05-typescript-notification-service/) |
+| 6 | TypeScript in Practice | [day-06](part-1/day-06-typescript-in-practice.md) | [Typed user API module](code/part-1/day-06-typescript-user-api/) |
 | 11 | Leave Module | [day-11](part-1/day-11-leave-module.md) | [ERP leave module](erp_leave_module/) |
