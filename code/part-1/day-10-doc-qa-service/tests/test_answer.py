@@ -80,6 +80,18 @@ def test_cost_comes_from_the_reply_usage_metadata(store):
     assert result["cost"] == pytest.approx(0.00125)
 
 
+def test_answer_is_plain_text_when_the_model_replies_with_content_blocks(store):
+    # Gemini 3 through langchain-google-genai returns a list of content blocks, not a string.
+    store.add_texts(["The SI unit of power of a lens is dioptre."],
+                    metadatas=[{"source": "a.pdf", "page": 0}])
+    blocks = [{"type": "text", "text": "Dioptre [1]."}]
+    llm = GenericFakeChatModel(messages=iter([AIMessage(content=blocks)]))
+
+    result = answer("What is the unit of power of a lens?", store, llm, V2)
+
+    assert result["answer"] == "Dioptre [1]."
+
+
 def test_blank_question_raises_without_calling_the_model(store):
     store.add_texts(["Near point is 25 cm."], metadatas=[{"source": "eye.pdf", "page": 1}])
     recorder = Recorder()
