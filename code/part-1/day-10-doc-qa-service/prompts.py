@@ -1,4 +1,10 @@
+import os
+
 from langchain_core.prompts import ChatPromptTemplate
+
+V1 = ChatPromptTemplate.from_messages([
+    ("human", "Context:\n{context}\n\nQuestion: {question}"),
+])
 
 V2 = ChatPromptTemplate.from_messages([
     ("system",
@@ -10,4 +16,6 @@ V2 = ChatPromptTemplate.from_messages([
 
 
 def get_prompt():
+    if os.environ.get("PROMPT_VERSION") == "v1":
+        return V1
     return V2
