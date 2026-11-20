@@ -9,6 +9,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import Runnable
 from langchain_core.vectorstores import VectorStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langsmith import traceable
 
 from cost import cost
 
@@ -35,6 +36,10 @@ def ingest(pdf_dir: str | Path, store: VectorStore) -> int:
     return len(chunks)
 
 
+# One LangSmith run per question when LANGSMITH_TRACING is on. Only the question and k are
+# recorded: serialising the store or model objects is noisy, and it drains a fake model's iterator.
+@traceable(name="answer",
+           process_inputs=lambda inputs: {"question": inputs.get("question"), "k": inputs.get("k", 4)})
 def answer(question: str, store: VectorStore, llm: Runnable,
            prompt: ChatPromptTemplate, k: int = 4) -> dict:
     """Answer from the top `k` chunks. Returns {answer, sources, cost}.
