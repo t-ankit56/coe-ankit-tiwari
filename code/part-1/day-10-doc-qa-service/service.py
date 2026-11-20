@@ -33,8 +33,9 @@ def answer(question, store, llm, prompt, k=4):
     docs = store.similarity_search(question, k=k)
     if not docs:
         return {"answer": "I don't know", "sources": [], "cost": 0.0}
-    context = docs[0].page_content
+    context = "\n\n".join(f"[{n}] {d.page_content}" for n, d in enumerate(docs, start=1))
     reply = (prompt | llm).invoke({"context": context, "question": question})
-    sources = [{"n": 1, "document": docs[0].metadata["source"],
-                "page": docs[0].metadata["page"], "text": docs[0].page_content}]
+    sources = [{"n": n, "document": d.metadata["source"],
+                "page": d.metadata["page"], "text": d.page_content}
+               for n, d in enumerate(docs, start=1)]
     return {"answer": reply.content, "sources": sources, "cost": 0.0}
