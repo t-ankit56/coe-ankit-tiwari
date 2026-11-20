@@ -27,3 +27,7 @@ def ingest(pdf_dir: str | Path, store: VectorStore) -> int:
     if chunks:
         store.add_documents(chunks)
     return len(chunks)
+
+
+def answer(question, store, llm, prompt, k=4):
+    return {"answer": "I don't know", "sources": [], "cost": 0.0}
