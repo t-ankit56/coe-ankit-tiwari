@@ -78,3 +78,12 @@ def test_cost_comes_from_the_reply_usage_metadata(store):
     result = answer("How many joules in 1 kW h?", store, llm, V2)
 
     assert result["cost"] == pytest.approx(0.00125)
+
+
+def test_blank_question_raises_without_calling_the_model(store):
+    store.add_texts(["Near point is 25 cm."], metadatas=[{"source": "eye.pdf", "page": 1}])
+    recorder = Recorder()
+
+    with pytest.raises(ValueError):
+        answer("   ", store, recorder.llm, V2)
+    assert recorder.prompts == []
