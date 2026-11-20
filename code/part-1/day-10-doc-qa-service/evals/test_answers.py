@@ -62,6 +62,8 @@ def outputs() -> list[dict]:
         results = [{k: row[k] for k in ("answer", "sources", "cost")} for row in json.loads(SAVED.read_text())]
     else:
         results = run_answers()
+        # Save before judging, so a judge failure never throws away the generation calls.
+        save([{"id": c["id"], "question": c["question"], **r} for c, r in zip(CASES, results)])
     metric = correctness_metric()
     rows = []
     for case, result in zip(CASES, results):
@@ -72,9 +74,13 @@ def outputs() -> list[dict]:
         rows.append({"id": case["id"], "question": case["question"], "expected_source": case["expected_source"],
                      "expected_fact": case["expected_fact"], **result, "checks": checks,
                      "judge": {"score": metric.score, "reason": metric.reason}, "passed": all(checks.values())})
+    save(rows)
+    return rows
+
+
+def save(rows: list[dict]) -> None:
     SAVED.parent.mkdir(exist_ok=True)
     SAVED.write_text(json.dumps(rows, indent=2, ensure_ascii=False) + "\n")
-    return rows
 
 
 def describe(row: dict) -> str:
