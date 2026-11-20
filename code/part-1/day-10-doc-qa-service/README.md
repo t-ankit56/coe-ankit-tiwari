@@ -23,7 +23,6 @@ python service.py ask "What is the near point of the eye?"
 
 ```
 pytest                                          # 18 offline unit tests, no API calls
-bash evals/fetch_docs.sh                        # download and check the eval PDF
 python service.py ingest evals/docs --collection evals
 PROMPT_VERSION=v2 pytest -rxX evals             # live: 4 cases, judged by DeepEval
 ```
@@ -39,7 +38,7 @@ PROMPT_VERSION=v2 pytest -rxX evals             # live: 4 cases, judged by DeepE
 - **Libraries:** LangChain does each step (`GoogleGenerativeAIEmbeddings`, `PGVector`, `ChatPromptTemplate`, `ChatGoogleGenerativeAI`).
 - **Models:** `gemini-3.1-flash-lite` (temperature 0, no retries) and `gemini-embedding-001` (768 dimensions).
 - **Separate eval corpus:** the evals use their own PDF and collection (`evals/docs/`, collection `evals`). Changing `docs/` never breaks them.
-- **Copyright:** the eval PDF is copyrighted, so it is git-ignored. [evals/fetch_docs.sh](evals/fetch_docs.sh) downloads it from ncert.nic.in, checks its SHA-256 and writes the 2 pages.
+- **Eval PDF:** [evals/docs/jesc110-p1-2.pdf](evals/docs/jesc110-p1-2.pdf) is pages 1–2 of NCERT Class 10 Science, Chapter 10, committed so the evals and CI run on the exact pages the cases were written from.
 
 ## Tests
 

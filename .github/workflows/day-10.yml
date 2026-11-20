@@ -47,8 +47,6 @@ jobs:
       - run: pip install -r requirements.txt
       # Offline: 18 unit tests, no API calls.
       - run: pytest -W ignore tests
-      # The eval PDF is copyrighted, so it is downloaded and checked, not stored in git.
-      - run: bash evals/fetch_docs.sh
       # Live: 7 embedding requests to ingest.
       - run: python service.py ingest evals/docs --collection evals
       # Live: 4 query embeddings, 4 generations and 4 judge calls; gated on PASS_RATE.

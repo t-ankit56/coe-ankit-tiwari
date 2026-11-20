@@ -1,7 +1,6 @@
 """Eval suite for answer(): one live run per case, judged by GEval, then a gate on the pass rate.
 
-Needs the `evals` collection: run evals/fetch_docs.sh, then
-`python service.py ingest evals/docs --collection evals`.
+Needs the `evals` collection: `python service.py ingest evals/docs --collection evals`.
 """
 import json
 import os

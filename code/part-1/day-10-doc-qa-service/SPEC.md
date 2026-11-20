@@ -70,7 +70,7 @@ The run passes when the share of passing cases is at or above `PASS_RATE`, which
 
 ## CI
 
-`.github/workflows/day-10.yml` runs on `pull_request` and on `workflow_dispatch`, and has one job with a `pgvector/pgvector:pg17` service. It installs the requirements, runs `pytest tests`, runs `evals/fetch_docs.sh`, ingests `evals/docs/` into the `evals` collection, then runs `pytest evals` with `GEMINI_API_KEY` from the secrets. The judge runs in CI because it is the Fact gate. One run makes 7 ingest embedding requests (one per chunk), 4 query embeddings, 4 generations and 4 judge calls, and the README records this. The pull request run is the evidence. `workflow_dispatch` is a manual fallback: if a run fails on a free-tier limit, it can be started again from the Actions tab (or with `gh workflow run day-10.yml --ref <branch>`) without pushing a commit. GitHub only offers this once the workflow is on `main`. Until then, a failed pull request run is re-run with Re-run jobs. No push trigger, so the run count stays low. A `paths` filter limits it to changes in this project or the workflow. `cancel-in-progress: false`, because a cancelled run wastes the calls it has made. Tracing is off in CI, so no LangSmith secret is needed. The Day 9 branch is not merged into `main`, so the pull request targets it, which keeps the diff to Day 10.
+`.github/workflows/day-10.yml` runs on `pull_request` and on `workflow_dispatch`, and has one job with a `pgvector/pgvector:pg17` service. It installs the requirements, runs `pytest tests`, ingests `evals/docs/` into the `evals` collection, then runs `pytest evals` with `GEMINI_API_KEY` from the secrets. The judge runs in CI because it is the Fact gate. One run makes 7 ingest embedding requests (one per chunk), 4 query embeddings, 4 generations and 4 judge calls, and the README records this. The pull request run is the evidence. `workflow_dispatch` is a manual fallback: if a run fails on a free-tier limit, it can be started again from the Actions tab (or with `gh workflow run day-10.yml --ref <branch>`) without pushing a commit. GitHub only offers this once the workflow is on `main`. Until then, a failed pull request run is re-run with Re-run jobs. No push trigger, so the run count stays low. A `paths` filter limits it to changes in this project or the workflow. `cancel-in-progress: false`, because a cancelled run wastes the calls it has made. Tracing is off in CI, so no LangSmith secret is needed. The Day 9 branch is not merged into `main`, so the pull request targets it, which keeps the diff to Day 10.
 
 ## Folder layout
 
@@ -82,8 +82,7 @@ code/part-1/day-10-doc-qa-service/
   prompts.py  service.py  cost.py
   tests/                # unit tests
   tests/fixtures/       # one small PDF for the ingest test
-  evals/docs/           # the 2-page eval PDF, git-ignored (cases.json is written against it)
-  evals/fetch_docs.sh  evals/docs.sha256  evals/certs/
+  evals/docs/           # the 2-page eval PDF (cases.json is written against it)
   evals/cases.json  evals/judge.py  evals/test_answers.py
   results/              # saved v1 and v2 runs
 ```
@@ -102,7 +101,7 @@ No API calls.
 
 No API calls and no code.
 
-1. The eval PDF is pages 1–2 of NCERT Class 10 Science, Chapter 10 (The Human Eye), the same physics as ICSE Class 10. It started as chapters 9 to 11, but ingesting them (172 chunks) hit a 429: the free tier counts each embedded chunk as one request, 100 per minute. The 2 pages make 7 chunks. The chapter is copyrighted, so it is not committed. `evals/fetch_docs.sh` downloads it from ncert.nic.in, checks it against `evals/docs.sha256` so the cases always run against the edition they were written from, and writes the 2 pages to `evals/docs/jesc110-p1-2.pdf`. ncert.nic.in chains to Let's Encrypt "Root YE", which is missing from system trust stores, so the script adds the cross-signed copy in `evals/certs/` and keeps TLS verification on.
+1. The eval PDF is pages 1–2 of NCERT Class 10 Science, Chapter 10 (The Human Eye), the same physics as ICSE Class 10. It started as chapters 9 to 11, but ingesting them (172 chunks) hit a 429: the free tier counts each embedded chunk as one request, 100 per minute. The 2 pages make 7 chunks. They are committed as `evals/docs/jesc110-p1-2.pdf`, so the evals and CI run on the exact pages the cases were written from.
 2. Read them and write `evals/cases.json`.
 3. Add one small text-based PDF to `tests/fixtures/` for the unit tests. `docs/` starts empty with a `.gitkeep`.
 
