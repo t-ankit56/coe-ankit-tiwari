@@ -1,49 +1,25 @@
 [
   {
-    "id": "light-01",
-    "question": "What is the SI unit of the power of a lens?",
-    "expected_source": "jesc109.pdf",
-    "expected_fact": "dioptre (D)"
-  },
-  {
-    "id": "light-02",
-    "question": "What is the refractive index of diamond?",
-    "expected_source": "jesc109.pdf",
-    "expected_fact": "2.42"
-  },
-  {
     "id": "eye-01",
-    "question": "What is the near point of the eye for a young adult with normal vision?",
-    "expected_source": "jesc110.pdf",
-    "expected_fact": "about 25 cm"
+    "question": "What controls the size of the pupil?",
+    "expected_source": "jesc110-p1-2.pdf",
+    "expected_fact": "the iris, a dark muscular diaphragm"
   },
   {
     "id": "eye-02",
-    "question": "How long before the actual sunrise can we see the Sun, and why?",
-    "expected_source": "jesc110.pdf",
-    "expected_fact": "about 2 minutes, because of atmospheric refraction"
+    "question": "What is the near point of the eye for a young adult with normal vision?",
+    "expected_source": "jesc110-p1-2.pdf",
+    "expected_fact": "about 25 cm"
   },
   {
-    "id": "elec-01",
-    "question": "How many joules are there in one kilowatt hour?",
-    "expected_source": "jesc111.pdf",
-    "expected_fact": "3.6 × 10^6 J"
-  },
-  {
-    "id": "elec-02",
-    "question": "Which metal is used for electric bulb filaments, and what is its melting point?",
-    "expected_source": "jesc111.pdf",
-    "expected_fact": "tungsten, melting point 3380 °C"
+    "id": "eye-03",
+    "question": "What is cataract?",
+    "expected_source": "jesc110-p1-2.pdf",
+    "expected_fact": "the crystalline lens becomes milky and cloudy, causing partial or complete loss of vision"
   },
   {
     "id": "none-01",
-    "question": "What is the speed of sound in air?",
-    "expected_source": null,
-    "expected_fact": "says the answer is not in the documents"
-  },
-  {
-    "id": "none-02",
-    "question": "Who invented the electric light bulb?",
+    "question": "Which lens is used to correct myopia?",
     "expected_source": null,
     "expected_fact": "says the answer is not in the documents"
   }
