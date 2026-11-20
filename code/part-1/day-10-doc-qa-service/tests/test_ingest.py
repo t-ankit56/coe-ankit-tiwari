@@ -40,3 +40,10 @@ def test_many_pdfs_give_chunks_from_each(tmp_path, store):
 
     assert ingest(tmp_path, store) == 2
     assert {c["metadata"]["source"] for c in stored_chunks(store)} == {"a.pdf", "b.pdf"}
+
+
+def test_files_that_are_not_pdfs_are_ignored(tmp_path, store):
+    shutil.copy(FIXTURE, tmp_path / "dummy.pdf")
+    (tmp_path / "notes.txt").write_text("not a PDF")
+
+    assert ingest(tmp_path, store) == 1
