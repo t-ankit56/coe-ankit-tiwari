@@ -56,7 +56,8 @@ def answer(question: str, store: VectorStore, llm: Runnable,
                for n, d in enumerate(docs, start=1)]
     context = "\n\n".join(f"[{s['n']}] {s['text']}" for s in sources)
     reply = (prompt | llm).invoke({"context": context, "question": question})
-    return {"answer": reply.content, "sources": sources, "cost": cost(reply.usage_metadata)}
+    # .text joins text blocks; Gemini 3 replies with a list of blocks, not a string.
+    return {"answer": reply.text, "sources": sources, "cost": cost(reply.usage_metadata)}
 
 
 # --- CLI: wiring only, needs the network and Postgres, so it has no unit test ---
