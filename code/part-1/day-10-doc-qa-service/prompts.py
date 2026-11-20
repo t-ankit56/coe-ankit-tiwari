@@ -16,6 +16,9 @@ V2 = ChatPromptTemplate.from_messages([
 
 
 def get_prompt():
-    if os.environ.get("PROMPT_VERSION") == "v1":
+    version = os.environ.get("PROMPT_VERSION", "v2")
+    if version == "v1":
         return V1
-    return V2
+    if version == "v2":
+        return V2
+    raise ValueError(f"Unknown PROMPT_VERSION: {version!r} (use v1 or v2)")
