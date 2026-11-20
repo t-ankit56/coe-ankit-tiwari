@@ -47,3 +47,8 @@ def test_files_that_are_not_pdfs_are_ignored(tmp_path, store):
     (tmp_path / "notes.txt").write_text("not a PDF")
 
     assert ingest(tmp_path, store) == 1
+
+
+def test_missing_folder_raises(tmp_path, store):
+    with pytest.raises(FileNotFoundError):
+        ingest(tmp_path / "missing", store)
