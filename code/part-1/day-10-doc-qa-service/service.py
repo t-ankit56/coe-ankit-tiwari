@@ -32,7 +32,9 @@ def ingest(pdf_dir: str | Path, store: VectorStore) -> int:
 
 
 def answer(question, store, llm, prompt, k=4):
-    docs = store.similarity_search(question, k=k)
+    if not question.strip():
+        raise ValueError("Question is blank")
+    docs =store.similarity_search(question, k=k)
     if not docs:
         return {"answer": "I don't know", "sources": [], "cost": 0.0}
     context = "\n\n".join(f"[{n}] {d.page_content}" for n, d in enumerate(docs, start=1))
