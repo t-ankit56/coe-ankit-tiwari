@@ -30,4 +30,11 @@ def ingest(pdf_dir: str | Path, store: VectorStore) -> int:
 
 
 def answer(question, store, llm, prompt, k=4):
-    return {"answer": "I don't know", "sources": [], "cost": 0.0}
+    docs = store.similarity_search(question, k=k)
+    if not docs:
+        return {"answer": "I don't know", "sources": [], "cost": 0.0}
+    context = docs[0].page_content
+    reply = (prompt | llm).invoke({"context": context, "question": question})
+    sources = [{"n": 1, "document": docs[0].metadata["source"],
+                "page": docs[0].metadata["page"], "text": docs[0].page_content}]
+    return {"answer": reply.content, "sources": sources, "cost": 0.0}
