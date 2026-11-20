@@ -1,20 +1,28 @@
+"""Document question answering over PDFs: ingest into a vector store, answer with sources."""
 from pathlib import Path
 
 from langchain_community.document_loaders import PyPDFLoader
+from langchain_core.documents import Document
+from langchain_core.vectorstores import VectorStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
 
 
-def ingest(pdf_dir, store):
+def load_pages(pdf: Path) -> list[Document]:
+    """One Document per page, with `source` set to the file name."""
+    pages = PyPDFLoader(str(pdf)).load()
+    for page in pages:
+        page.metadata["source"] = pdf.name
+    return pages
+
+
+def ingest(pdf_dir: str | Path, store: VectorStore) -> int:
+    """Split every PDF in `pdf_dir` into chunks, add them to `store`, return the count."""
     folder = Path(pdf_dir)
     if not folder.is_dir():
         raise FileNotFoundError(f"No such folder: {folder}")
-    pages = []
-    for pdf in folder.glob("*.pdf"):
-        for page in PyPDFLoader(str(pdf)).load():
-            page.metadata["source"] = pdf.name
-            pages.append(page)
+    pages = [page for pdf in sorted(folder.glob("*.pdf")) for page in load_pages(pdf)]
     chunks = splitter.split_documents(pages)
     if chunks:
         store.add_documents(chunks)
