@@ -1,0 +1,176 @@
+[
+  {
+    "id": "eye-01",
+    "question": "What controls the size of the pupil?",
+    "expected_source": "jesc110-p1-2.pdf",
+    "expected_fact": "the iris, a dark muscular diaphragm",
+    "answer": "According to the provided text, the **iris** (a dark muscular diaphragm) controls the size of the pupil.",
+    "sources": [
+      {
+        "n": 1,
+        "document": "jesc110-p1-2.pdf",
+        "page": 0,
+        "text": "occurs at the outer surface of the cornea. The\ncrystalline lens merely provides the finer\nadjustment of focal length required to focus\nobjects at different distances on the retina. We find a structure called iris\nbehind the cornea. Iris is a dark muscular diaphragm that controls the\nsize of the pupil.  The pupil regulates and controls the amount of light\nFigure 10.1Figure 10.1Figure 10.1Figure 10.1Figure 10.1\nThe human eye\nReprint 2026-27"
+      },
+      {
+        "n": 2,
+        "document": "jesc110-p1-2.pdf",
+        "page": 1,
+        "text": "looking at objects closer to the eye, the ciliary muscles contract. This\nincreases the curvature of the eye lens. The eye lens then becomes thicker.\nConsequently, the focal length of the eye lens decreases.  This enables\nus to see nearby objects clearly.\nThe ability of the eye lens to adjust its focal length is called\naccommodation.  However, the focal length of the eye lens cannot be\ndecreased below a certain minimum limit.  Try to read a printed page by\nholding it very close to your eyes. You may see the image being blurred\nor feel strain in the eye. To see an object comfortably and distinctly, you\nmust hold it at about 25 cm from the eyes.  The minimum distance, at\nwhich objects can be seen most distinctly without strain, is called the\nleast distance of distinct vision. It is also called the near point of the eye.\nFor a young adult with normal vision, the near point is about\n25 cm. The farthest point upto which the eye can see objects clearly is"
+      },
+      {
+        "n": 3,
+        "document": "jesc110-p1-2.pdf",
+        "page": 0,
+        "text": "The human eye is one of the most valuable and sensitive sense organs.\nIt enables us to see the wonderful world and the colours around us. On\nclosing the eyes, we can identify objects to some extent by their smell,\ntaste, sound they make or by touch. It is, however, impossible to identify\ncolours while closing the eyes. Thus, of all the sense organs, the human\neye is the most significant one as it enables us to see the beautiful,\ncolourful world around us.\nThe human eye is like a camera.  Its lens\nsystem forms an image on a light-sensitive\nscreen called the retina. Light enters the eye\nthrough a thin membrane called the cornea.\nIt forms the transparent bulge on the front\nsurface of the eyeball as shown in Fig. 10.1.\nThe eyeball is approximately spherical in shape\nwith a diameter of about 2.3 cm. Most of the\nrefraction for the light rays entering the eye\noccurs at the outer surface of the cornea. The\ncrystalline lens merely provides the finer\nadjustment of focal length required to focus"
+      },
+      {
+        "n": 4,
+        "document": "jesc110-p1-2.pdf",
+        "page": 1,
+        "text": "Science162\nentering the eye. The eye lens forms an inverted real image of the object\non the retina. The retina is a delicate membrane having enormous\nnumber of light-sensitive cells.  The light-sensitive cells get activated\nupon illumination and generate electrical signals.  These signals are\nsent to the brain via the optic nerves.  The brain interprets these signals,\nand finally, processes the information so that we perceive objects as\nthey are.\n10.1.1 Power of Accommodation\nThe eye lens is composed of a fibrous, jelly-like material. Its curvature\ncan be modified to some extent by the ciliary muscles. The change in the\ncurvature of the eye lens can thus change its focal length. When the\nmuscles are relaxed, the lens becomes thin. Thus, its focal length\nincreases.  This enables us to see distant objects clearly. When you are\nlooking at objects closer to the eye, the ciliary muscles contract. This\nincreases the curvature of the eye lens. The eye lens then becomes thicker."
+      }
+    ],
+    "cost": 0.000237,
+    "checks": {
+      "source": true,
+      "citation": false,
+      "fact": true
+    },
+    "judge": {
+      "score": 1.0,
+      "reason": "The actual output correctly identifies the iris as the structure controlling pupil size and includes the descriptive detail provided in the expected output, demonstrating full factual alignment."
+    },
+    "passed": false
+  },
+  {
+    "id": "eye-02",
+    "question": "What is the near point of the eye for a young adult with normal vision?",
+    "expected_source": "jesc110-p1-2.pdf",
+    "expected_fact": "about 25 cm",
+    "answer": "For a young adult with normal vision, the near point of the eye is about 25 cm.",
+    "sources": [
+      {
+        "n": 1,
+        "document": "jesc110-p1-2.pdf",
+        "page": 1,
+        "text": "looking at objects closer to the eye, the ciliary muscles contract. This\nincreases the curvature of the eye lens. The eye lens then becomes thicker.\nConsequently, the focal length of the eye lens decreases.  This enables\nus to see nearby objects clearly.\nThe ability of the eye lens to adjust its focal length is called\naccommodation.  However, the focal length of the eye lens cannot be\ndecreased below a certain minimum limit.  Try to read a printed page by\nholding it very close to your eyes. You may see the image being blurred\nor feel strain in the eye. To see an object comfortably and distinctly, you\nmust hold it at about 25 cm from the eyes.  The minimum distance, at\nwhich objects can be seen most distinctly without strain, is called the\nleast distance of distinct vision. It is also called the near point of the eye.\nFor a young adult with normal vision, the near point is about\n25 cm. The farthest point upto which the eye can see objects clearly is"
+      },
+      {
+        "n": 2,
+        "document": "jesc110-p1-2.pdf",
+        "page": 1,
+        "text": "For a young adult with normal vision, the near point is about\n25 cm. The farthest point upto which the eye can see objects clearly is\ncalled the far point of the eye. It is infinity for a normal eye. You may note\nhere a normal eye can see objects clearly that are between 25 cm and\ninfinity.\nSometimes, the crystalline lens of people at old age becomes milky and\ncloudy. This condition is called cataract. This causes partial or complete\nloss of vision. It is possible to restore vision through a cataract surgery.\n10.2 DEFECTS OF VISION AND THEIR CORRECTION10.2 DEFECTS OF VISION AND THEIR CORRECTION10.2 DEFECTS OF VISION AND THEIR CORRECTION10.2 DEFECTS OF VISION AND THEIR CORRECTION10.2 DEFECTS OF VISION AND THEIR CORRECTION\nSometimes, the eye may gradually lose its power of accommodation.\nIn such conditions, the person cannot see the objects distinctly and\ncomfortably. The vision becomes blurred due to the refractive defects\nof the eye."
+      },
+      {
+        "n": 3,
+        "document": "jesc110-p1-2.pdf",
+        "page": 1,
+        "text": "comfortably. The vision becomes blurred due to the refractive defects\nof the eye.\nThere are mainly three common refractive defects of vision. These\nare (i) myopia or near -sightedness, (ii) Hyper metropia or far -\nsightedness, and (iii) Presbyopia.  These defects can be corrected by\nthe use of suitable spherical lenses. We discuss below these defects\nand their correction.\nReprint 2026-27"
+      },
+      {
+        "n": 4,
+        "document": "jesc110-p1-2.pdf",
+        "page": 1,
+        "text": "Science162\nentering the eye. The eye lens forms an inverted real image of the object\non the retina. The retina is a delicate membrane having enormous\nnumber of light-sensitive cells.  The light-sensitive cells get activated\nupon illumination and generate electrical signals.  These signals are\nsent to the brain via the optic nerves.  The brain interprets these signals,\nand finally, processes the information so that we perceive objects as\nthey are.\n10.1.1 Power of Accommodation\nThe eye lens is composed of a fibrous, jelly-like material. Its curvature\ncan be modified to some extent by the ciliary muscles. The change in the\ncurvature of the eye lens can thus change its focal length. When the\nmuscles are relaxed, the lens becomes thin. Thus, its focal length\nincreases.  This enables us to see distant objects clearly. When you are\nlooking at objects closer to the eye, the ciliary muscles contract. This\nincreases the curvature of the eye lens. The eye lens then becomes thicker."
+      }
+    ],
+    "cost": 0.00023025,
+    "checks": {
+      "source": true,
+      "citation": false,
+      "fact": true
+    },
+    "judge": {
+      "score": 1.0,
+      "reason": "The actual output correctly identifies the near point of the eye as 25 cm, which matches the expected output perfectly while providing a complete sentence."
+    },
+    "passed": false
+  },
+  {
+    "id": "eye-03",
+    "question": "What is cataract?",
+    "expected_source": "jesc110-p1-2.pdf",
+    "expected_fact": "the crystalline lens becomes milky and cloudy, causing partial or complete loss of vision",
+    "answer": "Based on the provided text, **cataract** is a condition that occurs in old age when the crystalline lens of the eye becomes milky and cloudy. This condition results in a partial or complete loss of vision, though it is possible to restore vision through surgery.",
+    "sources": [
+      {
+        "n": 1,
+        "document": "jesc110-p1-2.pdf",
+        "page": 1,
+        "text": "For a young adult with normal vision, the near point is about\n25 cm. The farthest point upto which the eye can see objects clearly is\ncalled the far point of the eye. It is infinity for a normal eye. You may note\nhere a normal eye can see objects clearly that are between 25 cm and\ninfinity.\nSometimes, the crystalline lens of people at old age becomes milky and\ncloudy. This condition is called cataract. This causes partial or complete\nloss of vision. It is possible to restore vision through a cataract surgery.\n10.2 DEFECTS OF VISION AND THEIR CORRECTION10.2 DEFECTS OF VISION AND THEIR CORRECTION10.2 DEFECTS OF VISION AND THEIR CORRECTION10.2 DEFECTS OF VISION AND THEIR CORRECTION10.2 DEFECTS OF VISION AND THEIR CORRECTION\nSometimes, the eye may gradually lose its power of accommodation.\nIn such conditions, the person cannot see the objects distinctly and\ncomfortably. The vision becomes blurred due to the refractive defects\nof the eye."
+      },
+      {
+        "n": 2,
+        "document": "jesc110-p1-2.pdf",
+        "page": 0,
+        "text": "The human eye is one of the most valuable and sensitive sense organs.\nIt enables us to see the wonderful world and the colours around us. On\nclosing the eyes, we can identify objects to some extent by their smell,\ntaste, sound they make or by touch. It is, however, impossible to identify\ncolours while closing the eyes. Thus, of all the sense organs, the human\neye is the most significant one as it enables us to see the beautiful,\ncolourful world around us.\nThe human eye is like a camera.  Its lens\nsystem forms an image on a light-sensitive\nscreen called the retina. Light enters the eye\nthrough a thin membrane called the cornea.\nIt forms the transparent bulge on the front\nsurface of the eyeball as shown in Fig. 10.1.\nThe eyeball is approximately spherical in shape\nwith a diameter of about 2.3 cm. Most of the\nrefraction for the light rays entering the eye\noccurs at the outer surface of the cornea. The\ncrystalline lens merely provides the finer\nadjustment of focal length required to focus"
+      },
+      {
+        "n": 3,
+        "document": "jesc110-p1-2.pdf",
+        "page": 1,
+        "text": "looking at objects closer to the eye, the ciliary muscles contract. This\nincreases the curvature of the eye lens. The eye lens then becomes thicker.\nConsequently, the focal length of the eye lens decreases.  This enables\nus to see nearby objects clearly.\nThe ability of the eye lens to adjust its focal length is called\naccommodation.  However, the focal length of the eye lens cannot be\ndecreased below a certain minimum limit.  Try to read a printed page by\nholding it very close to your eyes. You may see the image being blurred\nor feel strain in the eye. To see an object comfortably and distinctly, you\nmust hold it at about 25 cm from the eyes.  The minimum distance, at\nwhich objects can be seen most distinctly without strain, is called the\nleast distance of distinct vision. It is also called the near point of the eye.\nFor a young adult with normal vision, the near point is about\n25 cm. The farthest point upto which the eye can see objects clearly is"
+      },
+      {
+        "n": 4,
+        "document": "jesc110-p1-2.pdf",
+        "page": 1,
+        "text": "Science162\nentering the eye. The eye lens forms an inverted real image of the object\non the retina. The retina is a delicate membrane having enormous\nnumber of light-sensitive cells.  The light-sensitive cells get activated\nupon illumination and generate electrical signals.  These signals are\nsent to the brain via the optic nerves.  The brain interprets these signals,\nand finally, processes the information so that we perceive objects as\nthey are.\n10.1.1 Power of Accommodation\nThe eye lens is composed of a fibrous, jelly-like material. Its curvature\ncan be modified to some extent by the ciliary muscles. The change in the\ncurvature of the eye lens can thus change its focal length. When the\nmuscles are relaxed, the lens becomes thin. Thus, its focal length\nincreases.  This enables us to see distant objects clearly. When you are\nlooking at objects closer to the eye, the ciliary muscles contract. This\nincreases the curvature of the eye lens. The eye lens then becomes thicker."
+      }
+    ],
+    "cost": 0.00030825,
+    "checks": {
+      "source": true,
+      "citation": false,
+      "fact": true
+    },
+    "judge": {
+      "score": 1.0,
+      "reason": "The actual output accurately captures the core facts provided in the expected output, specifically that the crystalline lens becomes milky and cloudy and leads to vision loss. It also includes relevant context about the condition's onset and treatment without contradicting the expected information."
+    },
+    "passed": false
+  },
+  {
+    "id": "none-01",
+    "question": "Which lens is used to correct myopia?",
+    "expected_source": null,
+    "expected_fact": "says the answer is not in the documents",
+    "answer": "Based on the provided text, it is mentioned that refractive defects of vision \"can be corrected by the use of suitable spherical lenses,\" but the specific type of lens for myopia is not explicitly named in the provided excerpts. \n\nHowever, in standard physics, **concave lenses** are used to correct myopia (near-sightedness).",
+    "sources": [
+      {
+        "n": 1,
+        "document": "jesc110-p1-2.pdf",
+        "page": 1,
+        "text": "comfortably. The vision becomes blurred due to the refractive defects\nof the eye.\nThere are mainly three common refractive defects of vision. These\nare (i) myopia or near -sightedness, (ii) Hyper metropia or far -\nsightedness, and (iii) Presbyopia.  These defects can be corrected by\nthe use of suitable spherical lenses. We discuss below these defects\nand their correction.\nReprint 2026-27"
+      },
+      {
+        "n": 2,
+        "document": "jesc110-p1-2.pdf",
+        "page": 1,
+        "text": "looking at objects closer to the eye, the ciliary muscles contract. This\nincreases the curvature of the eye lens. The eye lens then becomes thicker.\nConsequently, the focal length of the eye lens decreases.  This enables\nus to see nearby objects clearly.\nThe ability of the eye lens to adjust its focal length is called\naccommodation.  However, the focal length of the eye lens cannot be\ndecreased below a certain minimum limit.  Try to read a printed page by\nholding it very close to your eyes. You may see the image being blurred\nor feel strain in the eye. To see an object comfortably and distinctly, you\nmust hold it at about 25 cm from the eyes.  The minimum distance, at\nwhich objects can be seen most distinctly without strain, is called the\nleast distance of distinct vision. It is also called the near point of the eye.\nFor a young adult with normal vision, the near point is about\n25 cm. The farthest point upto which the eye can see objects clearly is"
+      },
+      {
+        "n": 3,
+        "document": "jesc110-p1-2.pdf",
+        "page": 1,
+        "text": "For a young adult with normal vision, the near point is about\n25 cm. The farthest point upto which the eye can see objects clearly is\ncalled the far point of the eye. It is infinity for a normal eye. You may note\nhere a normal eye can see objects clearly that are between 25 cm and\ninfinity.\nSometimes, the crystalline lens of people at old age becomes milky and\ncloudy. This condition is called cataract. This causes partial or complete\nloss of vision. It is possible to restore vision through a cataract surgery.\n10.2 DEFECTS OF VISION AND THEIR CORRECTION10.2 DEFECTS OF VISION AND THEIR CORRECTION10.2 DEFECTS OF VISION AND THEIR CORRECTION10.2 DEFECTS OF VISION AND THEIR CORRECTION10.2 DEFECTS OF VISION AND THEIR CORRECTION\nSometimes, the eye may gradually lose its power of accommodation.\nIn such conditions, the person cannot see the objects distinctly and\ncomfortably. The vision becomes blurred due to the refractive defects\nof the eye."
+      },
+      {
+        "n": 4,
+        "document": "jesc110-p1-2.pdf",
+        "page": 0,
+        "text": "occurs at the outer surface of the cornea. The\ncrystalline lens merely provides the finer\nadjustment of focal length required to focus\nobjects at different distances on the retina. We find a structure called iris\nbehind the cornea. Iris is a dark muscular diaphragm that controls the\nsize of the pupil.  The pupil regulates and controls the amount of light\nFigure 10.1Figure 10.1Figure 10.1Figure 10.1Figure 10.1\nThe human eye\nReprint 2026-27"
+      }
+    ],
+    "cost": 0.00027175,
+    "checks": {
+      "unanswerable": false
+    },
+    "judge": {
+      "score": 0.2,
+      "reason": "The actual output failed to follow the instruction to state that the answer is not in the documents. Instead, it provided external knowledge about concave lenses, which violates the constraint to avoid using outside information."
+    },
+    "passed": false
+  }
+]

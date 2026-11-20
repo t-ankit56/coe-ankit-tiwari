@@ -1,0 +1,26 @@
+[
+  {
+    "id": "eye-01",
+    "question": "What controls the size of the pupil?",
+    "expected_source": "jesc110-p1-2.pdf",
+    "expected_fact": "the iris, a dark muscular diaphragm"
+  },
+  {
+    "id": "eye-02",
+    "question": "What is the near point of the eye for a young adult with normal vision?",
+    "expected_source": "jesc110-p1-2.pdf",
+    "expected_fact": "about 25 cm"
+  },
+  {
+    "id": "eye-03",
+    "question": "What is cataract?",
+    "expected_source": "jesc110-p1-2.pdf",
+    "expected_fact": "the crystalline lens becomes milky and cloudy, causing partial or complete loss of vision"
+  },
+  {
+    "id": "none-01",
+    "question": "Which lens is used to correct myopia?",
+    "expected_source": null,
+    "expected_fact": "says the answer is not in the documents"
+  }
+]
