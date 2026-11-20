@@ -4,3 +4,6 @@
 - Test 9: `source` is set to the file name (`jesc109.pdf`), not PyPDFLoader's full path, so answers show readable sources and the eval's Source check compares names that don't depend on where the folder lives.
 - Test 10 (many PDFs) passed when written: the green step for test 9 already looped over every `*.pdf` instead of loading one file, which was more than that test needed. Kept as a guard.
 - Test 11 (non-PDF files ignored) passed when written, as expected: the `*.pdf` glob already skips them. Kept as a guard.
+- Tracing: `@traceable` on `answer()` records only the question and `k`. Recording all inputs serialised the fake model and drained its message iterator, which broke tests 14 and 16.
+- Evals: 5-second pause before every chat call (generation and judge), because Day 9 hit 429 at 2 seconds against the free-tier 15 requests per minute.
+- Evals: each case is a test, but a failing case is `xfail` with its reason, so the pass rate is the only gate. Otherwise one failing case would fail every CI run and `PASS_RATE` would mean nothing.

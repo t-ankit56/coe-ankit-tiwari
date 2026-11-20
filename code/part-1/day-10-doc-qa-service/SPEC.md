@@ -66,7 +66,7 @@ A substring match fails correct answers that are worded differently, so a judge 
 - Each case is one judge call. The judge's score and reason are saved in `results/` next to the answer.
 - `REUSE_SAVED=1` judges the saved answers without calling `answer()` again.
 
-The run passes when the share of passing cases is at or above `PASS_RATE`, which is set from the v2 result.
+The run passes when the share of passing cases is at or above `PASS_RATE`, which is set from the v2 result. Each case is its own test; a failing case is marked `xfail` with the failed checks and the judge's reason, so it shows in the report but only the pass rate can fail the run.
 
 ## CI
 
@@ -160,7 +160,7 @@ The rebuild is the library's `pre_delete_collection` flag, so it gets no unit te
 ## Step 3: Evals and tracing
 
 1. Write `evals/judge.py` (the `GEval` metric) and `evals/test_answers.py`: one test per case, plus a pass-rate test against `PASS_RATE`. Show the judge's criteria and `evaluation_steps` before any call.
-2. **Named API calls:** one embedding batch to ingest, then for v1 and for v2, 8 query embeddings, 8 generations and 8 judge calls each (49 calls in all). Tracing is on. Save the answers, sources, judge scores and reasons to `results/`.
+2. **Named API calls:** 2 embedding calls to ingest (172 chunks, 100 per call), then for v1 and for v2, 8 query embeddings, 8 generations and 8 judge calls each (50 calls in all). A 5-second pause before every chat call keeps a run under the free-tier 15 requests per minute (Day 9 hit 429 at 2 seconds). Tracing is on. Save the answers, sources, judge scores and reasons to `results/`.
 3. Set `PASS_RATE` from v2. Keep one real failure for the presentation.
 
 **Suggested commit messages:** `test: eval suite for answer quality`, `docs: v1 and v2 eval results`
