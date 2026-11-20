@@ -1,9 +1,17 @@
 """Document question answering over PDFs: ingest into a vector store, answer with sources."""
 import argparse
+import logging
 import os
+import warnings
 from pathlib import Path
 
-from langchain_community.document_loaders import PyPDFLoader
+# Two known, harmless messages, silenced so CLI output is just the result. Other warnings still show.
+# langchain-community warns on import that it is being sunset; PyPDFLoader still works.
+warnings.filterwarnings("ignore", message="`langchain-community` is being sunset", category=DeprecationWarning)
+# pypdf logs "fontTools is required..." for the NCERT fonts; the text still extracts.
+logging.getLogger("pypdf").setLevel(logging.ERROR)
+
+from langchain_community.document_loaders import PyPDFLoader  # noqa: E402
 from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import Runnable
