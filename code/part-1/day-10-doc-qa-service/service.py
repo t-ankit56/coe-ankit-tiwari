@@ -6,6 +6,8 @@ from langchain_core.documents import Document
 from langchain_core.vectorstores import VectorStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
+from cost import cost
+
 splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
 
 
@@ -38,4 +40,4 @@ def answer(question, store, llm, prompt, k=4):
     sources = [{"n": n, "document": d.metadata["source"],
                 "page": d.metadata["page"], "text": d.page_content}
                for n, d in enumerate(docs, start=1)]
-    return {"answer": reply.content, "sources": sources, "cost": 0.0}
+    return {"answer": reply.content, "sources": sources, "cost": cost(reply.usage_metadata)}
