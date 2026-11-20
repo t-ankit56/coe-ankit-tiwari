@@ -33,4 +33,8 @@ jobs:
         with:
           python-version: "3.14"
       - run: pip install -r requirements.txt
-      - run: pytest -W ignore
+      # Offline on every push and pull request: no API calls.
+      - run: pytest -W ignore tests/test_matching.py
+      # Live Gemini calls only when started by hand, to protect the free tier.
+      - if: github.event_name == 'workflow_dispatch'
+        run: pytest -W ignore tests/test_extraction.py
