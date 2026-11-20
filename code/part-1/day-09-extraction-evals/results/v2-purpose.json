@@ -1,0 +1,86 @@
+[
+  {
+    "id": "01-clean",
+    "expected": "payment received for an annual software licence renewal",
+    "got": "annual software licence renewal",
+    "score": 1.0,
+    "reason": "The actual output accurately captures the core purpose of the transaction. While it omits the phrase 'payment received for', this does not change the fundamental meaning of the purpose, and there are no identifiers present to penalize."
+  },
+  {
+    "id": "02-missing",
+    "expected": "asking for the status of a delayed parcel",
+    "got": "delivery status inquiry",
+    "score": 0.9,
+    "reason": "The actual output correctly identifies the purpose as a delivery status inquiry, which aligns with the expected purpose of asking for the status of a parcel. While the expected output specifies the parcel is delayed, the core intent remains the same, and no identifiers were included."
+  },
+  {
+    "id": "03-ambiguous",
+    "expected": "paying a venue deposit",
+    "got": "venue deposit",
+    "score": 1.0,
+    "reason": "The actual output accurately reflects the expected purpose of paying a venue deposit. There are no identifiers present, and the minor difference in wording does not change the underlying meaning."
+  },
+  {
+    "id": "04-meeting",
+    "expected": "scheduling the project kickoff meeting",
+    "got": "project kickoff meeting",
+    "score": 1.0,
+    "reason": "The actual output accurately captures the core purpose of the expected output. While the expected output includes the action of scheduling, the fundamental meaning remains consistent, and there are no identifiers or extraneous details present."
+  },
+  {
+    "id": "05-two-amounts",
+    "expected": "asking for payment of the remaining balance",
+    "got": "outstanding balance payment",
+    "score": 1.0,
+    "reason": "The actual output accurately captures the core intent of the expected output, which is to request payment for a remaining balance. There are no identifiers present, and the slight difference in wording does not alter the fundamental meaning."
+  },
+  {
+    "id": "06-correction",
+    "expected": "paying the conference booth fee",
+    "got": "conference booth fee",
+    "score": 1.0,
+    "reason": "The actual output accurately reflects the expected purpose of paying the conference booth fee. There are no identifiers present, and the minor difference in wording does not change the underlying meaning."
+  },
+  {
+    "id": "07-date-format",
+    "expected": "announcing a training session",
+    "got": "Training session",
+    "score": 1.0,
+    "reason": "The actual output accurately captures the core purpose of the expected output. While the expected output includes the verb announcing, the meaning remains consistent, and there are no identifiers or extraneous details present."
+  },
+  {
+    "id": "08-european-format",
+    "expected": "paying an invoice",
+    "got": "invoice payment",
+    "score": 1.0,
+    "reason": "The actual output correctly identifies the purpose as invoice payment, which matches the expected purpose of paying an invoice. No identifiers were included, and the meaning is preserved despite the minor difference in phrasing."
+  },
+  {
+    "id": "09-card-charge",
+    "expected": "a card charge for an order of one wireless mouse",
+    "got": "order confirmation",
+    "score": 0.3,
+    "reason": "The actual output is significantly less specific than the expected output, failing to mention the nature of the transaction (a card charge) and the specific item purchased (a wireless mouse), which changes the meaning of the purpose."
+  },
+  {
+    "id": "10-quote",
+    "expected": "quotation for 12 office chairs",
+    "got": "quotation for office chairs",
+    "score": 0.5,
+    "reason": "The actual output is missing the quantity of 12 office chairs, which is a specific detail that changes the meaning of the quotation request."
+  },
+  {
+    "id": "invoice",
+    "expected": "supply of stationery (A4 paper and pens)",
+    "got": "payment for stationery supplies",
+    "score": 1.0,
+    "reason": "The actual output accurately reflects the core purpose of the transaction, which is the procurement of stationery supplies. While the expected output includes specific examples like A4 paper and pens, the actual output captures the essential meaning without adding or missing any critical information that would alter the intent."
+  },
+  {
+    "id": "invoice-hard",
+    "expected": "supply of custom boxes and printed labels",
+    "got": "payment for custom boxes and printed labels",
+    "score": 1.0,
+    "reason": "The actual output accurately reflects the purpose of the transaction described in the expected output. There are no identifiers present, and the slight difference in wording does not change the core meaning."
+  }
+]

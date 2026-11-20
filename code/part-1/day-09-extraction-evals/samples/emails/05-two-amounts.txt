@@ -1,0 +1,12 @@
+From: Sofia Rossi <sofia.rossi@harborline.example>
+Subject: Outstanding balance on INV-884
+
+Hello,
+
+Invoice INV-884 for 300.00 GBP was due on 1 June 2026. We received a payment
+of 100.00 GBP on 15 June 2026. The remaining balance of 200.00 GBP must be
+paid by 30 June 2026.
+
+Please arrange the payment.
+
+Sofia

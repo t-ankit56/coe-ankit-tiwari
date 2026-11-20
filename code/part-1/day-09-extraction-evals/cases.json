@@ -1,0 +1,62 @@
+[
+  {
+    "id": "01-clean",
+    "source": "samples/emails/01-clean.txt",
+    "expected": {"sender": "Priya Nair", "date": "2026-03-14", "amount": 1250.00, "currency": "USD", "reference": "BL-4821", "purpose": "payment received for an annual software licence renewal"}
+  },
+  {
+    "id": "02-missing",
+    "source": "samples/emails/02-missing.txt",
+    "expected": {"sender": "Marcus Webb", "date": null, "amount": null, "currency": null, "reference": "TKT-7730", "purpose": "asking for the status of a delayed parcel"}
+  },
+  {
+    "id": "03-ambiguous",
+    "source": "samples/emails/03-ambiguous.txt",
+    "expected": {"sender": "Lena Fischer", "date": null, "amount": null, "currency": "EUR", "reference": null, "purpose": "paying a venue deposit"}
+  },
+  {
+    "id": "04-meeting",
+    "source": "samples/emails/04-meeting.txt",
+    "expected": {"sender": "Tom Alvarez", "date": "2026-04-22", "amount": null, "currency": null, "reference": null, "purpose": "scheduling the project kickoff meeting"}
+  },
+  {
+    "id": "05-two-amounts",
+    "source": "samples/emails/05-two-amounts.txt",
+    "expected": {"sender": "Sofia Rossi", "date": "2026-06-30", "amount": 200.00, "currency": "GBP", "reference": "INV-884", "purpose": "asking for payment of the remaining balance"}
+  },
+  {
+    "id": "06-correction",
+    "source": "samples/emails/06-correction.txt",
+    "expected": {"sender": "Daniel Okafor", "date": "2026-07-20", "amount": 1020.00, "currency": "USD", "reference": "QT-3382", "purpose": "paying the conference booth fee"}
+  },
+  {
+    "id": "07-date-format",
+    "source": "samples/emails/07-date-format.txt",
+    "expected": {"sender": "Hannah Boyd", "date": null, "amount": null, "currency": null, "reference": null, "purpose": "announcing a training session"}
+  },
+  {
+    "id": "08-european-format",
+    "source": "samples/emails/08-european-format.txt",
+    "expected": {"sender": "Klaus Weber", "date": "2026-09-30", "amount": 1234.50, "currency": "EUR", "reference": "RE-20871", "purpose": "paying an invoice"}
+  },
+  {
+    "id": "09-card-charge",
+    "source": "samples/emails/09-card-charge.txt",
+    "expected": {"sender": "Maya Chen", "date": "2026-08-09", "amount": 85.00, "currency": "USD", "reference": "OR-5521", "purpose": "a card charge for an order of one wireless mouse"}
+  },
+  {
+    "id": "10-quote",
+    "source": "samples/emails/10-quote.txt",
+    "expected": {"sender": "Arjun Mehta", "date": null, "amount": 4800.00, "currency": "INR", "reference": "Q-3307", "purpose": "quotation for 12 office chairs"}
+  },
+  {
+    "id": "invoice",
+    "source": "samples/invoice.pdf",
+    "expected": {"sender": "Northwind Stationery Ltd", "date": "2026-02-03", "amount": 266.40, "currency": "GBP", "reference": "INV-20431", "purpose": "supply of stationery (A4 paper and pens)"}
+  },
+  {
+    "id": "invoice-hard",
+    "source": "samples/invoice-hard.pdf",
+    "expected": {"sender": "Lakeshore Print & Pack Ltd", "date": "2026-05-12", "amount": 1380.00, "currency": "USD", "reference": "LP-77231", "purpose": "supply of custom boxes and printed labels"}
+  }
+]

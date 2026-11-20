@@ -1,0 +1,4 @@
+- The Gemini embedding API returns no token count, so `embed_query` tokens are estimated as characters / 4. The error on cost is a few millionths of a dollar.
+- `generate_answer` is the slowest and the most expensive step by far (about 65% of the time, 98% of the cost). The input tokens are the retrieved chunks, so `TOP_K` and chunk size are what drive cost.
+- The size-600 chunks were already in the `day8` database, so no ingest and no embedding batch call were needed.
+- LangSmith spans match the local timings (checked by reading the project through the LangSmith API: 20 runs, same durations, tokens and cost).

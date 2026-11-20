@@ -12,6 +12,8 @@ Daily submissions for the Incubyte COE (track Python-TS-AI, Part 1). Each day is
 - `code/part-1/day-NN-<project>/`: one project per criterion. Do not merge two criteria into one project.
 - `README.md` (root): an index with one row per day. Add a row when a day is finished.
 - Day 4 (`day-04-*`) is SQL/Postgres exercises: a README and a `seed.sql`, no runnable code.
+- Days 7 to 9 are Python projects that call the Gemini API (see "LLM days" below).
+- `.github/workflows/evals.yml` runs the Day 9 extraction evals on every push and pull request. No other project is in CI.
 
 ## Commands
 
@@ -33,6 +35,25 @@ npx vitest run tests/api/user-api.test.ts -t "rejects"   # one file or one test 
 npm run check                            # Day 6 only: typecheck then tests
 npm run build                            # Day 6 only: emits src/ to dist/ via tsconfig.build.json
 ```
+
+## LLM days (Days 7 to 9)
+
+Python projects like Days 1 to 3 (own `venv/`, `requirements.txt`, `SPEC.md`, `NOTES.md`), but they call the Gemini API (`gemini-3.1-flash-lite`, pinned, temperature 0). Each needs a git-ignored `.env`: copy `.env.example` and add `GEMINI_API_KEY`. Day 8 and Day 9 tracing also need `DATABASE_URL` (Postgres with pgvector, database `day8`), and Day 9 tracing needs a LangSmith key.
+
+- `day-07-llm-extraction`: `extract(source)` (email text or PDF path) returns a Pydantic `Extraction`, with every field Optional. Prompt versions v1 and v2 live in `prompts.py`. No tests.
+- `day-08-rag-pgvector`: `rag.py` has `ingest`, `ask` and `compare.py` subcommands. Hand-checked, no tests.
+- `day-09-extraction-evals`: a copy of the Day 7 `extract()` plus a pytest eval suite. `cases.json` holds the 12 cases and `criteria.md` the pass rules. `tests/test_matching.py` runs offline. `tests/test_extraction.py` makes 12 live calls and gates on `PASS_RATE`. A DeepEval `GEval` judge (`judge.py`, Gemini-backed) scores `purpose`. Results are saved to `results/`.
+- `day-09-rag-tracing`: a copy of the Day 8 RAG flow with LangSmith spans. It reads the `day8` database, so ingest Day 8 first.
+
+```
+PROMPT_VERSION=v2 pytest tests/test_extraction.py             # live, v1 or v2
+REUSE_SAVED=1 PROMPT_VERSION=v2 pytest tests/test_extraction.py::test_purpose_score   # judge saved outputs, no extract() calls
+pytest tests/test_matching.py                                 # no API calls
+```
+
+- Day 9 projects are deliberate copies of Day 7 and Day 8 code so the earlier submissions stay untouched. Do not "deduplicate" them.
+- Live calls are limited by the free tier: no retries, a 2-second pause between calls, and the call count is recorded in the README. Do not run live tests or the tracing script unless asked. Prefer `REUSE_SAVED=1` and the saved `results/*.json`.
+- READMEs are filled from saved results, and the numbers in them come from real runs. Do not edit them by hand.
 
 ## How the TypeScript days are built
 
