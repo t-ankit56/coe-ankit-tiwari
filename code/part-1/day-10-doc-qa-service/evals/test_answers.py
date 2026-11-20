@@ -21,7 +21,7 @@ from prompts import get_prompt  # noqa: E402
 from service import answer, make_llm, make_store  # noqa: E402
 
 PROMPT_VERSION = os.environ.get("PROMPT_VERSION", "v2")
-PASS_RATE = 0.0  # set from the first real v2 run, see NOTES.md
+PASS_RATE = 0.75  # v2 scored 4/4 on the first real run; one case below it, see NOTES.md
 PAUSE_SECONDS = 5  # before every chat call: at most 12 a minute, under the free-tier 15 (Day 9 hit 429 at 2 s)
 REUSE_SAVED = os.environ.get("REUSE_SAVED") == "1"  # local only: judge saved answers without calling answer()
 COLLECTION = "evals"

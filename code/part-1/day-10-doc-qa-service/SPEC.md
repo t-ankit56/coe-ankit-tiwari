@@ -66,7 +66,7 @@ A substring match fails correct answers that are worded differently, so a judge 
 - Each case is one judge call. The judge's score and reason are saved in `results/` next to the answer.
 - `REUSE_SAVED=1` judges the saved answers without calling `answer()` again.
 
-The run passes when the share of passing cases is at or above `PASS_RATE`, which is set from the v2 result. Each case is its own test; a failing case is marked `xfail` with the failed checks and the judge's reason, so it shows in the report but only the pass rate can fail the run.
+The run passes when the share of passing cases is at or above `PASS_RATE`, which is set from the v2 result (one case below it, because 4 cases make 1.0 too strict for CI). Each case is its own test; a failing case is marked `xfail` with the failed checks and the judge's reason, so it shows in the report but only the pass rate can fail the run.
 
 ## CI
 
