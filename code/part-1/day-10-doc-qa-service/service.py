@@ -3,6 +3,8 @@ from pathlib import Path
 
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.documents import Document
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import Runnable
 from langchain_core.vectorstores import VectorStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -31,15 +33,20 @@ def ingest(pdf_dir: str | Path, store: VectorStore) -> int:
     return len(chunks)
 
 
-def answer(question, store, llm, prompt, k=4):
+def answer(question: str, store: VectorStore, llm: Runnable,
+           prompt: ChatPromptTemplate, k: int = 4) -> dict:
+    """Answer from the top `k` chunks. Returns {answer, sources, cost}.
+
+    Sources are numbered from 1 in retrieval order, matching the [n] labels in the context.
+    """
     if not question.strip():
         raise ValueError("Question is blank")
-    docs =store.similarity_search(question, k=k)
+    docs = store.similarity_search(question, k=k)
     if not docs:
         return {"answer": "I don't know", "sources": [], "cost": 0.0}
-    context = "\n\n".join(f"[{n}] {d.page_content}" for n, d in enumerate(docs, start=1))
-    reply = (prompt | llm).invoke({"context": context, "question": question})
     sources = [{"n": n, "document": d.metadata["source"],
                 "page": d.metadata["page"], "text": d.page_content}
                for n, d in enumerate(docs, start=1)]
+    context = "\n\n".join(f"[{s['n']}] {s['text']}" for s in sources)
+    reply = (prompt | llm).invoke({"context": context, "question": question})
     return {"answer": reply.content, "sources": sources, "cost": cost(reply.usage_metadata)}
