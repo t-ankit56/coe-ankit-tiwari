@@ -68,3 +68,13 @@ def test_many_chunks_are_numbered_in_retrieval_order_in_sources_and_prompt(store
     [prompt] = recorder.prompts
     for n, doc in enumerate(retrieved, start=1):
         assert f"[{n}] {doc.page_content}" in prompt
+
+
+def test_cost_comes_from_the_reply_usage_metadata(store):
+    store.add_texts(["1 kW h = 3.6 x 10^6 J."], metadatas=[{"source": "elec.pdf", "page": 20}])
+    usage = {"input_tokens": 2000, "output_tokens": 500, "total_tokens": 2500}
+    llm = GenericFakeChatModel(messages=iter([AIMessage(content="3.6 x 10^6 J [1]", usage_metadata=usage)]))
+
+    result = answer("How many joules in 1 kW h?", store, llm, V2)
+
+    assert result["cost"] == pytest.approx(0.00125)
