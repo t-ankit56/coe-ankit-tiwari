@@ -50,3 +50,21 @@ def test_one_chunk_returns_the_answer_with_its_source(store):
         "page": 0,
         "text": "The SI unit of power of a lens is dioptre.",
     }]
+
+
+def test_many_chunks_are_numbered_in_retrieval_order_in_sources_and_prompt(store):
+    store.add_texts(
+        ["Near point is 25 cm.", "Far point is infinity.", "Stars twinkle."],
+        metadatas=[{"source": "eye.pdf", "page": p} for p in (1, 2, 7)],
+    )
+    question = "What is the near point?"
+    retrieved = store.similarity_search(question, k=3)
+    recorder = Recorder()
+
+    result = answer(question, store, recorder.llm, V2, k=3)
+
+    assert [s["n"] for s in result["sources"]] == [1, 2, 3]
+    assert [s["text"] for s in result["sources"]] == [d.page_content for d in retrieved]
+    [prompt] = recorder.prompts
+    for n, doc in enumerate(retrieved, start=1):
+        assert f"[{n}] {doc.page_content}" in prompt
