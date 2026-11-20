@@ -1,4 +1,6 @@
 """Document question answering over PDFs: ingest into a vector store, answer with sources."""
+import argparse
+import os
 from pathlib import Path
 
 from langchain_community.document_loaders import PyPDFLoader
@@ -50,3 +52,64 @@ def answer(question: str, store: VectorStore, llm: Runnable,
     context = "\n\n".join(f"[{s['n']}] {s['text']}" for s in sources)
     reply = (prompt | llm).invoke({"context": context, "question": question})
     return {"answer": reply.content, "sources": sources, "cost": cost(reply.usage_metadata)}
+
+
+# --- CLI: wiring only, needs the network and Postgres, so it has no unit test ---
+
+EMBEDDING_MODEL = "gemini-embedding-001"
+EMBEDDING_SIZE = 768
+CHAT_MODEL = "gemini-3.1-flash-lite"
+
+
+def make_store(collection: str, rebuild: bool = False) -> VectorStore:
+    """PGVector store. rebuild=True empties the collection first (ingest only, never ask)."""
+    from langchain_google_genai import GoogleGenerativeAIEmbeddings
+    from langchain_postgres import PGVector
+
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model=EMBEDDING_MODEL, output_dimensionality=EMBEDDING_SIZE)  # no retries by default
+    return PGVector(
+        embeddings=embeddings,
+        connection=os.environ["DATABASE_URL"],
+        collection_name=collection,
+        embedding_length=EMBEDDING_SIZE,
+        pre_delete_collection=rebuild,
+    )
+
+
+def make_llm() -> Runnable:
+    from langchain_google_genai import ChatGoogleGenerativeAI
+
+    # max_retries is the total number of attempts, so 1 means no retry.
+    return ChatGoogleGenerativeAI(model=CHAT_MODEL, temperature=0, max_retries=1)
+
+
+def main(argv: list[str] | None = None) -> None:
+    from dotenv import load_dotenv
+
+    from prompts import get_prompt
+
+    load_dotenv(Path(__file__).parent / ".env")
+    parser = argparse.ArgumentParser(description="Question answering over PDFs.")
+    commands = parser.add_subparsers(dest="command", required=True)
+    ingest_cmd = commands.add_parser("ingest", help="rebuild a collection from a folder of PDFs")
+    ingest_cmd.add_argument("path", nargs="?", default=Path(__file__).parent / "docs")
+    ingest_cmd.add_argument("--collection", default="docs")
+    ask_cmd = commands.add_parser("ask", help="answer a question from a collection")
+    ask_cmd.add_argument("question")
+    ask_cmd.add_argument("--collection", default="docs")
+    args = parser.parse_args(argv)
+
+    if args.command == "ingest":
+        count = ingest(args.path, make_store(args.collection, rebuild=True))
+        print(f"Stored {count} chunks in collection '{args.collection}'.")
+    else:
+        result = answer(args.question, make_store(args.collection), make_llm(), get_prompt())
+        print(result["answer"])
+        for s in result["sources"]:
+            print(f"  [{s['n']}] {s['document']}, page {s['page']}")
+        print(f"Cost: ${result['cost']:.6f} (notional)")
+
+
+if __name__ == "__main__":
+    main()
