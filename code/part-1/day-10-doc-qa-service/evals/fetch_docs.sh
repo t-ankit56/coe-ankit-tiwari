@@ -25,7 +25,8 @@ if [ $# -ge 1 ]; then
 else
   cat /etc/ssl/certs/ca-certificates.crt certs/isrg-root-ye-by-x2.pem > "$work/bundle.pem"
   echo "download jesc110.pdf"
-  curl --fail --silent --show-error --location --cacert "$work/bundle.pem" \
+  # --retry is for ncert.nic.in dropping connections, not an API call; the hash is still checked.
+  curl --fail --silent --show-error --location --retry 3 --retry-all-errors --cacert "$work/bundle.pem" \
     --output "$work/jesc110.pdf" "https://ncert.nic.in/textbook/pdf/jesc110.pdf"
 fi
 
