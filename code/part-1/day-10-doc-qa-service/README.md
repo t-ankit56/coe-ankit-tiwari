@@ -110,9 +110,8 @@ From the v2 run: tokens from each reply's `usage_metadata` × $0.25 per million 
 1. Starts a `pgvector/pgvector:pg17` service.
 2. Installs `requirements.txt` on Python 3.14.
 3. Runs the 18 unit tests.
-4. Downloads the eval PDF.
-5. Ingests it.
-6. Runs the eval suite with prompt v2, gated on `PASS_RATE`.
+4. Ingests the committed eval PDF.
+5. Runs the eval suite with prompt v2, gated on `PASS_RATE`.
 
 Each run makes 11 embedding requests and 8 chat calls (4 answers and 4 judge calls). `GEMINI_API_KEY` comes from the repository secrets.
 
