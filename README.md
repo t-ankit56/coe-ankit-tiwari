@@ -14,4 +14,5 @@
 | 7 | LLM APIs, Prompting & Structured Outputs | [day-07](part-1/day-07-llm-apis-structured-outputs.md) | [LLM extraction from email and PDF](code/part-1/day-07-llm-extraction/) |
 | 8 | Embeddings, RAG & pgvector | [day-08](part-1/day-08-embeddings-rag-pgvector.md) | [RAG over documents with pgvector](code/part-1/day-08-rag-pgvector/) |
 | 9 | Evals, Observability & LLMOps | [day-09](part-1/day-09-evals-observability-llmops.md) | [Extraction evals and CI](code/part-1/day-09-extraction-evals/) · [RAG tracing with LangSmith](code/part-1/day-09-rag-tracing/) |
+| 10 | Capstone: Document Question Answering Service | [day-10](part-1/day-10-capstone-doc-qa.md) | [Doc QA service over PDFs](code/part-1/day-10-doc-qa-service/) |
 | 11 | Leave Module | [day-11](part-1/day-11-leave-module.md) | [ERP leave module](erp_leave_module/) |

@@ -13,7 +13,8 @@ Daily submissions for the Incubyte COE (track Python-TS-AI, Part 1). Each day is
 - `README.md` (root): an index with one row per day. Add a row when a day is finished.
 - Day 4 (`day-04-*`) is SQL/Postgres exercises: a README and a `seed.sql`, no runnable code.
 - Days 7 to 9 are Python projects that call the Gemini API (see "LLM days" below).
-- `.github/workflows/evals.yml` runs the Day 9 extraction evals on every push and pull request. No other project is in CI.
+- `.github/workflows/evals.yml` runs the Day 9 extraction evals on every push and pull request.
+- `.github/workflows/day-10.yml` runs the Day 10 unit tests and live evals (pgvector service) on pull requests that touch Day 10, and by hand. No other project is in CI.
 
 ## Commands
 
